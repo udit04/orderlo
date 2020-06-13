@@ -12,6 +12,7 @@ export default class SimpleSlider extends React.Component {
       slidesToShow: 1,
       slidesToScroll: 1
     };
+    console.log(this.props);
     return (
         <>
       <Slider {...settings}>
@@ -34,7 +35,7 @@ const Slide = styled.div`
 display:block;
 width:100%;
 min-height:400px;
-background:#6d83db;;
+background:#3c4dae;
 img{
     display:block;
     width:100%;

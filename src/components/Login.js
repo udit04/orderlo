@@ -1,10 +1,13 @@
-import React from 'react'
-import styled from 'styled-components'
+import React, { useState, useEffect } from 'react'
+import styled,{keyframes} from 'styled-components'
 import Flex from 'styled-flex-component'
+import { BackIcon } from '../Icons';
+import { loginService } from '../services/loginService';
 function Login() {
+    const [showSignup ,setSignup ] = useState(false);
     return (
         <div>
-            {/* <LoginCard>
+            <LoginCard>
                 <LoginHeader>
                     Welcome to Ordrlo
                 </LoginHeader>
@@ -26,9 +29,11 @@ function Login() {
                 </TextInputWrapper>
                 
                 <SolidButton>Login</SolidButton>
-                <LoginText>Don't have an account yet?<br/><span>Create an account</span></LoginText>
-            </LoginCard> */}
-            <Signup />
+                <LoginText>Don't have an account yet?<br/><span onClick={()=>{setSignup(true)}}>Create an account</span></LoginText>
+            </LoginCard>
+           { showSignup
+              &&
+            <Signup closeSignup={setSignup}/>}
         </div>
     )
 }
@@ -36,43 +41,91 @@ function Login() {
 export default Login;
 
 
-function Signup() {
+function Signup(props) {
+    const {closeSignup} = props;
+    useEffect(() => {
+        loginService.sendOtp({
+            "phone_number" : "8800947960",
+	        "new_user": true
+        }).then(res=>{
+            console.log(res);
+        }).catch(err=>{
+            console.log(err);
+        })
+        return () => {
+            
+        }
+    }, [])
     return (
-        <LoginCard>
-                <LoginHeader>
-                    Signup
-                </LoginHeader>
-                {/* <Tagline>tagline</Tagline> */}
-                <TextInputWrapper>
-                    <TextInput placeholder='First name'  type="text"/>
-                    <img src={require('../../public/static/name.png')}/>
-                </TextInputWrapper>
-                <TextInputWrapper>
-                    <TextInput id='otp' name='otp' placeholder='lastname'  type="text"/>
-                    <img src={require('../../public/static/name.png')}/>
-                </TextInputWrapper>
-                <Separator>Or</Separator>
-                <TextInputWrapper>
-                    <TextInput id='pin' name='pin' placeholder='Email'  type="text"/>
-                    <img src={require('../../public/static/email.png')}/>
-                </TextInputWrapper>
-                <TextInputWrapper>
-                    <TextInput id='pin' name='pin' placeholder='mobile'  type="text"/>
-                    <img src={require('../../public/static/phone.png')}/>
-                </TextInputWrapper>
-                <TextInputWrapper>
-                    <TextInput id='pin' name='pin' placeholder='pin'  type="text"/>
-                    <img src={require('../../public/static/lock.png')}/>
-                </TextInputWrapper>
-                {/* <TextInputWrapper>
-                    <TextInput  type="text"/>
-                </TextInputWrapper> */}
-                <SolidButton>Signup</SolidButton>
-                <LoginText>Already have an account<br/><span>Login</span></LoginText>
+        <SignupContainer>
+            <StackHeader><BackIcon onClick={()=>{closeSignup(false)}} height={16} width={16}/>Already a member ? </StackHeader>
+            <LoginCard className='signupCard'> 
+                    <LoginHeader>
+                        Signup
+                    </LoginHeader>
+                    {/* <Tagline>tagline</Tagline> */}
+                    <TextInputWrapper>
+                        <TextInput placeholder='First name'  type="text"/>
+                        <img src={require('../../public/static/name.png')}/>
+                    </TextInputWrapper>
+                    <TextInputWrapper>
+                        <TextInput id='otp' name='otp' placeholder='lastname'  type="text"/>
+                        <img src={require('../../public/static/name.png')}/>
+                    </TextInputWrapper>
+                    <TextInputWrapper>
+                        <TextInput id='pin' name='pin' placeholder='Email'  type="text"/>
+                        <img src={require('../../public/static/email.png')}/>
+                    </TextInputWrapper>
+                    <TextInputWrapper>
+                        <TextInput id='pin' name='pin' placeholder='mobile'  type="text"/>
+                        <img src={require('../../public/static/phone.png')}/>
+                    </TextInputWrapper>
+                    <TextInputWrapper>
+                        <TextInput id='pin' name='pin' placeholder='pin'  type="text"/>
+                        <img src={require('../../public/static/lock.png')}/>
+                    </TextInputWrapper>
+                    {/* <TextInputWrapper>
+                        <TextInput  type="text"/>
+                    </TextInputWrapper> */}
+                    <SolidButton>Signup</SolidButton>
+                    <LoginText>Already have an account<br/><span>Login</span></LoginText>
             </LoginCard>
+        </SignupContainer>
     )
 }
+const slideIn = keyframes`
 
+    0%{
+        transform : translateX(100%);
+    }
+    100%{
+        transform : translateX(0%);
+    }
+`
+const SignupContainer = styled.div`
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    min-width: 100vw;
+    z-index: 100;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: #3c4dae;
+    animation : ${slideIn} 0.3s;
+`
+const StackHeader = styled.div`
+    color:#ffffff;
+    padding:1rem;
+    svg{
+        vertical-align: middle;
+        margin: 10px;
+    }
+`
+const BackButton = styled.div`
+
+`
 const LoginCard = styled.div`
     width: calc(100% - 3rem);
     border-radius: 20px;
@@ -83,10 +136,19 @@ const LoginCard = styled.div`
     background: #ffffff;
     margin-top: -4rem;
     z-index: 2;
- position: absolute;
+    position: absolute;
     
     min-height: 300px;
     box-shadow: 1px 1px 1px 2px rgba(0,0,0,0.1);
+    &.signupCard{
+        top: 50%;
+        bottom: auto;
+        transform: translateY(-50%);
+        margin:0;
+    }
+    .slick-dots li button:before{
+        font-size:1rem;
+    }
 `
 const TextInputWrapper = styled.div`
 width:100%;
@@ -157,3 +219,4 @@ const Tagline = styled.div`
     color:#999999;
     text-align:center;
 `
+
