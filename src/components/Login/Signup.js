@@ -14,10 +14,11 @@ export default function Signup(props) {
     const [pin, setPin] = useState('');
     const [otp, setOtp] = useState('')
     const [err,setErr] = useState('');
+    const [otpMessage,setOtpMessage] = useState('');
     const [disable, setDisable] = useState(false)
     const [otpSent,setOtpSent] = useState(false);
     const {authData,setauthData} = useContext(AuthContext);
-    const {otpMessage,setOtpMessage} = useState('');
+   
     const handleSubmit = (event)=>{
         const formData = {
             first_name,
@@ -52,6 +53,9 @@ export default function Signup(props) {
                 setOtpMessage('signup successful')
                 setauthData({userData:res.data.user})
                 Router.push('/store');
+            }else{
+                setOtpMessage('')
+                setErr(res.data.message);
             }
         }).catch(err=>{
             setErr(err.response?err.response.data.message:'something went wrong');
@@ -64,29 +68,30 @@ export default function Signup(props) {
     const sendOtp = (e)=>{
         e.preventDefault();
         if(first_name.length>0 && last_name.length>0 && phone_number.length===10 && pin.length>0 && email.length>0){
-            setOtpSent(false);
             loginService.sendOtp({
                 phone_number,
                 "new_user" : true
             }).then(res=>{
                 if(res.status === 200){
+                     setOtpMessage('Otp sent successfully')
                     setOtpSent(true);
-                    setOtpMessage('Otp sent successfully')
+                   
                 }else{
+                    setOtpMessage('')
                     setErr(res.data.message);
                     setOtpSent(false);
-                    setOtpMessage('')
                 }
             }).catch(err=>{
                 console.log(err);
+                setOtpMessage('')
+
                 setErr('something went wrong');
                 setOtpSent(false);
-                setOtpMessage('')
             })
         }else{
             setErr('Enter all details correctly');
             setOtpSent(false);
-            setOtpMessage('')
+            // setOtpMessage('')
         }
        
     }
