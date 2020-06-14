@@ -10,11 +10,16 @@
   "dependencies": {
     "@material-ui/core": "^4.10.1",
     "@material-ui/icons": "^4.9.1",
+    "babel-plugin-styled-components": "^1.10.7",
     "next": "9.4.4",
+    "next-images": "^1.4.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
+    "react-slick": "^0.26.1",
     "react-swipeable-views": "^0.13.9",
     "react-swipeable-views-utils": "^0.13.9",
-    "styled-components": "^5.1.1"
+    "slick-carousel": "^1.8.1",
+    "styled-components": "^5.1.1",
+    "styled-flex-component": "^3.0.0"
   }
 }
