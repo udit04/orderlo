@@ -4,16 +4,16 @@ const baseUrl = 'http://api.ordrlo.com'
 
 const ax = axios.create({
     baseURL: baseUrl,
-    timeout: 1000,
+    timeout: 5000,
     headers: {'Content-Type':'application/json'}
   });
   
 const sendOtp = (body)=>{
-    const {phone_number}=body;
+    const {phone_number,new_user}=body;
      return ax.post(`/v1/api/send_otp`,
         {
             phone_number,
-            "new_user": true
+            new_user
         }
     )
 }

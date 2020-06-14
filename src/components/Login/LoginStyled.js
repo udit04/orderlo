@@ -23,6 +23,9 @@ export const SignupContainer = styled.div`
     left: 0;
     right: 0;
     background: #3c4dae;
+    background-size: 100%;
+    background-image: url(data:image/svg+xml;base64,PHN2ZyBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MTAgODIzIj48ZyBjbGlwLXBhdGg9InVybCgjY2xpcDApIj48cGF0aCBmaWxsPSIjNkQ4M0RCIiBkPSJNMCAwaDQxMHY4MjNIMHoiLz48cGF0aCBmaWxsPSIjNkQ4M0RCIiBkPSJNMCAwaDQxMXY0MzVIMHoiLz48cGF0aCBkPSJNMSAxaDQwOXYzOTJMMjA0IDUxMyAxIDM5M1YxeiIgZmlsbD0iIzNDNERBRSIvPjwvZz48ZGVmcz48Y2xpcFBhdGggaWQ9ImNsaXAwIj48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMCAwaDQxMHY4MjNIMHoiLz48L2NsaXBQYXRoPjwvZGVmcz48L3N2Zz4=);
+    background-repeat: no-repeat;
     animation : ${slideIn} 0.3s;
 `
 export const StackHeader = styled.div`
@@ -47,14 +50,18 @@ export const LoginCard = styled.div`
     margin-top: -4rem;
     z-index: 2;
     position: absolute;
-    
-    min-height: 300px;
+    min-height: 250px;
     box-shadow: 1px 1px 1px 2px rgba(0,0,0,0.1);
+    left:50%;
+    transform: translateX(-50%);
+    max-width:500px;
     &.signupCard{
         top: 50%;
         bottom: auto;
-        transform: translateY(-50%);
+        left:50%;
+        transform: translate(-50%,-50%);
         margin:0;
+        max-width:500px;
     }
     .slick-dots li button:before{
         font-size:1rem;
