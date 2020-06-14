@@ -43,7 +43,11 @@ export default function Signup(props) {
             console.log(err);
         })
     }
-    const sendOtp = ()=>{
+    const handleFormChange = ()=>{
+        
+    }
+    const sendOtp = (e)=>{
+        e.preventDefault();
         setOtpSent(false);
         loginService.sendOtp({
             phone_number,
@@ -73,28 +77,30 @@ export default function Signup(props) {
                         Signup
                     </LoginHeader>
                     {err && err!=='' && <ErrorText>{err}</ErrorText>}
+                    <form onSubmit={sendOtp}>
                     <TextInputWrapper>
-                        <TextInput placeholder='First Name' name='first_name' onChange={(e)=>{setFirstName(e.target.value)}} value={first_name}  type="text"/>
+                        <TextInput required placeholder='First Name' type='text' name='first_name' onChange={(e)=>{setFirstName(e.target.value)}} value={first_name}  type="text"/>
+                        <img src={require('../../../public/static/name.png')}/>
+                    </TextInputWrapper>
+                    <TextInputWrapper >
+                        <TextInput required id='last_name' name='last_name' type='text' placeholder='Last name' onChange={(e)=>{setLastName(e.target.value)}} value={last_name} type="text"/>
                         <img src={require('../../../public/static/name.png')}/>
                     </TextInputWrapper>
                     <TextInputWrapper>
-                        <TextInput id='last_name' name='last_name' placeholder='Last name' onChange={(e)=>{setLastName(e.target.value)}} value={last_name} type="text"/>
-                        <img src={require('../../../public/static/name.png')}/>
-                    </TextInputWrapper>
-                    <TextInputWrapper>
-                        <TextInput id='email' name='email' placeholder='Email' onChange={(e)=>{setEmail(e.target.value)}} value={email}  type="text"/>
+                        <TextInput required id='email' required type='email' name='email' placeholder='Email' onChange={(e)=>{setEmail(e.target.value)}} value={email}  type="text"/>
                         <img src={require('../../../public/static/email.png')}/>
                     </TextInputWrapper>
                     <TextInputWrapper>
-                        <TextInput id='phone_number' name='phone_number' placeholder='Mobile' onChange={(e)=>{setMobileNo(e.target.value)}} value={phone_number}  type="text"/>
+                        <TextInput required id='phone_number' name='phone_number' type='text' placeholder='Mobile' onChange={(e)=>{setMobileNo(e.target.value)}} value={phone_number}  type="text"/>
                         <img src={require('../../../public/static/phone.png')}/>
                     </TextInputWrapper>
                     <TextInputWrapper>
-                        <TextInput id='pin' name='pin' placeholder='Pin' onChange={(e)=>{setPin(e.target.value)}} value={pin} type="text"/>
+                        <TextInput required id='pin' name='pin' placeholder='Pin' type='text' onChange={(e)=>{setPin(e.target.value)}} value={pin} type="text"/>
                         <img src={require('../../../public/static/lock.png')}/>
                     </TextInputWrapper>
 
-                    <SolidButton disabled={disable} onClick={sendOtp} as='button' >Signup</SolidButton>
+                    <SolidButton disabled={disable} type='submit' as='button' >Signup</SolidButton>
+                    </form>
                     <LoginText>Already have an account<br/><span onClick={()=>{closeSignup(false)}}>Login</span></LoginText>
                 </LoginCard>
                 :

@@ -19,5 +19,5 @@ const Block = styled.div`
   display:block;
   width:100%;
   height:100%;
-  
+  max-width:1020px;
 `
