@@ -1,16 +1,18 @@
 import React from "react";
 import Slider from "react-slick";
 import styled from 'styled-components'
-// import sliderimg from '../../public/static/images/'
-import img1 from '../../public/static/image1.png'
 export default class SimpleSlider extends React.Component {
+  constructor(props){
+    super(props);
+  }
   render() {
     var settings = {
       dots: true,
       infinite: true,
       speed: 500,
       slidesToShow: 1,
-      slidesToScroll: 1
+      slidesToScroll: 1,
+      autoplay:true
     };
     return (
         <>
@@ -34,7 +36,7 @@ const Slide = styled.div`
 display:block;
 width:100%;
 min-height:400px;
-background:#6d83db;;
+background:#3c4dae;
 img{
     display:block;
     width:100%;
