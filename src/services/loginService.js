@@ -35,7 +35,7 @@ const verifyOtpNewUser = (body)=>{
 }
 
 const verifyOtpOldUser = (body)=>{
-    const {pin,otp,role_id,phone_number} = body
+    const {pin,otp,role_id,phone_number} = body;
     return ax.post(`/v1/api/verify_otp`,
         {
             pin,

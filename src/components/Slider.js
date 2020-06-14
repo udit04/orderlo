@@ -1,18 +1,19 @@
 import React from "react";
 import Slider from "react-slick";
 import styled from 'styled-components'
-// import sliderimg from '../../public/static/images/'
-import img1 from '../../public/static/image1.png'
 export default class SimpleSlider extends React.Component {
+  constructor(props){
+    super(props);
+  }
   render() {
     var settings = {
       dots: true,
       infinite: true,
       speed: 500,
       slidesToShow: 1,
-      slidesToScroll: 1
+      slidesToScroll: 1,
+      autoplay:true
     };
-    console.log(this.props);
     return (
         <>
       <Slider {...settings}>
