@@ -13,12 +13,13 @@ export const slideIn = keyframes`
 `
 
 export const SignupContainer = styled.div`
+    display: block;
+    position: fixed;
     width: 100%;
     height: 100%;
     min-height: 100vh;
     min-width: 100vw;
     z-index: 100;
-    position: absolute;
     top: 0;
     left: 0;
     right: 0;
@@ -58,7 +59,7 @@ export const LoginCard = styled.div`
     top: 50%;
     bottom: auto;
     &.signupCard{
-        top: 50%;
+        top: 55%;
         bottom: auto;
         left:50%;
         transform: translate(-50%,-50%);

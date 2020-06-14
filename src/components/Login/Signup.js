@@ -1,4 +1,4 @@
-import React, { useState,useContext } from 'react'
+import React, { useState,useContext,useEffect } from 'react'
 import {SignupContainer,slideIn,BackButton,StackHeader,LoginCard,TextInput,TextInputWrapper,Separator,SolidButton,LoginText,LoginHeader,Tagline,SuccessText,ErrorText} from './LoginStyled'
 import { BackIcon } from '../../Icons';
 import Flex from 'styled-flex-component'
@@ -28,6 +28,12 @@ export default function Signup(props) {
         }
         setOtpSent(true);
     }
+    useEffect(() => {
+        document.getElementsByTagName('body')[0].style='height:100vh;overflow-y:hidden;';
+        return () => {
+            document.getElementsByTagName('body')[0].style='height:100%;overflow-y:auto;';
+        }
+    }, [])
     const verifyOtp = ()=>{
         const formData = {
             first_name,
