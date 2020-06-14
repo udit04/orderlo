@@ -17,7 +17,7 @@ export default function Signup(props) {
     const [disable, setDisable] = useState(false)
     const [otpSent,setOtpSent] = useState(false);
     const {authData,setauthData} = useContext(AuthContext);
-
+    const {otpMessage,setOtpMessage} = useState('');
     const handleSubmit = (event)=>{
         const formData = {
             first_name,
@@ -43,6 +43,7 @@ export default function Signup(props) {
         loginService.verifyOtpNewUser(formData).then(res=>{
             console.log(res);
             if(res.data.user){
+                setOtpMessage('signup successful')
                 setauthData({userData:res.data.user})
                 Router.push('/store');
             }
@@ -56,22 +57,32 @@ export default function Signup(props) {
     }
     const sendOtp = (e)=>{
         e.preventDefault();
-        setOtpSent(false);
-        loginService.sendOtp({
-            phone_number,
-            "new_user" : true
-        }).then(res=>{
-            if(res.status === 200){
-                setOtpSent(true);
-            }else{
-                setErr(res.data.message);
-                setOtpSent(false);
-            }
-        }).catch(err=>{
-            console.log(err);
-            setErr('something went wrong');
+        if(first_name.length>0 && last_name.length>0 && phone_number.length===10 && pin.length>0 && email.length>0){
             setOtpSent(false);
-        })
+            loginService.sendOtp({
+                phone_number,
+                "new_user" : true
+            }).then(res=>{
+                if(res.status === 200){
+                    setOtpSent(true);
+                    setOtpMessage('Otp sent successfully')
+                }else{
+                    setErr(res.data.message);
+                    setOtpSent(false);
+                    setOtpMessage('')
+                }
+            }).catch(err=>{
+                console.log(err);
+                setErr('something went wrong');
+                setOtpSent(false);
+                setOtpMessage('')
+            })
+        }else{
+            setErr('Enter all details correctly');
+            setOtpSent(false);
+            setOtpMessage('')
+        }
+       
     }
     return (
         <SignupContainer>
@@ -85,6 +96,7 @@ export default function Signup(props) {
                         Signup
                     </LoginHeader>
                     {err && err!=='' && <ErrorText>{err}</ErrorText>}
+                    {otpMessage && otpMessage!=='' && <SuccessText>{otpMessage}</SuccessText>}
                     <form onSubmit={sendOtp}>
                     <TextInputWrapper>
                         <TextInput required placeholder='First Name' type='text' name='first_name' onChange={(e)=>{setFirstName(e.target.value)}} value={first_name}  type="text"/>

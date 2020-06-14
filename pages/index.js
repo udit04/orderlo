@@ -31,4 +31,6 @@ const Block = styled.div`
   width:100%;
   height:100%;
   max-width:1020px;
+  min-height: 100vh;
+  position:relative;
 `

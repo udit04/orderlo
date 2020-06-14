@@ -20,8 +20,10 @@ export default function Login(){
     const {authData,setauthData} = useContext(AuthContext);
     const [otpSent, setotpSent] = useState(false)
     const sendOtp = ()=>{
-        console.log();
-        loginService.sendOtp({
+        if(!(mobile_number.length===10 && mobile_number.match(/^[0-9]+$/) != null)){
+            setErr('Enter correct Phone number');
+        }else{
+            loginService.sendOtp({
                 "phone_number" : mobile_number,
                 "new_user": false
             }).then(res=>{
@@ -52,14 +54,16 @@ export default function Login(){
                 setErr('some error occured')
                 setDisable(false);
             })
+        }
+        
            
     }
     const handleFormChange =(e)=>{
-        if(e.target.name==='mobile_number'){
+        if(e.target.name==='phone_number' && e.target.value.length <=10){
             setMobileNumber(e.target.value);
-        }else if(e.target.name==='otp'){
+        }else if(e.target.name==='otp' && e.target.value.length<=6){
             setOtp(e.target.value);
-        }else if(e.target.name==='pin'){
+        }else if(e.target.name==='pin' ){
             setPin(e.target.value);
         }
     }
@@ -110,14 +114,14 @@ export default function Login(){
                     {otpMessage && otpMessage!=='' && <SuccessText>{otpMessage}</SuccessText>}
                     {err && err!=='' && <ErrorText>{err}</ErrorText>}
                     <TextInputWrapper>
-                        <TextInput disbaled={otpSent}  placeholder='Email/Mobile number' name='mobile_number' onChange={handleFormChange} value={mobile_number} type="text"/>
+                        <TextInput  type='number' disbaled={otpSent}  placeholder='Email/Mobile number' name='phone_number' onChange={handleFormChange} value={mobile_number} />
                         <img src={require('../../../public/static/phone.png')}/>
                     </TextInputWrapper>
                    {    otpSent
                             ?
                         <>
                             <TextInputWrapper>
-                            <TextInput id='otp' name='otp' placeholder='OTP' onChange={handleFormChange} value={otp} type="text"/>
+                            <TextInput type='number' id='otp' name='otp' placeholder='OTP' onChange={handleFormChange} value={otp}/>
                             <Flex justifyEnd><span onClick={sendOtp}>Resend Otp</span></Flex>
                             <img src={require('../../../public/static/lock.png')}/>
                             </TextInputWrapper>
