@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
 import { ThemeProvider } from '@material-ui/core/styles';
@@ -8,7 +8,12 @@ import "slick-carousel/slick/slick.css";
 
 import "slick-carousel/slick/slick-theme.css";
 import '../src/components/Slider.css';
+
+const initialData = 'darkTheme';
+export const AuthContext = React.createContext(initialData);
 export default function MyApp(props) {
+  const [authData, setauthData] = useState(initialData)
+
   const { Component, pageProps } = props;
 
   React.useEffect(() => {
@@ -28,7 +33,9 @@ export default function MyApp(props) {
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
+        <AuthContext.Provider value={{authData,setauthData}}>
         <Component {...pageProps} />
+        </AuthContext.Provider>
       </ThemeProvider>
     </React.Fragment>
   );

@@ -55,6 +55,8 @@ export const LoginCard = styled.div`
     left:50%;
     transform: translateX(-50%);
     max-width:500px;
+    top: 50%;
+    bottom: auto;
     &.signupCard{
         top: 50%;
         bottom: auto;

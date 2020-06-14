@@ -1,8 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState,useContext } from 'react'
 import {SignupContainer,slideIn,BackButton,StackHeader,LoginCard,TextInput,TextInputWrapper,Separator,SolidButton,LoginText,LoginHeader,Tagline,SuccessText,ErrorText} from './LoginStyled'
 import { BackIcon } from '../../Icons';
 import Flex from 'styled-flex-component'
 import { loginService } from '../../services/loginService';
+import { AuthContext } from '../../../pages/_app';
+import  Router  from 'next/router';
 export default function Signup(props) {
     const {closeSignup} = props;
     const [first_name, setFirstName] = useState('');
@@ -14,6 +16,8 @@ export default function Signup(props) {
     const [err,setErr] = useState('');
     const [disable, setDisable] = useState(false)
     const [otpSent,setOtpSent] = useState(false);
+    const {authData,setauthData} = useContext(AuthContext);
+
     const handleSubmit = (event)=>{
         const formData = {
             first_name,
@@ -38,13 +42,17 @@ export default function Signup(props) {
         
         loginService.verifyOtpNewUser(formData).then(res=>{
             console.log(res);
+            if(res.data.user){
+                setauthData({userData:res.data.user})
+                Router.push('/store');
+            }
         }).catch(err=>{
             setErr(err.response?err.response.data.message:'something went wrong');
             console.log(err);
         })
     }
     const handleFormChange = ()=>{
-        
+
     }
     const sendOtp = (e)=>{
         e.preventDefault();
@@ -111,7 +119,7 @@ export default function Signup(props) {
                     <TextInputWrapper>
                         <TextInput id='otp' name='otp' placeholder='OTP' onChange={(e)=>{setOtp(e.target.value)}} value={otp} type="text"/>
                         <img src={require('../../../public/static/lock.png')}/>
-                <Flex justifyBetween><span >&nbsp;Resend Otp</span><span>1:30 &nbsp;</span></Flex>
+                <Flex justifyBetween><span onClick={sendOtp}>&nbsp;Resend Otp</span><span>1:30 &nbsp;</span></Flex>
                     </TextInputWrapper>
                     <SolidButton onClick={verifyOtp} as='button' type='submit'>Signup</SolidButton>
                 </LoginCard>
