@@ -1,10 +1,21 @@
-import React from 'react';
+import React, { useContext,useEffect } from 'react';
 
 import styled from 'styled-components'
 import SimpleSlider from '../src/components/Slider';
 import Login from '../src/components/Login/Login';
+import { AuthContext } from './_app';
+import Router from 'next/router'
 
 export default function Index() {
+  const {authData,setauthData} = useContext(AuthContext);
+  useEffect(() => {
+    if(authData.user_id){
+      Router.push('/store');
+    }
+    return () => {
+    }
+  }, [])
+
   return (
       <Block >
         {/* <Login /> */}
@@ -20,4 +31,7 @@ const Block = styled.div`
   width:100%;
   height:100%;
   max-width:1020px;
+  min-height: 100vh;
+  position:relative;
+  overflow-x: hidden;
 `

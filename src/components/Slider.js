@@ -18,13 +18,13 @@ export default class SimpleSlider extends React.Component {
         <>
       <Slider {...settings}>
         <Slide>
-            <img src={require("../../public/static/image1.png")}/>
+            <img src={require("../../public/static/image_11.jpg")}/>
         </Slide>
         <Slide>
-        <img src={require("../../public/static/image2.png")}/>        
+        <img src={require("../../public/static/image_2.jpg")}/>        
         </Slide>
         <Slide>
-        <img src={require("../../public/static/image3.png")}/>
+        <img src={require("../../public/static/image_3.jpg")}/>
         </Slide>
       </Slider>
       </>

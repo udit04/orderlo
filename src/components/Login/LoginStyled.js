@@ -13,12 +13,13 @@ export const slideIn = keyframes`
 `
 
 export const SignupContainer = styled.div`
+    display: block;
+    position: fixed;
     width: 100%;
     height: 100%;
     min-height: 100vh;
     min-width: 100vw;
     z-index: 100;
-    position: absolute;
     top: 0;
     left: 0;
     right: 0;
@@ -55,8 +56,10 @@ export const LoginCard = styled.div`
     left:50%;
     transform: translateX(-50%);
     max-width:500px;
+    top: 50%;
+    bottom: auto;
     &.signupCard{
-        top: 50%;
+        top: 55%;
         bottom: auto;
         left:50%;
         transform: translate(-50%,-50%);
@@ -98,7 +101,9 @@ export const TextInput = styled.input`
     border-radius: 8px;
     outline: none;
     padding-left:1rem;
-    
+    &:focus{
+        border:1px solid #3c4dae;
+    }
 `
 export const Separator = styled.div`
     color:#333333;
