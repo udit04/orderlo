@@ -19,6 +19,7 @@ export default function Login(){
     const [pin, setPin] = useState('')
     const {authData,setauthData} = useContext(AuthContext);
     const [otpSent, setotpSent] = useState(false)
+    const [pinType, setPinType] = useState('password')
     const sendOtp = ()=>{
         if(!(mobile_number.length===10 && mobile_number.match(/^[0-9]+$/) != null)){
             setErr('Enter correct Phone number');
@@ -63,7 +64,7 @@ export default function Login(){
             setMobileNumber(e.target.value);
         }else if(e.target.name==='otp' && e.target.value.length<=6){
             setOtp(e.target.value);
-        }else if(e.target.name==='pin' ){
+        }else if(e.target.name==='pin' && e.target.value.length<=6){
             setPin(e.target.value);
         }
     }
@@ -127,9 +128,9 @@ export default function Login(){
                             </TextInputWrapper>
                             <Separator>Or</Separator>
                             <TextInputWrapper>
-                                <TextInput id='pin' name='pin' onChange={handleFormChange} value={pin} placeholder='6 digit pin'  type="text"/>
+                                <TextInput id='pin' name='pin' onChange={handleFormChange} value={pin} placeholder='6 digit pin'  type={pinType}/>
                                 <Flex justifyEnd><span >Forgot password</span></Flex>
-                                <img src={require('../../../public/static/lock.png')}/>
+                                <img onClick={()=>setPinType(pinType==='password'?'text':'password')} src={require('../../../public/static/lock.png')}/>
                             </TextInputWrapper>
                             
                             <SolidButton as='button' disabled={disable} onClick={handleSubmit}>Login</SolidButton>
@@ -142,7 +143,7 @@ export default function Login(){
                     
            { showSignup
               &&
-            <Signup closeSignup={setSignup}/>}
+            <Signup mobile_number={mobile_number} closeSignup={setSignup}/>}
         </div>
     )
 }

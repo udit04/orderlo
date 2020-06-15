@@ -101,7 +101,9 @@ export const TextInput = styled.input`
     border-radius: 8px;
     outline: none;
     padding-left:1rem;
-    
+    &:focus{
+        border:1px solid #3c4dae;
+    }
 `
 export const Separator = styled.div`
     color:#333333;

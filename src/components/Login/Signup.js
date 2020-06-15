@@ -10,7 +10,7 @@ export default function Signup(props) {
     const [first_name, setFirstName] = useState('');
     const [last_name, setLastName] = useState('');
     const [email, setEmail] = useState('');
-    const [phone_number, setMobileNo] = useState('');
+    const [phone_number, setMobileNo] = useState(props.mobile_number);
     const [pin, setPin] = useState('');
     const [otp, setOtp] = useState('')
     const [err,setErr] = useState('');
@@ -18,15 +18,9 @@ export default function Signup(props) {
     const [disable, setDisable] = useState(false)
     const [otpSent,setOtpSent] = useState(false);
     const {authData,setauthData} = useContext(AuthContext);
-   
+    const [pinType, setPinType] = useState('password')
     const handleSubmit = (event)=>{
-        const formData = {
-            first_name,
-            last_name,
-            phone_number,
-            email:email,
-            pin:pin,
-        }
+
         setOtpSent(true);
     }
     useEffect(() => {
@@ -122,12 +116,12 @@ export default function Signup(props) {
                         <img src={require('../../../public/static/email.png')}/>
                     </TextInputWrapper>
                     <TextInputWrapper>
-                        <TextInput required id='phone_number' name='phone_number' type='text' placeholder='Mobile' onChange={(e)=>{setMobileNo(e.target.value)}} value={phone_number}  type="text"/>
+                        <TextInput required id='phone_number' name='phone_number'  placeholder='Mobile' onChange={(e)=>{setMobileNo(e.target.value.length<=10?e.target.value:phone_number)}} value={phone_number}  type="text"/>
                         <img src={require('../../../public/static/phone.png')}/>
                     </TextInputWrapper>
                     <TextInputWrapper>
-                        <TextInput required id='pin' name='pin' placeholder='Pin' type='text' onChange={(e)=>{setPin(e.target.value)}} value={pin} type="text"/>
-                        <img src={require('../../../public/static/lock.png')}/>
+                        <TextInput required id='pin' name='pin' placeholder='Pin'  type={pinType} onChange={(e)=>{setPin(e.target.value.length<=10?e.target.value:pin)}} value={pin} />
+                        <img onClick={()=>setPinType(pinType==='password'?'text':'password')} src={require('../../../public/static/lock.png')}/>
                     </TextInputWrapper>
 
                     <SolidButton disabled={disable} type='submit' as='button' >Signup</SolidButton>
