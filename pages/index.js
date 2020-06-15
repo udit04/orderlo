@@ -33,4 +33,5 @@ const Block = styled.div`
   max-width:1020px;
   min-height: 100vh;
   position:relative;
+  overflow-x: hidden;
 `
