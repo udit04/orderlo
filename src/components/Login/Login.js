@@ -82,6 +82,7 @@ export default function Login(){
                     setauthData({
                         userData:res.data.user
                     })
+                   window && window.localStorage.setItem('userData',JSON.stringify(res.data.user));
                     Router.push('/store');
                 }else{
                    

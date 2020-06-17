@@ -8,8 +8,8 @@ import "slick-carousel/slick/slick.css";
 
 import "slick-carousel/slick/slick-theme.css";
 import '../src/components/Slider.css';
-
-const initialData = 'darkTheme';
+;
+const initialData = {}
 export const AuthContext = React.createContext(initialData);
 export default function MyApp(props) {
   const [authData, setauthData] = useState(initialData)
