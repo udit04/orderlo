@@ -12,10 +12,9 @@ const ax = axios.create({
     const {id} = body;
     return ax.get(`/v1/api/fetch_products?id=${id}`)
 }
-
- const getStoreRestos = (body)=>{
+const getStoreRestos = (body)=>{
     const {store_id}=body;
-    return ax.get(`/v1/api/fetch_restaurant?store_id=${store_id}`)
+    return ax.get(`/v1/api/fetch_store_wise_restaurants?store_id=${store_id}`)
 }
 
 export default {getRestoProducts,getStoreRestos}

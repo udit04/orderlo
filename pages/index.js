@@ -10,7 +10,7 @@ export default function Index() {
   const {authData,setauthData} = useContext(AuthContext);
   useEffect(() => {
     if(authData.user_id){
-      Router.push('/store');
+      Router.push('/store/1');
     }
     return () => {
     }

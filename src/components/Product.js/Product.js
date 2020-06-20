@@ -2,24 +2,26 @@ import React from 'react'
 import styled from 'styled-components'
 import Flex from 'styled-flex-component'
 import { RupeeIcon } from '../../Icons';
+import { IsVeg } from '../IsVeg';
+import AddButton from '../AddButton';
 export default function Product(props) {
     const {data,restaurant} = props;
     console.log(restaurant);
     return (
-        <ProductWrapper>
-            <img src='https://storcpdkenticomedia.blob.core.windows.net/media/recipemanagementsystem/media/recipe-media-files/recipes/retail/x17/2019_df_retail_butter-burger_20912_760x580.jpg?ext=.jpg'/>
-            <ProductName>{data.name}</ProductName>
-    <RestaurentName>{restaurant.name}</RestaurentName>
+        <Wrapper>
+            <img src={data.image}/>
+            <ProductName>{data.name} <IsVeg is_veg={data.is_veg}/></ProductName>
+                <RestaurentName>{restaurant.name} </RestaurentName>
             <Flex alignCenter justifyBetween>
-    <LocationName><RupeeIcon height={10} width={10}/>{data.price}</LocationName> <AddButton>Add</AddButton>
+                <LocationName><RupeeIcon height={10} width={10}/>{data.price}</LocationName> <AddButton product={data}></AddButton>
             </Flex>
-        </ProductWrapper>
+        </Wrapper>
     )
 }
 
-const ProductWrapper = styled.div`
+const Wrapper = styled.div`
     
-    width: calc(50% - 4rem);
+    width: calc(50% - 2rem);
     margin: 1rem;
     img{
         border-radius:10px;
@@ -40,13 +42,5 @@ const RestaurentName = styled.div`
 const LocationName = styled.div`
     font-size:14px;
     color:#333333;
-    font-weight:800;
-`
-const AddButton = styled.div`
-    border-radius:5px;
-    background:#f6192b;
-    padding:0.25rem 0.8rem;
-    color:#ffffff;
-    font-size:12px;
     font-weight:800;
 `

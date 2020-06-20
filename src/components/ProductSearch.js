@@ -4,7 +4,7 @@ import styled  from 'styled-components';
 export default function ProductSearch() {
     return (
             <SearchWrapper>
-                <SearchInput/>
+                <SearchInput placeholder="Search Restaurant, Cuisine"/>
                 <SearchIcon height={20} width={20}/>
             </SearchWrapper>
     )
@@ -30,5 +30,8 @@ const SearchInput = styled.input`
     border:none;
     outline:none;
     font-size:1rem;
-    font-weight:bold;
+    /* font-weight:bold; */
+    &::placeholder{
+        color:#ffffff;
+    }
 `

@@ -1,22 +1,24 @@
 import React,{useState,useEffect} from 'react'
-import ProductList from '../src/components/ProductList';
-import SimpleSlider from '../src/components/Slider';
-import Header from '../src/components/Header';
-import Sidebar from '../src/components/Sidebar';
+import ProductList from '../../src/components/ProductList';
+import SimpleSlider from '../../src/components/Slider';
+import Header from '../../src/components/Header';
+import Sidebar from '../../src/components/Sidebar';
 import  Flex  from 'styled-flex-component';
 import styled from 'styled-components'
-import productService from '../src/services/productService';
+import productService from '../../src/services/productService';
+import BottomTab from '../../src/components/BottomTab';
+import RestoList from '../../src/components/RestoList';
 export default function Store() {
     const [sidebar, setsidebar] = useState(false);
-    const [productsData, setproductsData] = useState(null)
-    const [restaurant, setrestaurant] = useState(null)
+    const [restaurantsData, setRestaurantsData] = useState(null)
+    const [store, setStore] = useState(null)
     useEffect(() => {
         
-        productService.getRestoProducts({id:1}).then(res=>{
+        productService.getStoreRestos({store_id:1}).then(res=>{
             if(res.status===200){
                 console.log(res.data)
-                setproductsData(res.data.products);
-                setrestaurant(res.data.restaurant);
+                setRestaurantsData(res.data.restaurants);
+                setStore(res.data.store);
             }else{
 
             }
@@ -31,19 +33,24 @@ export default function Store() {
             <StoreWrapper className={sidebar?'sidebar-active':''}>
                 <Flex column>
                 <Header toggleSidebar={()=>{setsidebar(!sidebar)}}/>
-                <SimpleSlider/>
+                <StoreImage src={store && store.image}/>
                 <div>
-                    
-                    <ProductList restaurant={restaurant} productsData={productsData}/>
+                    <RestoList store={store} restaurantsData={restaurantsData}/>
                     
                 </div>
                 </Flex>
             </StoreWrapper>
+            <BottomTab/>
             <Sidebar />
         </div>
     )
 }
 
+const StoreImage = styled.img`
+    display: block;
+    width: 100%;
+    max-height:200px;
+`
 const StoreWrapper = styled.div`
     position:relative;
     transform-origin: 50vw 50vh;
