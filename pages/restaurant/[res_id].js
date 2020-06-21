@@ -183,6 +183,7 @@ const CollectionName = styled.div`
     padding-bottom:0.25rem;
     font-weight: 700;
     color:#333;
+    text-transform:capitalize;
 `
 const StoreImage = styled.img`
     display: block;
