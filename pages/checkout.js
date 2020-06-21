@@ -103,7 +103,7 @@ export default function checkout() {
                             {/* <ShareIcon height={20} width={20}/> */}
                         </Flex>
                     </StackHeader>
-                    <ProductList restaurant={cartContext.cartData.restaurant} productsData={cartContext.cartData.products}/>
+                    <ProductList className='cartProducts' restaurant={cartContext.cartData.restaurant} productsData={cartContext.cartData.products}/>
                     <CartBillWrapper>
                         <CartTotal><span>Cart Total</span> <span> <RupeeIcon color={'#333'} height={12} width={12}/> {cartObject.cartPrice}</span></CartTotal>
                         <Tax><span>Service Charge</span> <span><RupeeIcon color={'#999'} height={8} width={8}/>{cartContext.cartData.restaurant.service_charge*cartObject.cartPrice/100}</span></Tax>
