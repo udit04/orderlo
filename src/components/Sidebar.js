@@ -6,16 +6,17 @@ export default function Sidebar() {
     const data = useContext(AuthContext);
     console.log(data,"____");
     useEffect(() => {
-        if(window.localStorage.getItem('userData')!=='undefined'){
+        if(!JSON.parse(window.localStorage.getItem('userData')) ){
            data.setauthData(JSON.parse(window.localStorage.getItem('userData')));
         }
         return () => {
             
         }
-    }, [data])
+    }, [data.authData])
     const logout = ()=>{
-        data.setauthData(null);
         window.localStorage.setItem('userData',null);
+        data.setauthData(null);
+        
     }
     if(!data.authData){
         return null

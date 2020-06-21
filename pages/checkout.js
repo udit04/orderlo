@@ -7,10 +7,13 @@ import Router from 'next/router';
 import ProductList from '../src/components/ProductList';
 import styled from 'styled-components'
 import productService from '../src/services/productService';
+import OrderSuccessScreen from '../src/components/OrderSuccessScreen';
 export default function checkout() {
     const cartContext = useContext(CartContext);
     const userContext = useContext(AuthContext);
     const [cartObject,setCartObject] = useState(null);
+
+    const [orderSuccess, setOrderSuccess] = useState(false);
     useEffect(() => {
         
         if(cartContext.cartData.products && cartContext.cartData.products.length >0 ){ 
@@ -32,7 +35,7 @@ export default function checkout() {
             setCartObject(null);
         }
         
-    }, [cartContext.cartData])
+    }, [cartContext.cartData.products])
     const onBack=()=>{
         Router.push(`/restaurant/${cartContext.cartData.restaurant.id}`)
     }
@@ -54,42 +57,59 @@ export default function checkout() {
         productService.placeOrder(placeOrderObject).then(res=>{
             if(res.status===200){
                 
-
+                setOrderSuccess(true);
+                const updatedCartData = {
+                    ...cartContext.cartData,
+                    products:[]
+                }
+                window.localStorage.setItem('cartData',JSON.stringify(updatedCartData))
+                
             }
         }).catch(err=>{
             console.log()
         });
     }
+    const clearCartAndRedirect = ()=>{
+        onBack();
+        cartContext.setCartData(updatedCartData);
+    }
     if(!cartObject){
         return null
     }
     else{
-        return (
-            <Flex column>
-                <StackHeader>
-                    <Flex justifyBetween alignCenter>
-                        <div>
-                        <BackIcon onClick={onBack}  height={20} width={20}/> 
-                            Cart
-                        </div>
-                        <div>
-                        {cartObject.itemsCount} Items
-                        </div>
-                        {/* <ShareIcon height={20} width={20}/> */}
-                    </Flex>
-                </StackHeader>
-                <ProductList restaurant={cartContext.cartData.restaurant} productsData={cartContext.cartData.products}/>
-                <CartBillWrapper>
-                    <CartTotal><span>Cart Total</span> <span> <RupeeIcon color={'#333'} height={12} width={12}/> {cartObject.cartPrice}</span></CartTotal>
-                    <Tax><span>Service Charge</span> <span><RupeeIcon color={'#999'} height={8} width={8}/>{cartContext.cartData.restaurant.service_charge*cartObject.cartPrice/100}</span></Tax>
-                    <Tax><span>Taxes and charges</span> <span><RupeeIcon color={'#999'} height={8} width={8}/>{(parseFloat(cartContext.cartData.restaurant.vat_tax) + parseFloat(cartContext.cartData.restaurant.gst_tax))*cartObject.cartPrice/100}</span></Tax>
-                </CartBillWrapper>
-                <FinalPayAmount>
-                <span>To Pay</span> <span><RupeeIcon color={'#f1a62d'} height={8} width={8}/>{((parseFloat(cartContext.cartData.restaurant.vat_tax) + parseFloat(cartContext.cartData.restaurant.gst_tax))*cartObject.cartPrice/100)+(cartContext.cartData.restaurant.service_charge*cartObject.cartPrice/100)+(cartObject.cartPrice)}</span>
-                </FinalPayAmount>
-                <ProceedToPay onClick={placeOrderClick}>Proceed to pay <span><RupeeIcon  height={8} width={8}/>{((parseFloat(cartContext.cartData.restaurant.vat_tax) + parseFloat(cartContext.cartData.restaurant.gst_tax))*cartObject.cartPrice/100)+(cartContext.cartData.restaurant.service_charge*cartObject.cartPrice/100)+(cartObject.cartPrice)}</span></ProceedToPay>
-            </Flex>
-        )
+        if(orderSuccess){
+            return(
+                <OrderSuccessScreen goToMenu={onBack}/>
+            )
+        }else{
+            return (
+                <Flex column>
+                    <StackHeader>
+                        <Flex justifyBetween alignCenter>
+                            <div>
+                            <BackIcon onClick={onBack}  height={20} width={20}/> 
+                                Cart
+                            </div>
+                            <div>
+                            {cartObject.itemsCount} Items
+                            </div>
+                            {/* <ShareIcon height={20} width={20}/> */}
+                        </Flex>
+                    </StackHeader>
+                    <ProductList restaurant={cartContext.cartData.restaurant} productsData={cartContext.cartData.products}/>
+                    <CartBillWrapper>
+                        <CartTotal><span>Cart Total</span> <span> <RupeeIcon color={'#333'} height={12} width={12}/> {cartObject.cartPrice}</span></CartTotal>
+                        <Tax><span>Service Charge</span> <span><RupeeIcon color={'#999'} height={8} width={8}/>{cartContext.cartData.restaurant.service_charge*cartObject.cartPrice/100}</span></Tax>
+                        <Tax><span>Taxes and charges</span> <span><RupeeIcon color={'#999'} height={8} width={8}/>{(parseFloat(cartContext.cartData.restaurant.vat_tax) + parseFloat(cartContext.cartData.restaurant.gst_tax))*cartObject.cartPrice/100}</span></Tax>
+                    </CartBillWrapper>
+                    <FinalPayAmount id='payButton'>
+                    <span>To Pay</span> <span><RupeeIcon color={'#f1a62d'} height={8} width={8}/>{((parseFloat(cartContext.cartData.restaurant.vat_tax) + parseFloat(cartContext.cartData.restaurant.gst_tax))*cartObject.cartPrice/100)+(cartContext.cartData.restaurant.service_charge*cartObject.cartPrice/100)+(cartObject.cartPrice)}</span>
+                    </FinalPayAmount>
+                    <ProceedToPay  onClick={placeOrderClick}>Proceed to pay <span><RupeeIcon  height={8} width={8}/>{((parseFloat(cartContext.cartData.restaurant.vat_tax) + parseFloat(cartContext.cartData.restaurant.gst_tax))*cartObject.cartPrice/100)+(cartContext.cartData.restaurant.service_charge*cartObject.cartPrice/100)+(cartObject.cartPrice)}</span></ProceedToPay>
+                </Flex>
+            )
+        }
+        
     }
 }
 

@@ -4,6 +4,7 @@ import { CartIcon, AccountIcon, RupeeIcon } from '../Icons'
 import { CartContext } from '../../pages/_app';
 import Flex from 'styled-flex-component'
 import  Router  from 'next/router';
+import  Link  from 'next/link';
 export default function BottomTab() {
     const cartContext = useContext(CartContext);
     const [cartObject,setCartObject] = useState(null);
@@ -51,7 +52,11 @@ export default function BottomTab() {
                 </TabButton> */}
                 <ItemsWrapper> <Flex column><div>Total Items</div><div>{cartObject.itemsCount}</div> </Flex></ItemsWrapper>
                  <PriceWrapper> <RupeeIcon height={12} width={12}/>{cartObject.cartPrice}</PriceWrapper>
-                <CheckoutBtn onClick={proceedToCheckout}>Checkout</CheckoutBtn>
+                <CheckoutBtn >
+                    <Link href="/checkout#payButton" scroll={false}>
+                    Checkout
+                    </Link>
+                    </CheckoutBtn>
                 
             </TabContainer>
         )
@@ -97,4 +102,7 @@ const PriceWrapper = styled.div`
 const CheckoutBtn = styled.div`
     color:#f1a62d;
     font-size:1rem;
+    a{
+        color:#f1a62d;
+    }
 `
