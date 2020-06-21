@@ -1,10 +1,10 @@
 import React from 'react'
-import {OrderSuccess} from '../Icons'
+import {OrderSuccess, BackIcon} from '../Icons'
 import  styled  from 'styled-components';
 export default function OrderSuccessScreen(props) {
     return (
         <div
-        style={{    
+            style={{    
             transform: 'translate(-50%,-50%)',
             position: 'absolute',
             left: '50%',
@@ -15,7 +15,7 @@ export default function OrderSuccessScreen(props) {
             <OrderSuccess 
             height='100%' width="100%"/>
             <OrderSuccessMessage>Order Placed successfully</OrderSuccessMessage>
-            <GoToMenuBtn onClick={props.goToMenu}>Go To menu</GoToMenuBtn>
+            <GoToMenuBtn onClick={props.goToMenu}><BackIcon height={10} width={10} />Back to food</GoToMenuBtn>
         </div>
     )
 }

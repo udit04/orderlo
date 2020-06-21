@@ -4,7 +4,7 @@ import SimpleSlider from '../../src/components/Slider';
 import Header from '../../src/components/Header';
 import Sidebar from '../../src/components/Sidebar';
 import  Flex  from 'styled-flex-component';
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import productService from '../../src/services/productService';
 import BottomTab from '../../src/components/BottomTab';
 import RestoList from '../../src/components/RestoList';
@@ -50,11 +50,31 @@ export default function Store() {
     )
 }
 
+const slide = keyframes`
+    0%{
+        background-position:100% 0;
+    }
+    100%{
+        background-position:-100% 0;
+    }
+
+`
 const StoreImage = styled.img`
     display: block;
     width: 100%;
-    max-height:200px;
+    height: 200px;
+    background: #efefef;
+    background: #f6f7f8;
+    border:none;
+    /* background-image: -webkit-gradient(linear,left top,right top,from(#f6f7f8),color-stop(20%,#edeef1),color-stop(40%,#f6f7f8),to(#f6f7f8)); */
+    background-image: linear-gradient(90deg,#f6f7f8 0,#edeef1 20%,#f6f7f8 40%,#f6f7f8);
+    background-repeat: no-repeat;
+    background-size: 400% 200%;
+    animation : ${slide} 1s ;
+    animation-iteration-count:infinite;
+    /* position: absolute; */
 `
+
 const StoreWrapper = styled.div`
     position:relative;
     transform-origin: 50vw 50vh;

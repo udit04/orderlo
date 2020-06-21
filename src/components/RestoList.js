@@ -3,10 +3,11 @@ import Product from './Product.js/Product';
 import styled from 'styled-components';
 import Flex  from 'styled-flex-component';
 import RestoCard from './Resto/RestoCard';
+import SkeletonLoader from './SkeletonLoader';
 
 export default function RestoList(props) {
     if(!(props.store  && props.restaurantsData)){
-       return  <LoaderWrapper>...Loading</LoaderWrapper>
+       return  <SkeletonLoader screen='mobile' />
     }
     else {
         return (

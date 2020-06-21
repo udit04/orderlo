@@ -73,8 +73,15 @@ export default function checkout() {
         onBack();
         cartContext.setCartData(updatedCartData);
     }
-    if(!cartObject){
+    if(!cartObject ){
+        if(cartContext.cartData && cartContext.cartData.restaurant && !cartContext.cartData.products.length){
+
+            Router.push(`/restaurant/${cartContext.cartData.restaurant.id}`)
+    
+        }else{
+        }
         return null
+
     }
     else{
         if(orderSuccess){

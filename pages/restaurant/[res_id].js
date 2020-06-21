@@ -142,7 +142,8 @@ const Category = styled.div`
 const StoreImage = styled.img`
     display: block;
     width: 100%;
-    max-height:200px;
+    height: 200px;
+    background: #efefef;
 `
 const StoreWrapper = styled.div`
     position:relative;

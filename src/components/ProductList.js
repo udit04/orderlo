@@ -2,10 +2,13 @@ import React from 'react'
 import Product from './Product.js/Product';
 import styled from 'styled-components';
 import Flex  from 'styled-flex-component';
+import SkeletonLoader from './SkeletonLoader';
 
 export default function ProductList(props) {
     if(!(props.productsData  && props.restaurant)){
-       return  <div>...Loading</div>
+       return (
+           <SkeletonLoader screen='mobile'/>
+       )
     }
     else {
         return (
