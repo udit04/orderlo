@@ -20,8 +20,8 @@ export default function RestoCard(props) {
 
 const Wrapper = styled.div`
     
-    width: calc(50% - 4rem);
-    margin: 1rem;
+    width: calc(50% - 6rem);
+    margin: 1.5rem;
     img{
         border-radius:10px;
         width:100%;

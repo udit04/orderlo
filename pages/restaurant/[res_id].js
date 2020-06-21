@@ -11,11 +11,12 @@ import  Router ,{ useRouter} from 'next/router';
 import { StackHeader } from '../../src/components/Login/LoginStyled';
 import { BackIcon, ShareIcon } from '../../src/Icons';
 import ProductSearch from '../../src/components/ProductSearch';
+import SkeletonLoader from '../../src/components/SkeletonLoader';
 export default function Restaurant(props) {
     const [sidebar, setsidebar] = useState(false);
     const [productsData, setproductsData] = useState(null)
-    const [filteredData,setFilteredData] = useState(null);
-    const [collections,setCollections] = useState(null);
+    const [filteredData,setFilteredData] = useState([]);
+    const [collections,setCollections] = useState([]);
     const [restaurant, setrestaurant] = useState(null)
     const [store,setStore] = useState(null);
     const router = useRouter();
@@ -39,14 +40,24 @@ export default function Restaurant(props) {
                 if(res.status===200){
                     console.log(res.data)
                     setproductsData(res.data.products);
-                    const collectionsData =  res.data.products.reduce(function (r, a) {
-                        r[a.category] = r[a.category] || [];
-                        r[a.category].push(a);
-                        return r;
+                    const collectionsData =  res.data.products.reduce(function (accumulator, element) {
+                        accumulator[element.category] = accumulator[element.category] || [];
+                        accumulator[element.category].push(element);
+                        return accumulator;
                     }, Object.create(null));
-                    console.log(collectionsData);
+                    console.log(Array.isArray(collectionsData));
+                    let collectionsNew = []
+
+                    for (const key in collectionsData) {
+                        console.log(key,collectionsData[key]);
+                        collectionsNew.push({
+                            name:key,
+                            products:[...collectionsData[key]]
+                        })
+                    }
+                    setCollections(collectionsNew);
                     setrestaurant(res.data.restaurant);
-                    setCollections(collectionsData);
+                    // setCollections(collectionsData);
                 }else{
                     
                 }
@@ -69,7 +80,23 @@ export default function Restaurant(props) {
                 filtered.push(element)
             }
         });
-        setFilteredData(filtered);
+        const dataCollections =  filtered.reduce(function (accumulator, element) {
+            accumulator[element.category] = accumulator[element.category] || [];
+            accumulator[element.category].push(element);
+            return accumulator;
+        }, Object.create(null));
+
+        let filteredCollections = []
+
+        for (const key in dataCollections) {
+            console.log(key,dataCollections[key]);
+            filteredCollections.push({
+                name:key,
+                products:[...dataCollections[key]]
+            })
+        }
+        
+        setFilteredData(filteredCollections);
     }
     return (
         <div>
@@ -107,8 +134,19 @@ export default function Restaurant(props) {
                         }
                     </CateogryWrapper>
                 </Categories> */}
-               
-                <ProductList restaurant={restaurant} productsData={search!==''?filteredData:productsData}/>
+                {(search!==''?filteredData:collections).map(collection=>{
+                    return(
+                        <>
+                        <CollectionName>{collection.name}</CollectionName>
+                        <ProductList restaurant={restaurant} productsData={collection.products}/>
+                        </>
+                        
+                    )
+                })}
+                {(search==='' && collections.length===0)
+                    &&
+                    <SkeletonLoader screen='mobile'/>
+                }
                     
                
                 </Flex>
@@ -119,25 +157,32 @@ export default function Restaurant(props) {
     )
 }
 
-const Categories = styled.div`
-    background: #fff;
-    /* color: #ffff; */
-    padding-left: 1rem;
-    padding-top: 1rem;
-`
-const CategoriesTitle = styled.div`
-    font-size:1rem;
-    font-weight:800;
-    color:#333;
-`
-const CateogryWrapper = styled.div`
-    display:flex;
-    overflow-x: scroll;
+// const Categories = styled.div`
+//     background: #fff;
+//     /* color: #ffff; */
+//     padding-left: 1rem;
+//     padding-top: 1rem;
+// `
+// const CategoriesTitle = styled.div`
+//     font-size:1rem;
+//     font-weight:800;
+//     color:#333;
+// `
+// const CateogryWrapper = styled.div`
+//     display:flex;
+//     overflow-x: scroll;
 
-`
-const Category = styled.div`
-    margin:0.5rem;
-    white-space:nowrap;
+// `
+// const Category = styled.div`
+//     margin:0.5rem;
+//     white-space:nowrap;
+// `
+
+const CollectionName = styled.div`
+    padding: 0.5rem 1rem;
+    padding-bottom:0.25rem;
+    font-weight: 700;
+    color:#333;
 `
 const StoreImage = styled.img`
     display: block;

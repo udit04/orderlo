@@ -25,6 +25,9 @@ export default function ProductList(props) {
 
 const ProductContainer = styled.div`
     background:#fff;
-    min-height: calc(100vh - 200px);
-    padding-bottom: 4rem;
+    &:last-child{
+        padding-bottom:4rem;
+    }
+    /* min-height: calc(100vh - 200px); */
+    /* padding-bottom: 4rem; */
 `;

@@ -87,12 +87,14 @@ const TabContainer = styled.div`
     text-align:center;
     align-items:center;
     justify-content: space-between;
-    padding: 0.5rem 1rem;
+    /* padding: 0.5rem 1rem; */
+    padding:1rem;
 
 `
 
 const ItemsWrapper = styled.div`
     color:#f1a62d;
+    line-height:1;
 `
 const PriceWrapper = styled.div`
     color:#fff;
@@ -104,5 +106,6 @@ const CheckoutBtn = styled.div`
     font-size:1rem;
     a{
         color:#f1a62d;
+        text-decoration:none;
     }
 `
