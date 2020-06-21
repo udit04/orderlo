@@ -10,7 +10,7 @@ export default function ProductList(props) {
     else {
         return (
         <ProductContainer>
-            <Flex wrap justifyCenter>
+            <Flex column >
                 {props.productsData.map(data=><Product restaurant={props.restaurant} data={data}/>)}
                 {/* <Product/> */}
             </Flex>
@@ -22,4 +22,6 @@ export default function ProductList(props) {
 
 const ProductContainer = styled.div`
     background:#fff;
+    min-height: calc(100vh - 200px);
+    padding-bottom: 4rem;
 `;

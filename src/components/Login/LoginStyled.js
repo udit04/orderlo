@@ -31,7 +31,8 @@ export const SignupContainer = styled.div`
 `
 export const StackHeader = styled.div`
     color:#ffffff;
-    padding:1rem;
+    padding:0.5rem;
+    background: #3c4bab;
     svg{
         vertical-align: middle;
         margin: 10px;

@@ -1,11 +1,11 @@
 import React from 'react'
-import { SearchIcon } from '../Icons'
+import { SearchIcon ,CloseIcon} from '../Icons'
 import styled  from 'styled-components';
-export default function ProductSearch() {
+export default function ProductSearch(props) {
     return (
             <SearchWrapper>
-                <SearchInput placeholder="Search Restaurant, Cuisine"/>
-                <SearchIcon height={20} width={20}/>
+                <SearchInput onChange={props.onChange} value={props.value} placeholder={props.placeholder?props.placeholder:"Search Restaurant, Cuisine"}/>
+                {props.value!==''?<CloseIcon onClick={props.clearSearcj} height={20} width={20}/>:<SearchIcon height={20} width={20}/>}
             </SearchWrapper>
     )
 }

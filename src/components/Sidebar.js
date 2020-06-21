@@ -12,7 +12,11 @@ export default function Sidebar() {
         return () => {
             
         }
-    }, [])
+    }, [data])
+    const logout = ()=>{
+        data.setauthData(null);
+        window.localStorage.setItem('userData',null);
+    }
     if(!data.authData){
         return null
     }else return (
@@ -26,7 +30,7 @@ export default function Sidebar() {
                     <Option>Terms & Conditions</Option>
                     <Option>Feedback</Option>
                     <Option>Contact us</Option>
-                    <Option>Logout</Option>
+                    <Option onClick={logout}>Logout</Option>
                     </div>
                 </Flex>
             </OptionsWrapper>

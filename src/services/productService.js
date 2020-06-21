@@ -17,4 +17,7 @@ const getStoreRestos = (body)=>{
     return ax.get(`/v1/api/fetch_store_wise_restaurants?store_id=${store_id}`)
 }
 
-export default {getRestoProducts,getStoreRestos}
+const placeOrder = (body)=>{
+    return ax.post(`/v1/api/place_order`,body);
+}
+export default {getRestoProducts,getStoreRestos,placeOrder}

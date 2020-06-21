@@ -6,7 +6,7 @@ import RestoCard from './Resto/RestoCard';
 
 export default function RestoList(props) {
     if(!(props.store  && props.restaurantsData)){
-       return  <div>...Loading</div>
+       return  <LoaderWrapper>...Loading</LoaderWrapper>
     }
     else {
         return (
@@ -23,5 +23,10 @@ export default function RestoList(props) {
 
 const ProductContainer = styled.div`
     background:#fff;
-    min-height: 500px;
+    min-height: 100vh;
 `;
+
+const LoaderWrapper = styled.div`
+    background:#fff;
+    min-height: 100vh;
+`

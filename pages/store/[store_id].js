@@ -19,6 +19,10 @@ export default function Store() {
                 console.log(res.data)
                 setRestaurantsData(res.data.restaurants);
                 setStore(res.data.store);
+                window.localStorage.setItem('cartData',JSON.stringify({
+                    store:{...res.data.store,id:1},
+                    
+                }))
             }else{
 
             }
@@ -32,7 +36,7 @@ export default function Store() {
         <div>
             <StoreWrapper className={sidebar?'sidebar-active':''}>
                 <Flex column>
-                <Header toggleSidebar={()=>{setsidebar(!sidebar)}}/>
+                <Header store={store} toggleSidebar={()=>{setsidebar(!sidebar)}}/>
                 <StoreImage src={store && store.image}/>
                 <div>
                     <RestoList store={store} restaurantsData={restaurantsData}/>
@@ -40,8 +44,8 @@ export default function Store() {
                 </div>
                 </Flex>
             </StoreWrapper>
-            <BottomTab/>
-            <Sidebar />
+            {/* <BottomTab/> */}
+            {sidebar && <Sidebar />}
         </div>
     )
 }
@@ -56,6 +60,7 @@ const StoreWrapper = styled.div`
     transform-origin: 50vw 50vh;
     transition: all 0.2s;
     z-index: 1000;
+    min-height:100vh;
     overflow:auto;
     height:auto;
     &.sidebar-active{

@@ -5,10 +5,11 @@ import  Flex  from 'styled-flex-component';
 import ProductSearch from './ProductSearch';
 
 export default function Header(props) {
+    const {store} = props;
     return (
         <HeaderWrapper>
             <Flex justifyBetween alignCenter>
-                <HeaderTitle>Welcome to Shipra mall</HeaderTitle>
+    <HeaderTitle>Welcome to {store?store.name:''}</HeaderTitle>
                 <div>
                     <NotifIcon height={32} width={32}/>
                     <HamburgerIcon onClick={props.toggleSidebar} height={32} width={32}/>

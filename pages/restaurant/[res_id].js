@@ -7,13 +7,31 @@ import  Flex  from 'styled-flex-component';
 import styled from 'styled-components'
 import productService from '../../src/services/productService';
 import BottomTab from '../../src/components/BottomTab';
-import { useRouter } from 'next/router';
+import  Router ,{ useRouter} from 'next/router';
+import { StackHeader } from '../../src/components/Login/LoginStyled';
+import { BackIcon, ShareIcon } from '../../src/Icons';
+import ProductSearch from '../../src/components/ProductSearch';
 export default function Restaurant(props) {
     const [sidebar, setsidebar] = useState(false);
     const [productsData, setproductsData] = useState(null)
+    const [filteredData,setFilteredData] = useState(null);
+    const [collections,setCollections] = useState(null);
     const [restaurant, setrestaurant] = useState(null)
+    const [store,setStore] = useState(null);
     const router = useRouter();
-    const { res_id } = router.query
+    const { res_id } = router.query;
+    const [search,setSearch ] = useState('');
+    const [cartProducts,setCartProducts]= useState([]);
+    useEffect(() => {
+        const cartData = JSON.parse(window.localStorage.getItem('cartData'));
+        if(cartData){
+            if(cartData.store){
+                console.log(cartData.store,'___store');
+                setStore(cartData.store);
+            }
+        }
+        
+    }, [])
     useEffect(() => {
         if(res_id)
         {
@@ -21,7 +39,14 @@ export default function Restaurant(props) {
                 if(res.status===200){
                     console.log(res.data)
                     setproductsData(res.data.products);
+                    const collectionsData =  res.data.products.reduce(function (r, a) {
+                        r[a.category] = r[a.category] || [];
+                        r[a.category].push(a);
+                        return r;
+                    }, Object.create(null));
+                    console.log(collectionsData);
                     setrestaurant(res.data.restaurant);
+                    setCollections(collectionsData);
                 }else{
                     
                 }
@@ -30,31 +55,66 @@ export default function Restaurant(props) {
             })
         }
     }, [res_id])
+
+    const onBack = ()=>{
+        if(store){
+            Router.push(`/store/${store.id}`)
+        }
+    }
+    const onProductSearch = (e)=>{
+        setSearch(e.target.value);
+        let filtered = [];
+        productsData.forEach(element => {
+            if((element.name.toLowerCase()).indexOf(e.target.value.toLowerCase()) !== -1){
+                filtered.push(element)
+            }
+        });
+        setFilteredData(filtered);
+    }
     return (
         <div>
-            <StoreWrapper className={sidebar?'sidebar-active':''}>
+            
                 <Flex column>
-                <Header toggleSidebar={()=>{setsidebar(!sidebar)}}/>
-                <StoreImage src={restaurant && restaurant.image}/>
-                <Categories>
+                   <StackHeader>
+                        <Flex justifyBetween>
+                            <BackIcon onClick={onBack}  height={20} width={20}/> 
+                            {/* <ShareIcon height={20} width={20}/> */}
+                        </Flex>
+                    </ StackHeader>
+                <RestoDetails>
+                    <StoreImage src={restaurant && restaurant.image}/>
+                    {
+                        restaurant
+                         &&
+                         <RestoInfoCard>
+                            <div className='title'>{restaurant.name}</div>
+                            <div className='address'>{restaurant.address}</div>
+                        </RestoInfoCard>
+                    }
+                </RestoDetails>
+                <ProductSearcWrapper>
+                    <ProductSearch value={search} clearSearcj={()=>{setSearch('')}} placeholder='Search food' onChange={onProductSearch}/>
+                </ProductSearcWrapper>
+                
+                {/* <Categories>
                     <CategoriesTitle>Top Categories</CategoriesTitle>
                     <CateogryWrapper>
+                        
                         {
                         productsData &&  [...new Set(productsData.map(item => item.category))].map(category=>(
                             <Category>{category}</Category>
                             ))
                         }
                     </CateogryWrapper>
-                </Categories>
-                <div>
+                </Categories> */}
+               
+                <ProductList restaurant={restaurant} productsData={search!==''?filteredData:productsData}/>
                     
-                    <ProductList restaurant={restaurant} productsData={productsData}/>
-                    
-                </div>
+               
                 </Flex>
-            </StoreWrapper>
+            
             <BottomTab/>
-            <Sidebar />
+            
         </div>
     )
 }
@@ -100,4 +160,51 @@ const StoreWrapper = styled.div`
         box-shadow: 1px 1px 50px 1px rgba(255, 255, 255, 0.05);
     }
 
+`
+
+
+const RestoDetails = styled.div`
+    display:block;
+`
+
+const RestoInfoCard = styled.div`
+    border-radius:10px;
+    padding:1rem;
+    z-index: 2000;
+    box-shadow: 1px 2px 5px 0px rgba(0,0,0,0.1);
+    width: 80%;
+    margin: auto;
+    display: block;
+    position: relative;
+    margin-top: -2rem;
+    background: #fff;
+    z-index: 2000;
+    box-shadow: 1px 2px 5px 0px rgba(0,0,0,0.1);
+    .title{
+        display:block;
+        color:#333333;
+        font-weight:600;
+    }
+    .address{
+        display:block;
+        color:#aaaaaa;
+    }
+`
+
+const ProductSearcWrapper= styled.div`
+    
+    & input{
+        background:#eeeeee;
+        color:#999;
+    }
+    & input::placeholder{
+        color:#999;
+    }
+    width: 80%;
+    margin: 0.5rem auto;
+    svg{
+        path{
+            fill:#999;
+        }
+    }
 `
