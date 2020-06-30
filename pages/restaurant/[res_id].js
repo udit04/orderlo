@@ -162,15 +162,25 @@ const Categories = styled.div`
     /* color: #ffff; */
     padding-left: 1rem;
     padding-top: 1rem;
+    position: sticky;
+    top: 0;
+    padding-left: 0;
 `
 const CategoriesTitle = styled.div`
     font-size:1rem;
     font-weight:800;
     color:#333;
+    margin-left:1rem;
 `
 const CateogryWrapper = styled.div`
     display:flex;
     overflow-x: scroll;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* IE 10+ */
+    &::-webkit-scrollbar {
+        width: 0px;
+        background: transparent; /* Chrome/Safari/Webkit */
+    }
 
 `
 const Category = styled.div`
@@ -179,6 +189,13 @@ const Category = styled.div`
     color: #999999;
     text-decoration: none;
     margin-left: 0;
+    text-transform:capitalize;
+    &:nth-child(1){
+        margin-left:1rem;
+    }
+    &:last-child(1){
+        margin-right:1rem;
+    }
 `
 
 const CollectionName = styled.div`
