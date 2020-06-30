@@ -46,7 +46,8 @@ export default function Signup(props) {
             if(res.data.user){
                 setOtpMessage('signup successful')
                 setauthData({userData:res.data.user})
-                Router.push('/store');
+                window && window.localStorage.setItem('userData',JSON.stringify(res.data.user));
+                Router.push('/store/1');
             }else{
                 setOtpMessage('')
                 setErr(res.data.message);

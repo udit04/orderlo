@@ -8,15 +8,25 @@ import "slick-carousel/slick/slick.css";
 
 import "slick-carousel/slick/slick-theme.css";
 import '../src/components/Slider.css';
+;
+const initialData = {};
+const initCartData = {};
 
-const initialData = 'darkTheme';
+
 export const AuthContext = React.createContext(initialData);
+export const CartContext = React.createContext(initCartData);
 export default function MyApp(props) {
   const [authData, setauthData] = useState(initialData)
-
+  const [cartData, setCartData] = useState({});
   const { Component, pageProps } = props;
-
+  console.log('____appProps',props);
   React.useEffect(() => {
+    if(window!==undefined){
+      let data = JSON.parse(window.localStorage.getItem('cartData'));
+      let userData = JSON.parse(window.localStorage.getItem('userData'));
+      setauthData(userData);
+      setCartData(data);
+    }
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector('#jss-server-side');
     if (jssStyles) {
@@ -34,7 +44,9 @@ export default function MyApp(props) {
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
         <AuthContext.Provider value={{authData,setauthData}}>
-        <Component {...pageProps} />
+          <CartContext.Provider value={{cartData,setCartData}}>
+            <Component {...pageProps} />
+          </CartContext.Provider>
         </AuthContext.Provider>
       </ThemeProvider>
     </React.Fragment>
