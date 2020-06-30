@@ -35,8 +35,12 @@ export default function checkout() {
             }
         
         }else{
-            setCartObject(null);
-            Router.push('/login');
+            if(cartContext.restaurant ){
+                setCartObject(null);
+                Router.push('/restaurant/'+cartContext.restaurant.id);
+            }else{
+                Router.push('/login')   
+            }
         }
         
     }, [cartContext.cartData && cartContext.cartData.products])
@@ -81,10 +85,10 @@ export default function checkout() {
         if(cartContext.cartData && cartContext.cartData.restaurant && !cartContext.cartData.products.length){
 
             Router.push(`/restaurant/${cartContext.cartData.restaurant.id}`)
-    
+            
         }else{
         }
-        return null
+        return <div></div>
 
     }
     else{
