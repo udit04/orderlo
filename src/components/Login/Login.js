@@ -83,7 +83,7 @@ export default function Login(){
                         userData:res.data.user
                     })
                    window && window.localStorage.setItem('userData',JSON.stringify(res.data.user));
-                    Router.push('/checkout');
+                    
                 }else{
                    
                         setErr(res.data.message)

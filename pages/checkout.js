@@ -8,18 +8,18 @@ import ProductList from '../src/components/ProductList';
 import styled from 'styled-components'
 import productService from '../src/services/productService';
 import OrderSuccessScreen from '../src/components/OrderSuccessScreen';
+import LoginSignup from '../src/components/Login/LoginSignup';
 export default function checkout() {
     const cartContext = useContext(CartContext);
     const userContext = useContext(AuthContext);
     const [cartObject,setCartObject] = useState(null);
 
     const [orderSuccess, setOrderSuccess] = useState(false);
+    const [loginPopup,setLoginPopup] = useState(false);
     useEffect(() => {
         
         if(cartContext.cartData && cartContext.cartData.products && cartContext.cartData.products.length >0 ){ 
-            if(!userContext.authData ){
-                Router.push('/login');
-            }
+            
             let cartQuantity = 0;
             let cartPrice = 0;
             cartContext.cartData.products.forEach(element => {
@@ -38,8 +38,6 @@ export default function checkout() {
             if(cartContext.restaurant ){
                 setCartObject(null);
                 Router.push('/restaurant/'+cartContext.restaurant.id);
-            }else{
-                Router.push('/login')   
             }
         }
         
@@ -51,31 +49,36 @@ export default function checkout() {
     const placeOrderClick = ()=>{
         const cartData = cartContext.cartData;
         const userData = userContext.authData;
-        const placeOrderObject = {
-            "user_id" : userData.user_id,
-            "store_id" : cartData.store.id,
-            "restaurant_id": cartData.restaurant.id,
-            "products":cartData.products,
-            "payment_method": "cod",
-            "cart_amount":cartObject.cartPrice,
-            "total_tax":5,
-            "total_amount": ( (parseFloat(cartContext.cartData.restaurant.vat_tax) + parseFloat(cartContext.cartData.restaurant.gst_tax))*cartObject.cartPrice/100)+(cartContext.cartData.restaurant.service_charge*cartObject.cartPrice/100)+(cartObject.cartPrice),
-            "payment_status": "cod"
-        }
-        productService.placeOrder(placeOrderObject).then(res=>{
-            if(res.status===200){
-                
-                setOrderSuccess(true);
-                const updatedCartData = {
-                    ...cartContext.cartData,
-                    products:[]
-                }
-                window.localStorage.setItem('cartData',JSON.stringify(updatedCartData))
-                
+        if(cartData && userData && userData.user_id){
+            const placeOrderObject = {
+                "user_id" : userData.user_id,
+                "store_id" : cartData.store.id,
+                "restaurant_id": cartData.restaurant.id,
+                "products":cartData.products,
+                "payment_method": "cod",
+                "cart_amount":cartObject.cartPrice,
+                "total_tax":5,
+                "total_amount": ( (parseFloat(cartContext.cartData.restaurant.vat_tax) + parseFloat(cartContext.cartData.restaurant.gst_tax))*cartObject.cartPrice/100)+(cartContext.cartData.restaurant.service_charge*cartObject.cartPrice/100)+(cartObject.cartPrice),
+                "payment_status": "cod"
             }
-        }).catch(err=>{
-            console.log()
-        });
+            productService.placeOrder(placeOrderObject).then(res=>{
+                if(res.status===200){
+                    
+                    setOrderSuccess(true);
+                    const updatedCartData = {
+                        ...cartContext.cartData,
+                        products:[]
+                    }
+                    window.localStorage.setItem('cartData',JSON.stringify(updatedCartData))
+                    
+                }
+            }) .catch(err=>{
+                console.log()
+            });
+        }else{
+            setLoginPopup(true);
+        }
+       
     }
     const clearCartAndRedirect = ()=>{
         onBack();
@@ -98,6 +101,8 @@ export default function checkout() {
             )
         }else{
             return (
+                <React.Fragment>
+                   { loginPopup && <LoginSignup placeOrderClick={placeOrderClick} setLoginPopup={setLoginPopup} /> }
                 <Flex column>
                     <StackHeader>
                         <Flex justifyBetween alignCenter>
@@ -122,6 +127,7 @@ export default function checkout() {
                     </FinalPayAmount>
                     <ProceedToPay  onClick={placeOrderClick}>Proceed to pay <span><RupeeIcon  height={8} width={8}/>{((parseFloat(cartContext.cartData.restaurant.vat_tax) + parseFloat(cartContext.cartData.restaurant.gst_tax))*cartObject.cartPrice/100)+(cartContext.cartData.restaurant.service_charge*cartObject.cartPrice/100)+(cartObject.cartPrice)}</span></ProceedToPay>
                 </Flex>
+                </React.Fragment>
             )
         }
         
