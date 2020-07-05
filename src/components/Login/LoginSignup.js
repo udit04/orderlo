@@ -10,7 +10,7 @@ export default function LoginSignup(props) {
   const userContext = useContext(AuthContext);
   const authData = userContext.authData;
   useEffect(() => {
-    if(authData && authData.userData.user_id){
+    if(authData && authData.userData && authData.userData.user_id){
     //   Router.push('/store/1');
     }
     return () => {

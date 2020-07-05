@@ -35,9 +35,9 @@ export default function checkout() {
             }
         
         }else{
-            if(cartContext.restaurant ){
+            if(cartContext.cartData && cartContext.cartData.restaurant ){
                 setCartObject(null);
-                Router.push('/restaurant/'+cartContext.restaurant.id);
+                Router.push('/restaurant/'+cartContext.cartData.restaurant.id);
             }
         }
         
@@ -51,7 +51,7 @@ export default function checkout() {
         const authData = userContext.authData;
         if(cartData && authData.userData && authData.userData.user_id){
             const placeOrderObject = {
-                "user_id" : authData.userData.user_id,
+                "user_id" : authData.userData && authData.userData.user_id?authData.userData.user_id:null,
                 "store_id" : cartData && cartData.store && cartData.store.id?cartData.store.id:null,
                 "restaurant_id": cartData.restaurant.id,
                 "products":cartData.products,
