@@ -2,7 +2,7 @@ import React,{useContext, useEffect} from 'react'
 import  Flex  from 'styled-flex-component';
 import styled from 'styled-components'
 import { AuthContext } from '../../pages/_app';
-import Router from 'next/dist/next-server/server/router';
+import Router from 'next/router';
 export default function Sidebar() {
     const data = useContext(AuthContext);
     console.log(data,"____");
