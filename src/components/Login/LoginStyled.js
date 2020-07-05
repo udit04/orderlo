@@ -105,6 +105,11 @@ export const TextInput = styled.input`
     &:focus{
         border:1px solid #3c4dae;
     }
+    @media screen and (min-width : 960px){
+        /* font-size: 1.8rem;
+        padding: 1em;
+        margin-bottom: 1.5rem; */
+    }
 `
 export const Separator = styled.div`
     color:#333333;

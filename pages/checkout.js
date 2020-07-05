@@ -52,7 +52,7 @@ export default function checkout() {
         if(cartData && userData && userData.user_id){
             const placeOrderObject = {
                 "user_id" : userData.user_id,
-                "store_id" : cartData.store.id,
+                "store_id" : cartData && cartData.store && cartData.store.id?cartData.store.id:null,
                 "restaurant_id": cartData.restaurant.id,
                 "products":cartData.products,
                 "payment_method": "cod",
