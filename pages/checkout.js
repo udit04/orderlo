@@ -48,10 +48,10 @@ export default function checkout() {
 
     const placeOrderClick = ()=>{
         const cartData = cartContext.cartData;
-        const userData = userContext.authData;
-        if(cartData && userData && userData.user_id){
+        const authData = userContext.authData;
+        if(cartData && authData.userData && authData.userData.user_id){
             const placeOrderObject = {
-                "user_id" : userData.user_id,
+                "user_id" : authData.userData.user_id,
                 "store_id" : cartData && cartData.store && cartData.store.id?cartData.store.id:null,
                 "restaurant_id": cartData.restaurant.id,
                 "products":cartData.products,
