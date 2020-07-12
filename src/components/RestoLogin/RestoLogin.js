@@ -2,7 +2,7 @@ import React, { useState, useEffect,useContext } from 'react'
 import styled,{keyframes} from 'styled-components'
 import Flex from 'styled-flex-component'
 import { BackIcon } from '../../Icons';
-import { loginService } from '../../services/loginService';
+import { RestoLoginService } from '../../services/restoLoginService';
 import {SignupContainer,BackButton,StackHeader,LoginCard,TextInput,TextInputWrapper,Separator,SolidButton,LoginText,LoginHeader,Tagline,SuccessText,ErrorText} from '../Login/LoginStyled';
 import RestoSignup from './RestoSignup';
 import { AuthContext } from '../../../pages/_app';
@@ -14,137 +14,80 @@ export default function Login(){
     const [mobile_number,setMobileNumber] = useState('');
     const [otp, setOtp] = useState('')
     const [err, setErr] = useState(null);
-    const [otpMessage,setOtpMessage]  = useState('');
+    const [message,setMessage]  = useState('');
     const [disable,setDisable] = useState(true);
-    const [pin, setPin] = useState('')
     const {authData,setauthData} = useContext(AuthContext);
-    const [otpSent, setotpSent] = useState(false)
     const [pinType, setPinType] = useState('password')
-    const sendOtp = ()=>{
-        if(!(mobile_number.length===10 && mobile_number.match(/^[0-9]+$/) != null)){
-            setErr('Enter correct Phone number');
-        }else{
-            loginService.sendOtp({
-                "phone_number" : mobile_number,
-                "new_user": false
-            }).then(res=>{
-                if(res.status===200){
-                    if(res.data.createNewUser){
-                        setErr(res.data.message+ '! You need to register first' );
-                        setOtpMessage('');
-                        setTimeout(()=>{
-                                setSignup(true);
-                        },1000)
-                    }else{
-                        setOtpMessage('Otp sent successfully!');
-                        setDisable(false);
-                        setErr('')
-                        setotpSent(true);
-                    }
-                    
-                    
-                }else{
-                    setOtpMessage('');
-                    setErr(res.data.message)
-                    setDisable(true);
-                }
-                console.log(res);
-            }).catch(err=>{
-                console.log(err);
-                setOtpMessage('');
-                setErr('some error occured')
-                setDisable(false);
-            })
-        }
-        
-           
-    }
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
     const handleFormChange =(e)=>{
-        if(e.target.name==='phone_number' && e.target.value.length <=10){
-            setMobileNumber(e.target.value);
-        }else if(e.target.name==='otp' && e.target.value.length<=6){
-            setOtp(e.target.value);
-        }else if(e.target.name==='pin' && e.target.value.length<=6){
-            setPin(e.target.value);
+        if(e.target.name==='username' && e.target.value.length<=10){
+            setUsername(e.target.value);
+            
+        }else if(e.target.name==='password' && e.target.value.length<=10){
+
+            setPassword(e.target.value)
+
         }
+
     }
-    const verifyOtp = ()=>{
-        loginService.verifyOtpOldUser({
-            pin:pin,
-            otp:otp,
-            "role_id": 1,
-            phone_number:mobile_number
-        }).then(res=>{
-            if(res.status === 200){
-                if(res.data && res.data.user && res.data.user.user_id){
-                    setErr('');
-                    setOtpMessage(res.data.message);
-                    setauthData({
-                        userData:res.data.user
-                    })
-                   window && window.localStorage.setItem('userData',JSON.stringify(res.data.user));
-                    
+    
+    const handleSubmit = (e)=>{
+        RestoLoginService.loginResto({username,password}).then(res=>{
+            if(res.data ){
+                if(res.data && res.data.createNewRestaurant){
+                    setMessage('');
+                    setErr(res.data.message);
+                    setTimeout(()=>{
+                        setSignup(true);
+                    },1000);
                 }else{
-                   
-                        setErr(res.data.message)
-                        setOtpMessage('');
-                    
+                    setErr('');
+                    setMessage(res.data.message)
                 }
+                
             }else{
-                setErr(res.data.message);
-                setOtpMessage('');
+
             }
         }).catch(err=>{
             console.log(err);
-            setErr('some error occured');
-            setOtpMessage('');
-            if(err.response && err.response.data.message){
-                setErr(err.response.data.message);
-            }
         })
-    }
-    const handleSubmit = (e)=>{
-        verifyOtp();
     }
     return (
         <div>
-                <LoginWrapper>
-                    <LoginHeader>
-                        Welcome to Ordrlo
-                    </LoginHeader>
-                    <Tagline>SignIn</Tagline>
-                    {otpMessage && otpMessage!=='' && <SuccessText>{otpMessage}</SuccessText>}
-                    {err && err!=='' && <ErrorText>{err}</ErrorText>}
-                    <TextInputWrapper>
-                        <TextInput  type='number' disbaled={otpSent}  placeholder='Email/Mobile number' name='phone_number' onChange={handleFormChange} value={mobile_number} />
-                        <img src={require('../../../public/static/phone.png')}/>
-                    </TextInputWrapper>
-                   {    otpSent || true
-                            ?
-                        <>
-                            {/* <TextInputWrapper>
-                            <TextInput type='number' id='otp' name='otp' placeholder='OTP' onChange={handleFormChange} value={otp}/>
-                            <Flex justifyEnd><span onClick={sendOtp}>Resend Otp</span></Flex>
-                            <img src={require('../../../public/static/lock.png')}/>
-                            </TextInputWrapper> */}
-                            {/* <Separator>Or</Separator> */}
-                            <TextInputWrapper>
-                                <TextInput id='pin' name='pin' onChange={handleFormChange} value={pin} placeholder='6 digit pin'  type={pinType}/>
-                                <Flex justifyEnd><span >Forgot password</span></Flex>
-                                <img onClick={()=>setPinType(pinType==='password'?'text':'password')} src={require('../../../public/static/lock.png')}/>
-                            </TextInputWrapper>
-                            
-                            <SolidButton as='button' disabled={disable} onClick={handleSubmit}>SignIn</SolidButton>
-                        </>
-                        :
-                         <SolidButton as='button' onClick={sendOtp}>Continue</SolidButton>
-                   }
-                    <LoginText>Don't have an account yet?<br/><span onClick={()=>{setSignup(true)}}>Create an account</span></LoginText>
-                </LoginWrapper>
+                <LoginPage>
+                    { !showSignup
+                        && 
+                    <LoginWrapper>
+                        <LoginHeader>
+                            Welcome to Ordrlo
+                        </LoginHeader>
+                        <Tagline>SignIn</Tagline>
+                        {message && message!=='' && <SuccessText>{message}</SuccessText>}
+                        {err && err!=='' && <ErrorText>{err}</ErrorText>}
+                        <TextInputWrapper>
+                            <TextInput  type='text'  placeholder='Username' name='username' onChange={handleFormChange} value={username} />
+                            <img src={require('../../../public/static/phone.png')}/>
+                        </TextInputWrapper>
                     
-           { showSignup
-              &&
-            <RestoSignup mobile_number={mobile_number} closeSignup={setSignup}/>}
+                                <TextInputWrapper>
+                                    <TextInput id='password' name='password' onChange={handleFormChange} value={password} placeholder='password'  type={pinType}/>
+                                    <Flex justifyEnd><span >Forgot password</span></Flex>
+                                    <img onClick={()=>setPinType(pinType==='password'?'text':'password')} src={require('../../../public/static/lock.png')}/>
+                                </TextInputWrapper>
+                                
+                                <SolidButton as='button' disabled={!(username.length>0 && password.length>0)} onClick={handleSubmit}>SignIn</SolidButton>
+                            
+                        <LoginText>Don't have an account yet?<br/><span onClick={()=>{setSignup(true)}}>Create an account</span></LoginText>
+                    </LoginWrapper>
+                    }
+                        
+                    { showSignup
+                        &&
+                        <RestoSignup username={username} closeSignup={setSignup}/>}
+
+                    <img src={require('../../../public/static/mockup.jpg')}/>
+                </LoginPage>
         </div>
     )
 }
@@ -176,6 +119,34 @@ const LoginWrapper = styled.div`
     padding:1rem;
     padding-top: 10rem;
     border-radius: 0;
-    
-    
+    @media screen and (min-width : 960px){
+        position:relative;
+        max-width: 600px;
+        background: #ffff;
+        height: calc(100vh - 50px);
+        /* margin-top: 50px;
+        margin-left: 50px; */
+        border-radius: 50px 50px 0 0;
+    }
+
+`
+
+const LoginPage = styled.div`
+    background:#3c4dae;
+    position:relative;
+    padding: 50px;
+    display:flex;
+    justify-content:space-between;
+    &> img{
+        display:block;
+        object-fit:contain;
+        margin:1rem;
+        max-width:500px;
+    }
+    @media screen and (max-width : 960px){
+        display:block;
+        &> img{
+        display:none;
+        }
+    }
 `

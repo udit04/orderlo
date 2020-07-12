@@ -28,6 +28,17 @@ export const SignupContainer = styled.div`
     background-image: url(data:image/svg+xml;base64,PHN2ZyBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MTAgODIzIj48ZyBjbGlwLXBhdGg9InVybCgjY2xpcDApIj48cGF0aCBmaWxsPSIjNkQ4M0RCIiBkPSJNMCAwaDQxMHY4MjNIMHoiLz48cGF0aCBmaWxsPSIjNkQ4M0RCIiBkPSJNMCAwaDQxMXY0MzVIMHoiLz48cGF0aCBkPSJNMSAxaDQwOXYzOTJMMjA0IDUxMyAxIDM5M1YxeiIgZmlsbD0iIzNDNERBRSIvPjwvZz48ZGVmcz48Y2xpcFBhdGggaWQ9ImNsaXAwIj48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMCAwaDQxMHY4MjNIMHoiLz48L2NsaXBQYXRoPjwvZGVmcz48L3N2Zz4=);
     background-repeat: no-repeat;
     animation : ${slideIn} 0.3s;
+    @media screen and (min-width : 960px){
+        position:relative;
+        min-width:600px;
+        max-width: 600px;
+        background: #ffff;
+        height: calc(100vh - 50px);
+        /* margin-top: 50px;
+        margin-left: 50px; */
+        border-radius: 50px 50px 0 0;
+        animation:none;
+    }
 `
 export const StackHeader = styled.div`
     color:#ffffff;
@@ -59,6 +70,7 @@ export const LoginCard = styled.div`
     max-width:500px;
     top: 50%;
     bottom: auto;
+    
     &.signupCard{
         top: 55%;
         bottom: auto;
@@ -70,6 +82,14 @@ export const LoginCard = styled.div`
     .slick-dots li button:before{
         font-size:1rem;
     }
+    @media screen and (min-width : 960px){
+        &.signupCard{ 
+            position:relative;
+            top:50%;
+            box-shadow:none;
+        }
+    }
+    
 `
 export const TextInputWrapper = styled.div`
 width:100%;
@@ -90,7 +110,10 @@ margin-top:1rem;
     span{
         color:#3c4dae;
     }
-}
+    @media screen and (min-width : 960px){
+        margin-top:1.5rem;
+    }
+
 `
 export const TextInput = styled.input`
     box-shadow:none;

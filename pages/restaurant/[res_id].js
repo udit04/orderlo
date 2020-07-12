@@ -198,7 +198,7 @@ const Category = styled.div`
     }
 `
 
-const CollectionName = styled.div`
+export const CollectionName = styled.div`
     padding: 0.5rem 1rem;
     padding-bottom:0.25rem;
     font-weight: 700;

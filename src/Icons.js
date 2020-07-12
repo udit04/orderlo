@@ -75,6 +75,7 @@ export const VegIcon = (props) => {
         width={props.width}
         height={props.height}
         viewBox="0 0 14 14"
+        {...rest}
       >
         <g fill="none" fill-rule="evenodd" transform="translate(0 1)">
           <rect
@@ -101,6 +102,7 @@ export const VegIcon = (props) => {
         width={props.width}
         height={props.height}
         viewBox="0 0 14 14"
+        {...rest}
       >
         <g fill="none" fill-rule="evenodd" transform="translate(0 1)">
           <rect

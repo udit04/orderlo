@@ -14,7 +14,7 @@ export default function ProductList(props) {
         return (
         <ProductContainer className={props.className?props.className:''}>
             <Flex column >
-                {props.productsData.map(data=><Product restaurant={props.restaurant} data={data}/>)}
+                {props.productsData.map(data=><Product dashboard={props.dashboard} restaurant={props.restaurant} data={data}/>)}
                 {/* <Product/> */}
             </Flex>
         </ProductContainer>    
