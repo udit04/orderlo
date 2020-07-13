@@ -40,6 +40,9 @@ export default function RestoSignup(props) {
         RestoLoginService.signupResto(formData).then(res=>{
             if(res.data){
                 setMessage(res.data.message);
+                if(res.data.restaurant){
+                    Router.push(`/dashboard/${restaurant.id}`)
+                }
             }else{
                 
             }

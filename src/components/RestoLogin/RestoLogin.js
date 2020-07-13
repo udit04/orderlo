@@ -109,7 +109,6 @@ const RestoLoginContainer = styled.div`
 
 `
 const LoginWrapper = styled.div`
-
     left: 0;
     right: 0;
     width: 100%;
@@ -128,7 +127,6 @@ const LoginWrapper = styled.div`
         margin-left: 50px; */
         border-radius: 50px 50px 0 0;
     }
-
 `
 
 const LoginPage = styled.div`

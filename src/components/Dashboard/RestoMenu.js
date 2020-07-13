@@ -5,14 +5,14 @@ import { CollectionName } from '../../../pages/restaurant/[res_id]';
 import styled from 'styled-components'
 function RestoMenu(props) {
     // const {res_id} = props;
-    const res_id = 1;
+    const {res_id} = props;
     const [collections, setCollections] = useState([]);
     const [productsData,setProductsData] = useState([]);
     const [restaurant,setRestaurant] = useState(null);
     useEffect(() => {
         if(res_id)
         {
-            productService.getRestoProducts({id:1}).then(res=>{
+            productService.getRestoProducts({id:res_id}).then(res=>{
                 if(res.status===200){
                     console.log(res.data)
                     setProductsData(res.data.products);
