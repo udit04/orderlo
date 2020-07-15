@@ -10,7 +10,7 @@ export default function BottomTab() {
     const [cartObject,setCartObject] = useState(null);
     useEffect(() => {
         
-        if(cartContext.cartData.products && cartContext.cartData.products.length >0 ){ 
+        if(cartContext.cartData && cartContext.cartData.products && cartContext.cartData.products.length >0 ){ 
             let cartQuantity = 0;
             let cartPrice = 0;
             cartContext.cartData.products.forEach(element => {

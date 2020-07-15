@@ -123,21 +123,21 @@ export default function Restaurant(props) {
                     <ProductSearch value={search} clearSearcj={()=>{setSearch('')}} placeholder='Search food' onChange={onProductSearch}/>
                 </ProductSearcWrapper>
                 
-                {/* <Categories>
+                <Categories>
                     <CategoriesTitle>Top Categories</CategoriesTitle>
                     <CateogryWrapper>
                         
-                        {
-                        productsData &&  [...new Set(productsData.map(item => item.category))].map(category=>(
-                            <Category>{category}</Category>
+                        
+                        {(search!==''?filteredData:collections).map(collection=>(
+                            <Category as='a' href={'#'+collection.name}>{collection.name}</Category>
                             ))
                         }
                     </CateogryWrapper>
-                </Categories> */}
+                </Categories>
                 {(search!==''?filteredData:collections).map(collection=>{
                     return(
                         <>
-                        <CollectionName>{collection.name}</CollectionName>
+                        <CollectionName id={collection.name}>{collection.name}</CollectionName>
                         <ProductList restaurant={restaurant} productsData={collection.products}/>
                         </>
                         
@@ -157,28 +157,48 @@ export default function Restaurant(props) {
     )
 }
 
-// const Categories = styled.div`
-//     background: #fff;
-//     /* color: #ffff; */
-//     padding-left: 1rem;
-//     padding-top: 1rem;
-// `
-// const CategoriesTitle = styled.div`
-//     font-size:1rem;
-//     font-weight:800;
-//     color:#333;
-// `
-// const CateogryWrapper = styled.div`
-//     display:flex;
-//     overflow-x: scroll;
+const Categories = styled.div`
+    background: #fff;
+    /* color: #ffff; */
+    padding-left: 1rem;
+    padding-top: 1rem;
+    position: sticky;
+    top: 0;
+    padding-left: 0;
+`
+const CategoriesTitle = styled.div`
+    font-size:1rem;
+    font-weight:800;
+    color:#333;
+    margin-left:1rem;
+`
+const CateogryWrapper = styled.div`
+    display:flex;
+    overflow-x: scroll;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* IE 10+ */
+    &::-webkit-scrollbar {
+        width: 0px;
+        background: transparent; /* Chrome/Safari/Webkit */
+    }
 
-// `
-// const Category = styled.div`
-//     margin:0.5rem;
-//     white-space:nowrap;
-// `
+`
+const Category = styled.div`
+    margin:0.5rem;
+    white-space:nowrap;
+    color: #999999;
+    text-decoration: none;
+    margin-left: 0;
+    text-transform:capitalize;
+    &:nth-child(1){
+        margin-left:1rem;
+    }
+    &:last-child(1){
+        margin-right:1rem;
+    }
+`
 
-const CollectionName = styled.div`
+export const CollectionName = styled.div`
     padding: 0.5rem 1rem;
     padding-bottom:0.25rem;
     font-weight: 700;

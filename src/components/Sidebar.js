@@ -2,9 +2,10 @@ import React,{useContext, useEffect} from 'react'
 import  Flex  from 'styled-flex-component';
 import styled from 'styled-components'
 import { AuthContext } from '../../pages/_app';
+import Router from 'next/router';
 export default function Sidebar() {
     const data = useContext(AuthContext);
-    console.log(data,"____");
+    // console.log(data,"____");
     useEffect(() => {
         if(!JSON.parse(window.localStorage.getItem('userData')) ){
            data.setauthData(JSON.parse(window.localStorage.getItem('userData')));
@@ -12,9 +13,10 @@ export default function Sidebar() {
         return () => {
             
         }
-    }, [data.authData])
+    }, [data.authData && data.authData.user_id])
     const logout = ()=>{
-        window.localStorage.setItem('userData',null);
+        Router.push('/logout');
+        window.localStorage.removeItem('userData');
         data.setauthData(null);
         
     }

@@ -16,9 +16,14 @@ export default function Product(props) {
                     <LocationName><RupeeIcon color={'#f1a62d'} height={8} width={8}/>{data.price}</LocationName>
                 
                 </Flex>
+                {!props.dashboard
+                ?
                 <Flex alignCenter justifyBetween>
                     <AddButton restaurant={restaurant} product={data}></AddButton>
                 </Flex>
+                :
+                ''
+                }
             </ProductContent>
         </Wrapper>
     )
@@ -47,6 +52,9 @@ const ProductName = styled.div`
     font-size:12px;
     font-weight:500;
     line-height: 1;
+    @media screen and (min-width:600px){
+        font-size:16px;
+    }
 `
 const RestaurentName = styled.div`
     font-size:10px;

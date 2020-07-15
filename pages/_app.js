@@ -24,7 +24,7 @@ export default function MyApp(props) {
     if(window!==undefined){
       let data = JSON.parse(window.localStorage.getItem('cartData'));
       let userData = JSON.parse(window.localStorage.getItem('userData'));
-      setauthData(userData);
+      setauthData({userData:userData});
       setCartData(data);
     }
     // Remove the server-side injected CSS.

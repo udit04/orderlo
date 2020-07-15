@@ -64,9 +64,10 @@ export default function AddButton(props) {
             }
             
         }else{
+            let data ={}
             if(cartData && !cartData.products){
 
-                const data = {
+                 data = {
                     ...cartData,
                     restaurant:{...restaurant},
                     products:[
@@ -78,10 +79,21 @@ export default function AddButton(props) {
 
                 }
                 
+                
+            }else if(!cartData){
+                data = {
+                    restaurant:{...restaurant},
+                    products:[
+                        {
+                            ...product,
+                            quantity:1
+                        }
+                    ],
+                }
+            }
                 window.localStorage.setItem('cartData',JSON.stringify(data));
                 cartContext.setCartData(data);
                 setQuantity(1)
-            }
 
         }
     }
