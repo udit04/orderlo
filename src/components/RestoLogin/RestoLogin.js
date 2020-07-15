@@ -38,12 +38,19 @@ export default function Login(){
                 if(res.data && res.data.createNewRestaurant){
                     setMessage('');
                     setErr(res.data.message);
+                    
                     setTimeout(()=>{
                         setSignup(true);
                     },1000);
                 }else{
                     setErr('');
                     setMessage(res.data.message)
+                    if(res.data && res.data.restaurant){
+                        setMessage(res.data.message);
+                        if(res.data.restaurant){
+                            Router.push(`/dashboard/${res.data.restaurant.id}`)
+                        }
+                    }
                 }
                 
             }else{

@@ -41,7 +41,7 @@ export default function RestoSignup(props) {
             if(res.data){
                 setMessage(res.data.message);
                 if(res.data.restaurant){
-                    Router.push(`/dashboard/${restaurant.id}`)
+                    Router.push(`/dashboard/${res.data.restaurant.id}`)
                 }
             }else{
                 

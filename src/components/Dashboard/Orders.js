@@ -31,7 +31,7 @@ function Orders(props) {
         <OrdersWrapper>
             <div className="title">Orders</div>
             <OrderTabs>
-                <OrderTab onClick={()=>{setOrderTab(0)}} className={orderTab===0?'active':''}>Pending orders</OrderTab>
+                <OrderTab onClick={()=>{setOrderTab(0)}} className={orderTab===0?'active newOrders':'newOrders'}>Pending orders</OrderTab>
                 <OrderTab onClick={()=>{setOrderTab(1)}} className={orderTab===1?'active':''}>Completed orders</OrderTab>
                 <OrderTab>Order history</OrderTab>
             </OrderTabs>
@@ -159,7 +159,7 @@ const OrderTab = styled.div`
         border-bottom:2px solid currentColor;
         
     }
-    &.active:before {
+    &.newOrders:before {
         content: 'New Orders';
         position: absolute;
         padding: 0.1rem 0.3rem;;

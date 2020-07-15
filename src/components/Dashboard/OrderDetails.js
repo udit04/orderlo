@@ -3,7 +3,10 @@ import  Flex,{FlexItem}  from 'styled-flex-component';
 import { FieldValue,FieldName } from './Orders';
 import styled from 'styled-components'
 import { IsVeg } from '../IsVeg';
+import { SolidButton } from '../Login/LoginStyled';
 // import OrderDetails from './OrderDetails';
+import StyledModal from '../Modal/StyledModal';
+
 function OrderDetails(props) {
     const {orderDetail} = props;
     console.log(props.orderDetail && orderDetail.products);
@@ -216,8 +219,13 @@ function OrderDetails(props) {
                     </FlexItem>
                 </Flex>
             <Separator/>
+            <SolidButton onClick={props.openBillModal}>
+                Genrate Bill
+            </SolidButton>
             {/* </CartProduct> */}
+            
             </div>
+
         </DetailsWrapper>
         )
     }
