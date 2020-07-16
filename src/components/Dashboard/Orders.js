@@ -6,6 +6,7 @@ function Orders(props) {
     const [err, setErr] = useState(null)
     const [ordersData,setOrdersData] = useState(null);
     const [orderTab,setOrderTab] = useState(0)
+
     useEffect(() => {
 
         RestoService.getOrders({id:props.id}).then(res=>{
@@ -41,13 +42,19 @@ function Orders(props) {
                 <OrdersListWrapper>
                     <OrdersCount>Today <span>{ordersData.menu.length}</span></OrdersCount>
                     { orderTab ===0 && 
-                    ordersData.menu.filter(data=>data.order_status==="accepted").map(data=>{
+                    ordersData.menu.filter(data=>((data.order_status==="accepted"||data.order_status==="created") && payment_status ==='pending') ).map(data=>{
                         return(
                             <Order setOrderDetail={props.setOrderDetail} data={data}/>
                         )
                     })}
                     { orderTab === 1 && 
-                    ordersData.menu.filter(data=>data.order_status!=="accepted").map(data=>{
+                    ordersData.menu.filter(data=>(data.order_status==="delivered") && payment_status ==='success').map(data=>{
+                        return(
+                            <Order setOrderDetail={props.setOrderDetail} data={data}/>
+                        )
+                    })}
+                    { orderTab === 1 && 
+                    ordersData.menu.filter(data=>(data.order_status!=="created" && data.order_status!=="accepted") ).map(data=>{
                         return(
                             <Order setOrderDetail={props.setOrderDetail} data={data}/>
                         )
@@ -96,10 +103,19 @@ function Order(props){
     <FieldValue>{data.id}</FieldValue>
                 </Flex>
                 <FlexItem grow="1">
-                    <Flex column  className='orderColumn' justifyCenter alignCenter>
+                    <Flex column  className='orderColumn' justifyCenter={data.order_status==='created'} alignCenter>
                         {/* <FieldName>Total</FieldName>
                         <FieldValue>Rs. 342</FieldValue> */}
+                        {data.order_status==='created'
+                            ?
                         <ConfirmButton onClick={acceptOrder}>Accept</ConfirmButton>
+                        :
+                        <>
+                        <FieldName>Total</FieldName>
+                        <FieldValue>Rs. 342</FieldValue>
+                        </>
+                        }
+                        
                     </Flex>
                    
                 </FlexItem>
