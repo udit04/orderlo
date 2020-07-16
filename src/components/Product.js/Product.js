@@ -6,6 +6,7 @@ import { IsVeg } from '../IsVeg';
 import AddButton from '../AddButton';
 export default function Product(props) {
     const {data,restaurant} = props;
+    if(!data) return <React.Fragment></React.Fragment>
     return (
         <Wrapper>
             <img src={data.image}/>

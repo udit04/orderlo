@@ -1,6 +1,5 @@
 import axios from 'axios'
-
-const baseUrl = 'https://api-ordrlo.herokuapp.com'
+import { baseUrl } from '../helpers/constants';
 
 const ax = axios.create({
     baseURL: baseUrl,
