@@ -245,7 +245,7 @@ export default function Restaurant(props) {
                 <Categories>
                     <CategoriesTitle>Top Categories</CategoriesTitle>
                     <CateogryWrapper>
-                        {   productsData && search===''
+                        {   productsData && search!==''
                                 ?
                             productsData.map(collection=>{
                                 return(
@@ -275,7 +275,7 @@ export default function Restaurant(props) {
                             :
                             ''
                         }
-                        {   productsData && search!==''
+                        {   productsData && search===''
                                 ?
                             productsData.map(collection=>{
                                 return(
