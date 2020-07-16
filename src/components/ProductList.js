@@ -11,14 +11,26 @@ export default function ProductList(props) {
        )
     }
     else {
-        return (
-        <ProductContainer className={props.className?props.className:''}>
-            <Flex column >
-                {props.productsData.map(data=><Product dashboard={props.dashboard} restaurant={props.restaurant} data={data}/>)}
-                {/* <Product/> */}
-            </Flex>
-        </ProductContainer>    
-        )
+        if(props.search && props.search.length>0 ){
+            return (
+                <ProductContainer className={props.className?props.className:''}>
+                    <Flex column >
+                        {props.productsData.filter(p=>(p.name.toLowerCase().indexOf(props.search.toLowerCase()) !== -1)).map(data=><Product dashboard={props.dashboard} restaurant={props.restaurant} data={data}/>)}
+                        {/* <Product/> */}
+                    </Flex>
+                </ProductContainer>  
+            )  
+        }else{
+            return (
+                <ProductContainer className={props.className?props.className:''}>
+                    <Flex column >
+                        {props.productsData.map(data=><Product dashboard={props.dashboard} restaurant={props.restaurant} data={data}/>)}
+                        {/* <Product/> */}
+                    </Flex>
+                </ProductContainer>    
+                )
+        }
+       
     }
 }
 

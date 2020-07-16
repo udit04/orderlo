@@ -53,12 +53,18 @@ export default function checkout() {
         const authData = userContext.authData;
         if(table!==''){
             if(cartData && authData.userData && authData.userData.user_id){
-
+                const products = cartData.products.map(product=>{
+                    return {
+                        product_id:product.id,
+                        addons:[],
+                        qty:product.quantity
+                        }
+                })
                 const placeOrderObject = {
                     "user_id" : authData.userData && authData.userData.user_id?authData.userData.user_id:null,
                     "store_id" : cartData && cartData.store && cartData.store.id?cartData.store.id:null,
                     "restaurant_id": cartData.restaurant.id,
-                    "products":cartData.products,
+                    "products": products,
                     "payment_method": "cod",
                     "order_status": "created",
                     "cart_amount":cartObject.cartPrice,
