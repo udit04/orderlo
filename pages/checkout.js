@@ -60,10 +60,11 @@ export default function checkout() {
                     "restaurant_id": cartData.restaurant.id,
                     "products":cartData.products,
                     "payment_method": "cod",
+                    "order_status": "created",
                     "cart_amount":cartObject.cartPrice,
                     "total_tax":5,
                     "total_amount": ( (parseFloat(cartContext.cartData.restaurant.vat_tax) + parseFloat(cartContext.cartData.restaurant.gst_tax))*cartObject.cartPrice/100)+(cartContext.cartData.restaurant.service_charge*cartObject.cartPrice/100)+(cartObject.cartPrice),
-                    "payment_status": "cod",
+                    "discount": 0,
                     "table_no": table
                 }
                 productService.placeOrder(placeOrderObject).then(res=>{

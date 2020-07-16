@@ -10,7 +10,7 @@ const ax = axios.create({
   
  const getRestoProducts = (body)=>{
     const {id} = body;
-    return ax.get(`/v1/api/fetch_products?id=${id}`)
+    return ax.get(`/v1/api/fetch_restaurant_menu?restaurant_id=${id}&for_customer=true`)
 }
 const getStoreRestos = (body)=>{
     const {store_id}=body;
