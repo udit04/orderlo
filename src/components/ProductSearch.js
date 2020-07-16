@@ -5,7 +5,7 @@ export default function ProductSearch(props) {
     return (
             <SearchWrapper>
                 <SearchInput onChange={props.onChange} value={props.value} placeholder={props.placeholder?props.placeholder:"Search Restaurant, Cuisine"}/>
-                {props.value!==''?<CloseIcon onClick={props.clearSearcj} height={20} width={20}/>:<SearchIcon height={20} width={20}/>}
+                {props.value!==''?<CloseIcon onClick={props.clearSearch} height={20} width={20}/>:<SearchIcon height={20} width={20}/>}
             </SearchWrapper>
     )
 }

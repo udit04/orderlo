@@ -239,13 +239,63 @@ export default function Restaurant(props) {
                     }
                 </RestoDetails>
                 <ProductSearcWrapper>
-                    <ProductSearch value={search} clearSearcj={()=>{setSearch('')}} placeholder='Search food' onChange={onProductSearch}/>
+                    <ProductSearch value={search} clearSearch={()=>{setSearch('')}} placeholder='Search food' onChange={onProductSearch}/>
                 </ProductSearcWrapper>
                 
                 <Categories>
                     <CategoriesTitle>Top Categories</CategoriesTitle>
                     <CateogryWrapper>
-                        
+                        {   productsData && search!==''
+                                ?
+                            productsData.map(collection=>{
+                                return(
+                                    <>{
+                                        collection.products.filter(p=>(p.name.toLowerCase().indexOf(search.toLowerCase()) !== -1)).length>0
+                                        &&
+                                        <Category onClick={()=>{if(window!==undefined) document.getElementById(collection.name).scrollIntoView({behavior: "smooth", block: "center", inline: "center"});}} >{collection.name}</Category>
+                                        }
+                                    
+                                    {
+                                        collection.subCategory.map(coll=>{
+                                            return(
+                                                <>
+                                                {
+                                                    coll.products.filter(p=>(p.name.toLowerCase().indexOf(search.toLowerCase()) !== -1)).length>0
+                                                        &&
+                                                    <Category onClick={()=>{if(window!==undefined) document.getElementById(coll.name).scrollIntoView({behavior: "smooth", block: "center", inline: "center"});}}   >{coll.name}</Category>
+
+                                                }
+                                                </>
+                                            )
+                                        })
+                                    }
+                                    </>
+                                )
+                            })
+                            :
+                            ''
+                        }
+                        {   productsData && search===''
+                                ?
+                            productsData.map(collection=>{
+                                return(
+                                    <>
+                                    <Category onClick={()=>{if (window!==undefined) document.getElementById(collection.name).scrollIntoView({behavior: "smooth", block: "center", inline: "center"});}}>{collection.name}</Category>
+                                    {
+                                        collection.subCategory.map(coll=>{
+                                            return(
+                                                <>
+                                                <Category onClick={()=>{if (window!==undefined) document.getElementById(coll.name).scrollIntoView({behavior: "smooth", block: "center", inline: "center"});}} >{coll.name}</Category>
+                                                </>
+                                            )
+                                        })
+                                    }
+                                    </>
+                                )
+                            })
+                            :
+                            ''
+                        }
                         
                         {/* {(search!==''?filteredData:collections).map(collection=>(
                             <Category as='a' href={'#'+collection.name}>{collection.name}</Category>
@@ -262,19 +312,51 @@ export default function Restaurant(props) {
                         
                     )
                 })} */}
-                {productsData 
+                {productsData && search!==''
                     ?
                     productsData.map(collection=>{
                         return(
                             <>
-                            <CollectionName >{collection.name}</CollectionName>
-                            <ProductList restaurant={restaurant} productsData={collection.products}/>
+                            
+                            {
+                                collection.products.filter(p=>(p.name.toLowerCase().indexOf(search.toLowerCase()) !== -1)).length>0
+                                    &&
+                                <CollectionName id={collection.name} >{collection.name}</CollectionName>
+                            
+                            }
+                            <ProductList search={search} restaurant={restaurant} productsData={collection.products}/>
                             {
                                 collection.subCategory.map(coll=>{
                                     return(
                                         <>
-                                        <CollectionName >{coll.name}</CollectionName>
-                                        <ProductList restaurant={restaurant} productsData={coll.products}/>
+                                        {coll.products.filter(p=>(p.name.toLowerCase().indexOf(search.toLowerCase()) !== -1)).length>0
+                                            &&
+                                        <CollectionName id={coll.name} >{coll.name}</CollectionName>
+                                        }
+                                        <ProductList search={search} restaurant={restaurant} productsData={coll.products}/>
+                                        </>
+                                    )
+                                })
+                            }
+                            </>
+                        )
+                    })
+                    :
+                    ''
+                }
+                {productsData && search === ''
+                    ?
+                    productsData.map(collection=>{
+                        return(
+                            <>
+                            <CollectionName id={collection.name} >{collection.name}</CollectionName>
+                            <ProductList search={search} restaurant={restaurant} productsData={collection.products}/>
+                            {
+                                collection.subCategory.map(coll=>{
+                                    return(
+                                        <>
+                                        <CollectionName id={coll.name} >{coll.name}</CollectionName>
+                                        <ProductList search={search} restaurant={restaurant} productsData={coll.products}/>
                                         </>
                                     )
                                 })
@@ -287,10 +369,10 @@ export default function Restaurant(props) {
                 }
                 
                 
-                {/* {(search==='' && collections.length===0)
+                {(search==='' && productsData === null)
                     &&
                     <SkeletonLoader screen='mobile'/>
-                } */}
+                }
                     
                
                 </Flex>
