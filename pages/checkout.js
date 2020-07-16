@@ -150,7 +150,7 @@ export default function checkout() {
                                 <TextInput type='number'  value={table} placeholder='Enter table number' name='table_number' onChange={(e)=>{setTable(e.target.value)}}>
                                 </TextInput>
                             </TextInputWrapper>
-                            <SolidButton disabled={table===''} onClick={()=>{setTableModal(false)}}>Proceed</SolidButton>
+                            <SolidButton disabled={table===''} onClick={()=>{placeOrderClick();}}>Proceed</SolidButton>
                         </div>
                     </TableNoModal>
                }
