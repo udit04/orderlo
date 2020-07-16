@@ -157,7 +157,7 @@ export default function Restaurant(props) {
                           "is_active": true
                         }
                       }
-                    setproductsData(menuData.menu);
+                    setproductsData(res.data.menu);
 
                     // const collectionsData =  res.data.products.reduce(function (accumulator, element) {
                     //     accumulator[element.category] = accumulator[element.category] || [];
@@ -175,7 +175,7 @@ export default function Restaurant(props) {
                     //     })
                     // }
                     // setCollections(collectionsNew);
-                    setrestaurant(menuData.restaurant);
+                    setrestaurant(res.data.restaurant);
                     // setCollections(collectionsData);
                 }else{
                     
