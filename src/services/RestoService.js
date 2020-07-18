@@ -28,6 +28,10 @@ const getBillDetails = (body)=>{
 const acceptOrder = (body)=>{
     return ax.post(`/v1/api/update_order_status`,body)
 }
+
+const cancelOrder = (body)=>{
+    return ax.post(`/v1/api/update_order_status`,body);
+}
 // const getStoreRestos = (body)=>{
 //     const {store_id}=body;
 //     return ax.get(`/v1/api/fetch_store_wise_restaurants?store_id=${store_id}`)

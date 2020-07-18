@@ -48,6 +48,7 @@ export default function Login(){
                     if(res.data && res.data.restaurant){
                         setMessage(res.data.message);
                         if(res.data.restaurant){
+                            localStorage.setItem('restoDetail',JSON.stringify({ restaurant:{...res.data.restaurant}}));
                             Router.push(`/dashboard/${res.data.restaurant.id}`)
                         }
                     }

@@ -41,6 +41,7 @@ export default function RestoSignup(props) {
             if(res.data){
                 setMessage(res.data.message);
                 if(res.data.restaurant){
+                    localStorage.setItem('restoDetail',JSON.stringify({ restaurant:{...res.data.restaurant}}));
                     Router.push(`/dashboard/${res.data.restaurant.id}`)
                 }
             }else{

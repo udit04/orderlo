@@ -9,10 +9,19 @@ function Orders(props) {
 
     useEffect(() => {
 
-        RestoService.getOrders({id:props.id}).then(res=>{
-            console.log(res)
+        getOrders(props.id);
+
+    }, [])
+
+    useEffect(() => {
+
+        getOrders(props.id);
+
+    }, [props.id])
+
+    const getOrders = (id)=>{
+        RestoService.getOrders({id}).then(res=>{
             if(res.status === 200 && res.data.menu){
-                console.log(res)
                 setOrdersData(res.data);
                 props.setOrderDetail(res.data.menu[0]);
             }else{
@@ -22,19 +31,60 @@ function Orders(props) {
             setErr(err);
             console.log(err)
         })
-
-        return () => {
-            
-        }
-    }, [])
-    
+    }
+    const acceptOrder = (order_id)=>{
+        RestoService.acceptOrder(
+            {
+                "restaurant_id" : props.id,
+                "order_id" : order_id,
+                "order_status" : "accepted",
+                "payment_status" : "pending"
+            }
+        ).then(res=>{
+            if(res.status===200){
+                getOrders(props.id);
+            }
+        }).catch(console.log('something went wrong'))
+    }
+    const cancelOrder = (order_id)=>{
+            RestoService.acceptOrder(
+                {
+                    "restaurant_id" : props.id,
+                    "order_id" : order_id,
+                    "order_status" : "rejected",
+                    "payment_status" : "pending"
+                }
+            ).then(res=>{
+                if(res.status===200){
+                    getOrders(props.id);
+                }
+            }).catch(err=>{
+                console.log('something went wrong')
+            })
+    }
+    const deliverOrder = (order_id)=>{
+        RestoService.acceptOrder(
+            {
+                "restaurant_id" : props.id,
+                "order_id" : order_id,
+                "order_status" : "delivered",
+                "payment_status" : "success"
+            }
+        ).then(res=>{
+            if(res.status===200){
+                getOrders(props.id);
+            }
+        }).catch(err=>{
+            console.log('something went wrong')
+        })
+    }
     return (
         <OrdersWrapper>
             <div className="title">Orders</div>
             <OrderTabs>
                 <OrderTab onClick={()=>{setOrderTab(0)}} className={orderTab===0?'active newOrders':'newOrders'}>Pending orders</OrderTab>
                 <OrderTab onClick={()=>{setOrderTab(1)}} className={orderTab===1?'active':''}>Completed orders</OrderTab>
-                <OrderTab>Order history</OrderTab>
+                <OrderTab className={orderTab===2?'active':''} onClick={()=>{setOrderTab(2)}}>Order history</OrderTab>
             </OrderTabs>
 
             {   ordersData && ordersData.menu && ordersData.menu.length>0
@@ -42,21 +92,21 @@ function Orders(props) {
                 <OrdersListWrapper>
                     <OrdersCount>Today <span>{ordersData.menu.length}</span></OrdersCount>
                     { orderTab ===0 && 
-                    ordersData.menu.filter(data=>((data.order_status==="accepted"||data.order_status==="created") && payment_status ==='pending') ).map(data=>{
+                    ordersData.menu.filter(data=>((data.order_status==="accepted"||data.order_status==="created") ) ).map(data=>{
                         return(
-                            <Order setOrderDetail={props.setOrderDetail} data={data}/>
+                            <Order deliverOrder={deliverOrder} acceptOrder={acceptOrder} cancelOrder={cancelOrder}  setOrderDetail={props.setOrderDetail} data={data}/>
                         )
                     })}
                     { orderTab === 1 && 
-                    ordersData.menu.filter(data=>(data.order_status==="delivered") && payment_status ==='success').map(data=>{
+                    ordersData.menu.filter(data=>(data.order_status==="delivered") && data.payment_status ==='success').map(data=>{
                         return(
-                            <Order setOrderDetail={props.setOrderDetail} data={data}/>
+                            <Order deliverOrder={deliverOrder} acceptOrder={acceptOrder} cancelOrder={cancelOrder} deliverOrder={deliverOrder}  setOrderDetail={props.setOrderDetail} data={data}/>
                         )
                     })}
-                    { orderTab === 1 && 
+                    { orderTab === 2 && 
                     ordersData.menu.filter(data=>(data.order_status!=="created" && data.order_status!=="accepted") ).map(data=>{
                         return(
-                            <Order setOrderDetail={props.setOrderDetail} data={data}/>
+                            <Order deliverOrder={deliverOrder} acceptOrder={acceptOrder} cancelOrder={cancelOrder} setOrderDetail={props.setOrderDetail} data={data}/>
                         )
                     })}
                     {/* <Order/>
@@ -69,31 +119,18 @@ function Orders(props) {
     )
 }
 
-export default Orders
 
 function Order(props){
-    const {data } = props;
-    const acceptOrder = ()=>{
-        RestoService.acceptOrder(
-            {
-                "restaurant_id" : data.restaurant_id,
-                "order_id" : data.id,
-                "order_status" : "accepted"
-            }
-        ).then(res=>{
-            if(res.status===200){
-                
-            }
-        })
-    }
+    const {data,cancelOrder,acceptOrder,deliverOrder } = props;
+    
     return (
         <OrderWrapper onClick={()=>{props.setOrderDetail(data)}}>
-            <Flex>
+            <Flex alignCenter>
                 <Flex column className='orderColumn'>
                         <OrderNum>
                             <Flex column>
-                                <div className='orderNumber'>24</div>
-    <div className="time">{new Date(data.createdAt).toLocaleTimeString()}</div>
+                                <div className='orderNumber'>{data.table_no}</div>
+                                <div className="time">{new Date(data.createdAt).toLocaleTimeString()}</div>
                             </Flex>
                             
                         </OrderNum>
@@ -103,18 +140,49 @@ function Order(props){
     <FieldValue>{data.id}</FieldValue>
                 </Flex>
                 <FlexItem grow="1">
-                    <Flex column  className='orderColumn' justifyCenter={data.order_status==='created'} alignCenter>
-                        {/* <FieldName>Total</FieldName>
-                        <FieldValue>Rs. 342</FieldValue> */}
-                        {data.order_status==='created'
-                            ?
-                        <ConfirmButton onClick={acceptOrder}>Accept</ConfirmButton>
-                        :
-                        <>
-                        <FieldName>Total</FieldName>
-                        <FieldValue>Rs. 342</FieldValue>
-                        </>
-                        }
+                        <Flex column   className='orderColumn' justifyCenter={data.order_status==='created'} alignStretch>
+                  
+                            {
+                            data.order_status==='created'
+                                ?
+                                <>
+                                    <Flex alignCenter justifyBetween>
+                                        <Flex column><FieldName>Total</FieldName>
+                                        
+                                            <FieldValue>Rs. {data.cart_amount}</FieldValue>
+                                        </Flex>   
+                                        <Flex column>
+                                            <ConfirmButton onClick={()=>acceptOrder(data.id)}>Accept</ConfirmButton>
+                                            <OrderStatus error={data.order_status==='rejected'}>{data.order_status} : <span style={{color:data.payment_status!=='success'?'#f1a62d;':''}}>payment - {data.payment_status}</span></OrderStatus>
+
+                                        </Flex>
+                                    </Flex>
+                                </>
+                                :
+                                <>
+                                    <Flex alignCenter justifyBetween>
+                                        <Flex column><FieldName>Total</FieldName>
+                                        
+                                            <FieldValue>Rs. {data.cart_amount}</FieldValue>
+                                            {/* <OrderStatus error={data.order_status==='rejected'}>{data.order_status} : payment - {data.payment_status}</OrderStatus> */}
+                                        </Flex>   
+                                        {
+                                        (data.order_status==='accepted' && data.payment_status==='pending')
+                                            ?
+                                            <Flex column>
+                                                <ConfirmButton onClick={()=>deliverOrder(data.id)}>delivered</ConfirmButton>
+                                                <OrderStatus error={data.order_status==='rejected'}>{data.order_status} : <span style={{color:data.payment_status!=='success'?'#f1a62d;':''}}>payment - {data.payment_status}</span></OrderStatus>
+
+                                            </Flex>
+                                            :
+                                            <Flex column>
+                                                <OrderStatus error={data.order_status==='rejected'}>{data.order_status} : <span style={{color:data.payment_status!=='success'?'#f1a62d;':''}}>payment - {data.payment_status}</span></OrderStatus>
+
+                                            </Flex>
+                                        }
+                                    </Flex>
+                                </>
+                            }
                         
                     </Flex>
                    
@@ -122,7 +190,11 @@ function Order(props){
                 
                 <Flex column  className='orderColumn noBorder'>
                     <FieldName>inform</FieldName>
-                    <FieldValue>cancel</FieldValue>
+                    {   
+                        data.order_status ==='created'
+                            && 
+                        <FieldValue onClick={()=>cancelOrder(data.id)}>cancel</FieldValue>
+                    }
                 </Flex>
             </Flex>
         </OrderWrapper>
@@ -242,5 +314,14 @@ const ConfirmButton = styled.div`
     font-weight:800;
     border-radius:5px;
     font-size:1rem;
-
+    cursor:pointer;
+    text-align:center;
 `
+
+const OrderStatus = styled.div`
+    color:#02C39A;
+    color:${props=>props.error?`red;`:'#02C39A;'}
+`
+
+
+export default Orders
