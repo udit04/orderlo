@@ -8,24 +8,34 @@ import RestoMenu from '../../src/components/Dashboard/RestoMenu';
 import { useRouter } from 'next/router'
 import StyledModal from '../../src/components/Modal/StyledModal';
 import { IsVeg } from '../../src/components/IsVeg';
-function Dashboard() {
+function Dashboard(props) {
 
     const [activeTab, setActiveTab] = useState(0);
     const   [orderDetail, setOrderDetail] = useState(null);
     const router = useRouter()
     const { res_id } = router.query
-    const [billModal, setBillModal] = useState(true)
+    const [billModal, setBillModal] = useState(false)
+    const [id,setId] = useState(null);
+    const contentRef = React.createRef();
     useEffect(() => {
-        
-        
-    }, [])
-    return (
+        if(res_id){
+            setId(res_id)
+        }
+    }, [res_id])
+    
+    if(!id){
+
+        return(
+            <div></div>
+        )
+    }else{
+            return (
         <Flex>
             <OrderSidebar setActiveTab={setActiveTab} activeTab={activeTab}/>
             {
                 activeTab === 0
                     &&
-                <Orders res_id={res_id} setOrderDetail={setOrderDetail} id='1' activeTab={activeTab}/>
+                <Orders res_id={id} setOrderDetail={setOrderDetail} id={id} activeTab={activeTab}/>
             }
             {
                 activeTab === 1
@@ -38,10 +48,12 @@ function Dashboard() {
                 <RestoMenu res_id={res_id}/>
             }
             
-            <OrderDetails openBillModal={setBillModal} res_id={res_id} orderDetail={orderDetail} activeTab={activeTab}/>
-            <StyledModal>
+            <OrderDetails openBillModal={()=>{setBillModal(true)}} res_id={res_id} orderDetail={orderDetail} activeTab={activeTab}/>
+            {   billModal 
+                    &&
+                <StyledModal onClose={()=>{setBillModal(false)}} contentRef={contentRef}>
                 
-                <BillContainer>
+                <BillContainer ref={contentRef}>
                     <RestoName> Shivsagar</RestoName>
                     <RestoAddress>Nashik highway, thane new bhiwandi</RestoAddress>
                     <Flex column className='billMeta'>
@@ -212,8 +224,10 @@ function Dashboard() {
                 </BillContainer>
 
             </StyledModal>
+            }
         </Flex>
     )
+        }
 }
 
 export default Dashboard

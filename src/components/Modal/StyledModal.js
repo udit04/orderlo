@@ -2,11 +2,18 @@ import React from 'react'
 import styled  from 'styled-components'
 
 function StyledModal(props) {
+    const closeModal = (e)=>{
+        console.log(e.target,e.currentTarget);
+        if(e.target.contains(props.contentRef.current)){
+            props.onClose();
+        }
+    }
     return (
-        <ModalWrapper >
+        <ModalWrapper onClick={closeModal}>
             {props.children}
         </ModalWrapper>
     )
+
 }
 
 const ModalWrapper = styled.div`
