@@ -6,7 +6,7 @@ import { StackHeader } from '../src/components/Login/LoginStyled';
 import { BackIcon, ShareIcon } from '../src/Icons';
 import restoService from '../src/services/RestoService';
 import {getDateTimeStringFromGMT} from '../src/helpers/util'
-export default function Restaurant(props) {
+export default function OrderHistory(props) {
     const router = useRouter();
     const [orders, setOrders] = useState(null);
     useEffect(() => {
@@ -40,7 +40,7 @@ export default function Restaurant(props) {
                     </Flex>
                 </ StackHeader>
                 {
-                    !orders ? <SkeletonLoader screen='mobile'/> : 
+                    !orders || !orders.length ? <SkeletonLoader screen='mobile'/> : 
                     orders.map((order)=>{
                         return <div key={order.id}>
                             <p>Restaurant Name - {order.restaurant.name}</p>
