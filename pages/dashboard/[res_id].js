@@ -5,7 +5,7 @@ import OrderDetails from '../../src/components/Dashboard/OrderDetails';
 import Flex,{FlexItem} from 'styled-flex-component'
 import OrderSidebar from '../../src/components/Dashboard/OrderSidebar';
 import RestoMenu from '../../src/components/Dashboard/RestoMenu';
-import { useRouter } from 'next/router'
+import Router,{ useRouter } from 'next/router'
 import StyledModal from '../../src/components/Modal/StyledModal';
 import { IsVeg } from '../../src/components/IsVeg';
 function Dashboard(props) {
@@ -17,11 +17,17 @@ function Dashboard(props) {
     const [billModal, setBillModal] = useState(false)
     const [id,setId] = useState(null);
     const contentRef = React.createRef();
-    useEffect(() => {
-        if(res_id){
-            setId(res_id)
+    const [restaurant,setRestaurant] = useState(null)
+    useEffect(()=>{
+        const restoDetail = JSON.parse(localStorage.getItem('restoDetail'));
+        if(restoDetail && restoDetail.restaurant){
+            setId(restoDetail.restaurant.id)
+            setRestaurant(restoDetail.restaurant)
+        }else{
+            Router.push('/restologin');
         }
-    }, [res_id])
+
+    },[])
     
     if(!id){
 
@@ -35,159 +41,168 @@ function Dashboard(props) {
             {
                 activeTab === 0
                     &&
-                <Orders res_id={id} setOrderDetail={setOrderDetail} id={id} activeTab={activeTab}/>
+                <Orders restaurant={restaurant} res_id={id} setOrderDetail={setOrderDetail} id={id} activeTab={activeTab}/>
             }
             {
                 activeTab === 1
                     &&
-                <RestoMenu res_id={res_id} activeTab={activeTab}/>
+                <RestoMenu restaurant={restaurant} res_id={res_id} activeTab={activeTab}/>
             }
             {
                 activeTab === 2
                     &&
-                <RestoMenu res_id={res_id}/>
+                <RestoMenu restaurant={restaurant} res_id={res_id}/>
             }
             
-            <OrderDetails openBillModal={()=>{setBillModal(true)}} res_id={res_id} orderDetail={orderDetail} activeTab={activeTab}/>
-            {   billModal 
+            <OrderDetails restaurant={restaurant} openBillModal={()=>{setBillModal(true)}} res_id={res_id} orderDetail={orderDetail} activeTab={activeTab}/>
+            {   billModal && restaurant
                     &&
                 <StyledModal onClose={()=>{setBillModal(false)}} contentRef={contentRef}>
                 
                 <BillContainer ref={contentRef}>
-                    <RestoName> Shivsagar</RestoName>
-                    <RestoAddress>Nashik highway, thane new bhiwandi</RestoAddress>
+            <RestoName> {restaurant.name}</RestoName>
+                    <RestoAddress>{restaurant.address}</RestoAddress>
                     <Flex column className='billMeta'>
                         <Flex >
-                            <FlexItem grow={1}>Date : 15/06/20</FlexItem> <FlexItem grow={1}>Date : 15/06/20</FlexItem>
+            <FlexItem grow={1}>Date : {(new Date(orderDetail.createdAt)).getDate() + '/' + ((new Date(orderDetail.createdAt)).getMonth()+1) + '/' + ((new Date(orderDetail.createdAt)).getFullYear() - 2000)}</FlexItem> <FlexItem grow={1}>Date : 15/06/20</FlexItem>
                         </Flex>
                         <Flex>
-                            <FlexItem grow={1}>Table No: 10</FlexItem> <FlexItem grow={1}>Table No: 10</FlexItem>
+                             <FlexItem grow={1}>Table No: {orderDetail.table_no}</FlexItem> <FlexItem grow={1}>Table No: 10</FlexItem>
                         </Flex>
                         <PriceTable>
-                            <BillCategory as='h3'>Food</BillCategory>
-                            <Flex className='billHeader'><FlexItem  grow={1}>Item</FlexItem><FlexItem >Quantity</FlexItem> <FlexItem >Price</FlexItem></Flex>
-                            <CartProduct>
-                                <Flex>
-                                    <FlexItem grow='1'>
-                                        <Flex column>
-                                            <Flex>
-                                                <IsVeg style={{marginTop:'5px',marginRight:'5px'}} is_veg={1}/>
-                                                <Flex column>
-                                                    <Flex><ProductName>Chicken Creamy Nachos </ProductName></Flex>
-                                                    <ExtraItem>Extra cheese</ExtraItem>
-                                                </Flex>
-                                                
-                                            </Flex>
-                                            
+                        <Flex className='billHeader'><FlexItem  grow={1}>Item</FlexItem><FlexItem >Quantity</FlexItem> <FlexItem >Price</FlexItem></Flex>
+
+                            {
+                                orderDetail.products.filter(product=>product.is_alcohol===false).length>0 
+                                    ?
+                                    <>
+                                    <BillCategory as='h3'>Food</BillCategory>
+                                    
+                                    {orderDetail.products.filter(product=>product.is_alcohol===false).map(product=>{
+                                            return(
+                                                <CartProduct>
+                                                    <Flex>
+                                                        <FlexItem grow='1'>
+                                                            <Flex column>
+                                                                <Flex>
+                                                                    <IsVeg style={{marginTop:'5px',marginRight:'5px'}} is_veg={product.is_veg}/>
+                                                                    <Flex column>
+                                                                        <Flex><ProductName>{product.name} </ProductName></Flex>
+                                                                        {/* <ExtraItem>Extra cheese</ExtraItem> */}
+                                                                    </Flex>
+                                                                    
+                                                                </Flex>
+                                                                
+                                                            </Flex>
+                                                        </FlexItem>
+                                                        <FlexItem>
+                                                            <ProductCount> x {product.qty}</ProductCount>
+                                                        </FlexItem>
+                                                        <FlexItem >
+                                                            <Flex column>
+                                                                <ProductCost>Rs.{parseInt(product.price) * product.qty}</ProductCost>
+                                                            </Flex>
+                                                        </FlexItem>
+                                                    </Flex>
+                                                </CartProduct>
+
+                                            )
+                                        })
+                                        }
+                                        <Flex>
+                                                <FlexItem grow={1}>
+                                                    <SectionName>Food Subtotal</SectionName>
+                                                </FlexItem>
+                                                <FlexItem >
+                                                    <Flex column>
+                                    <ProductCost>Rs.{orderDetail.products.filter(product=>product.is_alcohol===false).reduce((a,p)=>(a + p.price * p.qty),0)}</ProductCost>
+                                                    </Flex>
+                                                </FlexItem>
                                         </Flex>
-                                    </FlexItem>
-                                    <FlexItem>
-                                        <ProductCount> x 2</ProductCount>
-                                    </FlexItem>
-                                    <FlexItem >
-                                        <Flex column>
-                                            <ProductCost>Rs.60</ProductCost>
+                                        <Flex>
+                                                <FlexItem grow={1}>
+                                                    <SectionName> Gst</SectionName>
+                                                </FlexItem>
+                                                <FlexItem >
+                                                    <Flex column>
+                                    <ProductCost>+Rs.{orderDetail.products.filter(product=>product.is_alcohol===false).reduce((a,p)=>(a + p.price * p.qty),0) * restaurant.gst_tax/100}</ProductCost>
+                                                    </Flex>
+                                                </FlexItem>
                                         </Flex>
-                                    </FlexItem>
-                                </Flex>
-                            </CartProduct>
-                            <CartProduct>
-                                <Flex>
-                                    <FlexItem grow='1'>
-                                        <Flex column>
-                                            <Flex>
-                                                <IsVeg style={{marginTop:'5px',marginRight:'5px'}} is_veg={1}/>
-                                                <Flex column>
-                                                    <Flex><ProductName>Chicken Creamy Nachos </ProductName></Flex>
-                                                    <ExtraItem>Extra cheese</ExtraItem>
-                                                </Flex>
-                                                
-                                            </Flex>
-                                            
+                                    </>
+                                    :''
+                            }
+                            {orderDetail.products.filter(product=>product.is_alcohol===true).length>0  
+                                ?
+                                <>
+                                    <BillCategory as='h3'>Drinks</BillCategory>
+                                    {orderDetail.products.filter(product=>product.is_alcohol===true).length>0 && orderDetail.products.filter(product=>product.is_alcohol===true).map(product=>{
+                                            return(
+                                                <CartProduct>
+                                                    <Flex>
+                                                        <FlexItem grow='1'>
+                                                            <Flex column>
+                                                                <Flex>
+                                                                    <IsVeg style={{marginTop:'5px',marginRight:'5px'}} is_veg={product.is_veg}/>
+                                                                    <Flex column>
+                                                                        <Flex><ProductName>{product.name} </ProductName></Flex>
+                                                                        {/* <ExtraItem>Extra cheese</ExtraItem> */}
+                                                                    </Flex>
+                                                                    
+                                                                </Flex>
+                                                                
+                                                            </Flex>
+                                                        </FlexItem>
+                                                        <FlexItem>
+                                                            <ProductCount> x {product.qty}</ProductCount>
+                                                        </FlexItem>
+                                                        <FlexItem >
+                                                            <Flex column>
+                                                                <ProductCost>Rs.{parseInt(product.price) * product.qty}</ProductCost>
+                                                            </Flex>
+                                                        </FlexItem>
+                                                    </Flex>
+                                                </CartProduct>
+
+                                            )
+                                        })
+                                        }
+                                        <Flex>
+                                                <FlexItem grow={1}>
+                                                    <SectionName>Drinks Subtotal</SectionName>
+                                                </FlexItem>
+                                                <FlexItem >
+                                                    <Flex column>
+                                                        <ProductCost>Rs.1000</ProductCost>
+                                                    </Flex>
+                                                </FlexItem>
                                         </Flex>
-                                    </FlexItem>
-                                    <FlexItem>
-                                        <ProductCount> x 2</ProductCount>
-                                    </FlexItem>
-                                    <FlexItem >
-                                        <Flex column>
-                                            <ProductCost>Rs.60</ProductCost>
+                                        <Flex>
+                                                <FlexItem grow={1}>
+                                                    <SectionName> Vat</SectionName>
+                                                </FlexItem>
+                                                <FlexItem >
+                                                    <Flex column>
+                                    <ProductCost>+Rs.{orderDetail.products.filter(product=>product.is_alcohol===true).reduce((a,p)=>(a + p.price * p.qty),0)*restaurant.vat_tax}</ProductCost>
+                                                    </Flex>
+                                                </FlexItem>
                                         </Flex>
-                                    </FlexItem>
-                                </Flex>
-                            </CartProduct>
-                            <CartProduct>
-                                <Flex>
-                                    <FlexItem grow='1'>
-                                        <Flex column>
-                                            <Flex>
-                                                <IsVeg style={{marginTop:'5px',marginRight:'5px'}} is_veg={1}/>
-                                                <Flex column>
-                                                    <Flex><ProductName>Chicken Creamy Nachos </ProductName></Flex>
-                                                    <ExtraItem>Extra cheese</ExtraItem>
-                                                </Flex>
-                                                
-                                            </Flex>
-                                            
-                                        </Flex>
-                                    </FlexItem>
-                                    <FlexItem>
-                                        <ProductCount> x 2</ProductCount>
-                                    </FlexItem>
-                                    <FlexItem >
-                                        <Flex column>
-                                            <ProductCost>Rs.60</ProductCost>
-                                        </Flex>
-                                    </FlexItem>
-                                </Flex>
-                            </CartProduct>
-                            <BillCategory as='h3'>Drinks</BillCategory>
-                            <CartProduct>
-                                <Flex>
-                                    <FlexItem grow='1'>
-                                        <Flex column>
-                                            <Flex>
-                                                <IsVeg style={{marginTop:'5px',marginRight:'5px'}} is_veg={1}/>
-                                                <Flex column>
-                                                    <Flex><ProductName>Chicken Creamy Nachos </ProductName></Flex>
-                                                    <ExtraItem>Extra cheese</ExtraItem>
-                                                </Flex>
-                                                
-                                            </Flex>
-                                            
-                                        </Flex>
-                                    </FlexItem>
-                                    <FlexItem>
-                                        <ProductCount> x 2</ProductCount>
-                                    </FlexItem>
-                                    <FlexItem >
-                                        <Flex column>
-                                            <ProductCost>Rs.60</ProductCost>
-                                        </Flex>
-                                    </FlexItem>
-                                </Flex>
-                            </CartProduct>
-                            <Flex>
-                                    <FlexItem grow={1}>
-                                        <SectionName> Subtotal</SectionName>
-                                    </FlexItem>
-                                    <FlexItem >
-                                        <Flex column>
-                                            <ProductCost>Rs.1000</ProductCost>
-                                        </Flex>
-                                    </FlexItem>
-                            </Flex>
+                                    </>
+                                    :''
+                            }
+                            
+                            
                             <Flex>
                                     <FlexItem grow={1}>
                                         <SectionName> Discount</SectionName>
                                     </FlexItem>
                                     <FlexItem >
                                         <Flex column>
-                                            <ProductCost>-Rs.100</ProductCost>
+                                            <ProductCost>-Rs.__</ProductCost>
                                         </Flex>
                                     </FlexItem>
                             </Flex>
-                            <Flex>
+                            {/* <Flex>
                                     <FlexItem grow={1}>
                                         <SectionName> Vat</SectionName>
                                     </FlexItem>
@@ -196,14 +211,14 @@ function Dashboard(props) {
                                             <ProductCost>+Rs.100</ProductCost>
                                         </Flex>
                                     </FlexItem>
-                            </Flex>
+                            </Flex> */}
                             <Flex>
                                     <FlexItem grow={1}>
                                         <SectionName> Service Charge</SectionName>
                                     </FlexItem>
                                     <FlexItem >
                                         <Flex column>
-                                            <ProductCost>+Rs.100</ProductCost>
+                        <ProductCost>+Rs.{orderDetail.products.reduce((a,p)=>(a + p.price * p.qty),0) * restaurant.service_charge}</ProductCost>
                                         </Flex>
                                     </FlexItem>
                             </Flex>

@@ -16,7 +16,12 @@ function OrderDetails(props) {
         return (
         <DetailsWrapper>
             <div>
-            <DetailHeader  > OrderDetails <span>New order</span></DetailHeader>
+            <DetailHeader  > OrderDetails 
+                { ['created','accepted'].includes(orderDetail.order_status) 
+                    && 
+                <span>New order</span>}
+            </DetailHeader>
+
             <Separator/>
             <DetailsMeta>
                 <Flex >
@@ -78,7 +83,7 @@ function OrderDetails(props) {
                     )
                 })
             }
-            <CartProduct>
+            {/* <CartProduct>
                 <Flex>
                     <FlexItem grow='1'>
                         <Flex column>
@@ -165,7 +170,7 @@ function OrderDetails(props) {
                         </Flex>
                     </FlexItem>
                 </Flex>
-            </CartProduct>
+            </CartProduct> */}
             <Separator/>
             <Flex>
                 <FlexItem grow='1'>

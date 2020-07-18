@@ -167,7 +167,7 @@ function Order(props){
                                             {/* <OrderStatus error={data.order_status==='rejected'}>{data.order_status} : payment - {data.payment_status}</OrderStatus> */}
                                         </Flex>   
                                         {
-                                        (data.order_status==='accepted' && data.payment_status==='success')
+                                        (data.order_status==='accepted' && data.payment_status==='pending')
                                             ?
                                             <Flex column>
                                                 <ConfirmButton onClick={()=>deliverOrder(data.id)}>delivered</ConfirmButton>
