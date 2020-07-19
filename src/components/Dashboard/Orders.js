@@ -7,12 +7,12 @@ function Orders(props) {
     const [ordersData,setOrdersData] = useState(null);
     const [orderTab,setOrderTab] = useState(0)
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            getOrders(props.id);
-          }, 5000);
-          return () => clearInterval(interval);
-    }, [ordersData])
+    // useEffect(() => {
+    //     const interval = setInterval(() => {
+    //         getOrders(props.id);
+    //       }, 5000);
+    //       return () => clearInterval(interval);
+    // }, [ordersData])
 
     useEffect(() => {
         getOrders(props.id);
@@ -26,7 +26,7 @@ function Orders(props) {
         RestoService.getOrders(query).then(res=>{
             if(res.status === 200 && res.data.menu){
                 setOrdersData(res.data);
-                props.setOrderDetail(res.data.menu[0]);
+                //props.setOrderDetail(res.data.menu[0]);
             }else{
                 if(!res.data.message)
                     setErr(err);
@@ -187,7 +187,7 @@ function Order(props){
                                         (data.order_status==='accepted' && data.payment_status==='pending')
                                             ?
                                             <Flex column>
-                                                <ConfirmButton onClick={()=>deliverOrder(data.id)}>delivered</ConfirmButton>
+                                                <ConfirmButton onClick={()=>deliverOrder(data.id)}>MARK AS DONE</ConfirmButton>
                                                 <OrderStatus error={data.order_status==='rejected'}>{data.order_status} : <span style={{color:data.payment_status!=='success'?'#f1a62d;':''}}>payment - {data.payment_status}</span></OrderStatus>
 
                                             </Flex>

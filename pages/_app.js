@@ -19,7 +19,6 @@ export default function MyApp(props) {
   const [authData, setauthData] = useState(initialData)
   const [cartData, setCartData] = useState({});
   const { Component, pageProps } = props;
-  console.log('____appProps',props);
   React.useEffect(() => {
     if(window!==undefined){
       let data = JSON.parse(window.localStorage.getItem('cartData'));
