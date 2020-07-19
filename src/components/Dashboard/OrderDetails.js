@@ -25,12 +25,12 @@ function OrderDetails(props) {
             <Separator/>
             <DetailsMeta>
                 <Flex >
-                    <FlexItem grow='1'>
+                    {/* <FlexItem grow='1'>
                         <Flex column>
                             <FieldName>Total</FieldName>
                             <FieldValue>Rs.{orderDetail.total_amount}</FieldValue>
                         </Flex>
-                    </FlexItem>
+                    </FlexItem> */}
                     <FlexItem grow='1'>
                         <Flex column>
                             <FieldName>Order number</FieldName>
@@ -44,7 +44,7 @@ function OrderDetails(props) {
                 <Flex>
                     <FlexItem grow='1'>
                         <Flex column>
-                            <Flex><DetailMain>ProductDetails</DetailMain></Flex>
+                            <Flex><DetailMain>Product Details</DetailMain></Flex>
                         </Flex>
                     </FlexItem>
                     <FlexItem >
@@ -66,7 +66,7 @@ function OrderDetails(props) {
                                             <IsVeg style={{marginTop:'5px',marginRight:'5px'}} is_veg={product.is_veg}/>
                                             <Flex column>
                                                 <Flex><ProductName>{product.name} </ProductName><ProductCount> x {product.qty}</ProductCount></Flex>
-                                                <ExtraItem>Extra cheese</ExtraItem>
+                                                {/* <ExtraItem>Extra cheese</ExtraItem> */}
                                             </Flex>
                                             
                                         </Flex>
@@ -83,94 +83,7 @@ function OrderDetails(props) {
                     )
                 })
             }
-            {/* <CartProduct>
-                <Flex>
-                    <FlexItem grow='1'>
-                        <Flex column>
-                            <Flex>
-                                <IsVeg style={{marginTop:'5px',marginRight:'5px'}} is_veg={1}/>
-                                <Flex column>
-                                    <Flex><ProductName>Chicken Creamy Nachos </ProductName><ProductCount> x 2</ProductCount></Flex>
-                                    <ExtraItem>Extra cheese</ExtraItem>
-                                </Flex>
-                                
-                            </Flex>
-                            
-                        </Flex>
-                    </FlexItem>
-                    <FlexItem >
-                        <Flex column>
-                            <ProductCost>Rs.60</ProductCost>
-                        </Flex>
-                    </FlexItem>
-                </Flex>
-            </CartProduct>
-            <CartProduct>
-                <Flex>
-                    <FlexItem grow='1'>
-                        <Flex column>
-                            <Flex>
-                                <IsVeg style={{marginTop:'5px',marginRight:'5px'}} is_veg={1}/>
-                                <Flex column>
-                                    <Flex><ProductName>Chicken Creamy Nachos </ProductName><ProductCount> x 2</ProductCount></Flex>
-                                    <ExtraItem>Extra cheese</ExtraItem>
-                                </Flex>
-                                
-                            </Flex>
-                            
-                        </Flex>
-                    </FlexItem>
-                    <FlexItem >
-                        <Flex column>
-                            <ProductCost>Rs.60</ProductCost>
-                        </Flex>
-                    </FlexItem>
-                </Flex>
-            </CartProduct>
-            <CartProduct>
-                <Flex>
-                    <FlexItem grow='1'>
-                        <Flex column>
-                            <Flex>
-                                <IsVeg style={{marginTop:'5px',marginRight:'5px'}} is_veg={1}/>
-                                <Flex column>
-                                    <Flex><ProductName>Chicken Creamy Nachos </ProductName><ProductCount> x 2</ProductCount></Flex>
-                                    <ExtraItem>Extra cheese</ExtraItem>
-                                </Flex>
-                                
-                            </Flex>
-                            
-                        </Flex>
-                    </FlexItem>
-                    <FlexItem >
-                        <Flex column>
-                            <ProductCost>Rs.60</ProductCost>
-                        </Flex>
-                    </FlexItem>
-                </Flex>
-            </CartProduct>
-            <CartProduct>
-                <Flex>
-                    <FlexItem grow='1'>
-                        <Flex column>
-                            <Flex>
-                                <IsVeg style={{marginTop:'5px',marginRight:'5px'}} is_veg={1}/>
-                                <Flex column>
-                                    <Flex><ProductName>Chicken Creamy Nachos </ProductName><ProductCount> x 2</ProductCount></Flex>
-                                    <ExtraItem>Extra cheese</ExtraItem>
-                                </Flex>
-                                
-                            </Flex>
-                            
-                        </Flex>
-                    </FlexItem>
-                    <FlexItem >
-                        <Flex column>
-                            <ProductCost>Rs.60</ProductCost>
-                        </Flex>
-                    </FlexItem>
-                </Flex>
-            </CartProduct> */}
+           
             <Separator/>
             <Flex>
                 <FlexItem grow='1'>
@@ -195,10 +108,10 @@ function OrderDetails(props) {
                         </Flex>
                     </FlexItem>
                 </Flex>
-                <Flex>
+                {/* <Flex>
                     <FlexItem grow='1'>
                         <Flex column>
-                            {/* <Flex><ProductName><IsVeg is_veg={1}/>Chicken Creamy Nachos </ProductName><ProductCount> x 2</ProductCount></Flex> */}
+                            <Flex><ProductName><IsVeg is_veg={1}/>Chicken Creamy Nachos </ProductName><ProductCount> x 2</ProductCount></Flex>
                             <ExtraItem>Service Charge( 10%)</ExtraItem>
                         </Flex>
                     </FlexItem>
@@ -207,10 +120,10 @@ function OrderDetails(props) {
                             <ProductCost>Rs. {orderDetail.total_tax}</ProductCost>
                         </Flex>
                     </FlexItem>
-                </Flex>
+                </Flex> */}
             </CartProduct>
             {/* <Separator/> */}
-            <Flex alignCenter>
+            {/* <Flex alignCenter>
                     <FlexItem grow='1'>
                         <Flex column>
                             <DetailMain>Total</DetailMain>
@@ -223,10 +136,14 @@ function OrderDetails(props) {
                         </Flex>
                     </FlexItem>
                 </Flex>
-            <Separator/>
-            <SolidButton onClick={props.openBillModal}>
-                Genrate Bill
-            </SolidButton>
+            <Separator/> */}
+            {
+                ['created','accepted'].includes(orderDetail.order_status)
+                    &&
+                <SolidButton onClick={props.openBillModal}>
+                    Generate Bill
+                </SolidButton>
+            }
             {/* </CartProduct> */}
             
             </div>

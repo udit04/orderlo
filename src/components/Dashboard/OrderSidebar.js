@@ -3,13 +3,14 @@ import styled from 'styled-components'
 import Flex from 'styled-flex-component'
 
 function OrderSidebar(props) {
+    const {restaurant} = props;
     return (
         <SidebarContainer>
             {/* Sidebar */}
             <Flex column justifyCenter alignCenter>
                 <div>
-                    <RestoLogo></RestoLogo>
-                    <RestoName>The Red Cafe</RestoName>
+                    <RestoLogo >{restaurant.image && <img src={restaurant.image}/>}</RestoLogo>
+                    <RestoName>{restaurant.name}</RestoName>
                 </div>
                 <Flex column>
                     
@@ -55,6 +56,12 @@ const RestoLogo = styled.div`
     width:100px;
     margin:auto;
     background:#eee;
+    img{
+        position:relative;
+        width:100%;
+        height:100%;
+
+    }
 `
 const RestoName = styled.div`
     font-size:1.25rem;font-weight:800;

@@ -94,19 +94,19 @@ function Orders(props) {
                     { orderTab ===0 && 
                     ordersData.menu.filter(data=>((data.order_status==="accepted"||data.order_status==="created") ) ).map(data=>{
                         return(
-                            <Order deliverOrder={deliverOrder} acceptOrder={acceptOrder} cancelOrder={cancelOrder}  setOrderDetail={props.setOrderDetail} data={data}/>
+                            <Order key={data.id} deliverOrder={deliverOrder} acceptOrder={acceptOrder} cancelOrder={cancelOrder}  setOrderDetail={props.setOrderDetail} data={data}/>
                         )
                     })}
                     { orderTab === 1 && 
                     ordersData.menu.filter(data=>(data.order_status==="delivered") && data.payment_status ==='success').map(data=>{
                         return(
-                            <Order deliverOrder={deliverOrder} acceptOrder={acceptOrder} cancelOrder={cancelOrder} deliverOrder={deliverOrder}  setOrderDetail={props.setOrderDetail} data={data}/>
+                            <Order key={data.id} deliverOrder={deliverOrder} acceptOrder={acceptOrder} cancelOrder={cancelOrder} deliverOrder={deliverOrder}  setOrderDetail={props.setOrderDetail} data={data}/>
                         )
                     })}
                     { orderTab === 2 && 
                     ordersData.menu.filter(data=>(data.order_status!=="created" && data.order_status!=="accepted") ).map(data=>{
                         return(
-                            <Order deliverOrder={deliverOrder} acceptOrder={acceptOrder} cancelOrder={cancelOrder} setOrderDetail={props.setOrderDetail} data={data}/>
+                            <Order key={data.id} deliverOrder={deliverOrder} acceptOrder={acceptOrder} cancelOrder={cancelOrder} setOrderDetail={props.setOrderDetail} data={data}/>
                         )
                     })}
                     {/* <Order/>

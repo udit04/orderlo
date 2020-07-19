@@ -38,7 +38,7 @@ function Dashboard(props) {
     }else{
             return (
         <Flex>
-            <OrderSidebar setActiveTab={setActiveTab} activeTab={activeTab}/>
+            <OrderSidebar restaurant={restaurant} setActiveTab={setActiveTab} activeTab={activeTab}/>
             {
                 activeTab === 0
                     &&

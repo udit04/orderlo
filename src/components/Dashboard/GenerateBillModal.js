@@ -3,52 +3,146 @@ import StyledModal from '../Modal/StyledModal';
 import styled from 'styled-components'
 import Flex,{FlexItem} from 'styled-flex-component';
 import { IsVeg } from '../IsVeg';
+import { SolidButton } from '../Login/LoginStyled';
+import RestoService from '../../services/RestoService'
 function GenerateBillModal(props) {
     const {billModal,setBillModal,orderDetail,restaurant} = props;
     const contentRef = React.createRef();
-    const [discount, setDiscount] = useState('')
+    const [foodDiscount, setFoodDiscount] = useState(0);
+    const [drinksDiscount,setDrinksDiscount] = useState(0);
+    const [serviceCharge,setServiceCharge] = useState(restaurant.service_charge)
+    const [vatTax,setVatTax] = useState(restaurant.vat_tax);
+    const [gstTax,setGstTax] = useState(restaurant.gst_tax);
+    const [billObject,setBillObject] = useState(null);
     useEffect(() => {
-        
-        return () => {
-        }
+        console.log(orderDetail)
+        setBillObject(getBillObject());
     }, [])
+
     const discountChange = (e)=>{
-        if(e.target.value.match(/^[0-9]+$/)){
-            setDiscount(e.target.value);
-        }else{
+        if(e.target.name==='food_discount'){
+            setFoodDiscount(e.target.value)
+        }else if (e.target.name==='drinks_discount'){
+            setDrinksDiscount(e.target.value)
+        }   
 
-        }
     }
+    useEffect(() => {
+        setBillObject(getBillObject());
+    }, [foodDiscount,drinksDiscount,serviceCharge,vatTax,gstTax])
 
-    const generateOrderBill = ()=>{
-        RestoService.generateBill({
+    const getBillObject  = ()=>{
+        const food_discount_value = orderDetail.products.filter(product=>product.is_alcohol===false).reduce((a,p)=>(a + p.price * p.qty),0) * parseFloat(foodDiscount/100);
+        const food_tax_value = orderDetail.products.filter(product=>product.is_alcohol===false).reduce((a,p)=>(a + p.price * p.qty),0)*parseFloat(gstTax/100);
+        const food_cart_value = orderDetail.products.filter(product=>product.is_alcohol===false).reduce((a,p)=>(a + p.price * p.qty),0);
+        const food_final_amount = food_cart_value + food_tax_value - food_discount_value;
+        const service_charge_value = orderDetail.products.reduce((a,p)=>(a + p.price * p.qty),0) * parseFloat(serviceCharge/100);
+        let drinks_final_amount = 0;
+        let alcoholObj  = null;
+        if(orderDetail.products.filter(product=>product.is_alcohol===true).length>0){
+            const drinks_discount_value = orderDetail.products.filter(product=>product.is_alcohol===true).reduce((a,p)=>(a + p.price * p.qty),0) * parseFloat(drinksDiscount/100);
+            const drinks_tax_value = orderDetail.products.filter(product=>product.is_alcohol===false).reduce((a,p)=>(a + p.price * p.qty),0)*parseFloat(vatTax/100);
+            const drinks_cart_value = orderDetail.products.filter(product=>product.is_alcohol===true).reduce((a,p)=>(a + p.price * p.qty),0);
             
-                "order_id" : 8951072,
-                "food": {
-                    "sub_total" : 80,
-                    "discount": {
-                        "percentage": 0,
-                        "value": 0
-                    },
-                    "tax" : {
-                        "percentage" : 5,
-                        "value" : 4
-                    },
-                    "final_amount": 84
-                },
-                "alcohol": null,
-                "service_charge" : {
-                    "percentage" : 0,
-                    "value": 0
-                },
-                "grand_total" : 84
-        }).then(res=>{
+            drinks_final_amount = drinks_cart_value - drinks_discount_value + drinks_tax_value ;
 
+            alcoholObj = {
+                "sub_total": drinks_cart_value,
+                "discount": {
+                    "percentage": drinksDiscount,
+                    "value": drinks_discount_value
+                },
+                "vat_tax": {
+                    "percentage": drinksTax,
+                    "value": drinks_tax_value 
+                },
+                "final_amount": drinks_final_amount
+            }
+        }
+        const generateBillData = {
+
+            "order_id" : orderDetail.id,
+            "food": {
+                "sub_total" : food_cart_value,
+                "discount": {
+                    "percentage": foodDiscount,
+                    "value": food_discount_value
+                },
+                "tax" : {
+                    "percentage" : gstTax,
+                    "value" : food_tax_value
+                },
+                "final_amount": food_final_amount
+            },
+            "alcohol": alcoholObj,
+            "service_charge" : {
+                "percentage" : serviceCharge,
+                "value": service_charge_value
+            },
+            "grand_total" : food_final_amount + drinks_final_amount + service_charge_value
+        }
+        return generateBillData;
+    }
+    const generateOrderBill = ()=>{
+        // const food_discount_value = orderDetail.products.filter(product=>product.is_alcohol===false).reduce((a,p)=>(a + p.price * p.qty),0) * parseFloat(foodDiscount/100);
+        // const food_tax_value = orderDetail.products.filter(product=>product.is_alcohol===false).reduce((a,p)=>(a + p.price * p.qty),0)*parseFloat(gstTax/100);
+        // const food_cart_value = orderDetail.products.filter(product=>product.is_alcohol===false).reduce((a,p)=>(a + p.price * p.qty),0);
+        // const food_final_amount = food_cart_value + food_tax_value - food_discount_value;
+        // const service_charge_value = orderDetail.products.reduce((a,p)=>(a + p.price * p.qty),0) * serviceCharge;
+        // let drinks_final_amount = 0;
+        // let alcoholObj  = null;
+        // if(orderDetail.products.filter(product=>product.is_alcohol===true).length>0){
+        //     const drinks_discount_value = orderDetail.products.filter(product=>product.is_alcohol===true).reduce((a,p)=>(a + p.price * p.qty),0) * parseFloat(drinksDiscount/100);
+        //     const drinks_tax_value = orderDetail.products.filter(product=>product.is_alcohol===false).reduce((a,p)=>(a + p.price * p.qty),0)*parseFloat(vatTax/100);
+        //     const drinks_cart_value = orderDetail.products.filter(product=>product.is_alcohol===true).reduce((a,p)=>(a + p.price * p.qty),0);
+            
+        //     drinks_final_amount = drinks_cart_value - drinks_discount_value + drinks_tax_value ;
+
+        //     alcoholObj = {
+        //         "sub_total": drinks_cart_value,
+        //         "discount": {
+        //             "percentage": drinksDiscount,
+        //             "value": drinks_discount_value
+        //         },
+        //         "vat_tax": {
+        //             "percentage": drinksTax,
+        //             "value": drinks_tax_value 
+        //         },
+        //         "final_amount": drinks_final_amount
+        //     }
+        // }
+        // const generateBillData = {
+
+        //     "order_id" : orderDetail.id,
+        //     "food": {
+        //         "sub_total" : food_cart_value,
+        //         "discount": {
+        //             "percentage": foodDiscount,
+        //             "value": food_discount_value
+        //         },
+        //         "tax" : {
+        //             "percentage" : gstTax,
+        //             "value" : food_tax_value
+        //         },
+        //         "final_amount": food_final_amount
+        //     },
+        //     "alcohol": alcoholObj,
+        //     "service_charge" : {
+        //         "percentage" : serviceCharge,
+        //         "value": service_charge_value
+        //     },
+        //     "grand_total" : food_final_amount + drinks_final_amount + service_charge_value
+        // }
+        console.log('__generateBill',getBillObject());
+        RestoService.generateBill(getBillObject()).then(res=>{
+            console.log(res);
         }).catch(err=>{
             console.log(err);
         })
     }
-    return (
+    if(billObject === null){
+        return null
+    }else return (
         <div>
                 <StyledModal onClose={()=>{setBillModal(false)}} contentRef={contentRef}>
                 
@@ -63,7 +157,7 @@ function GenerateBillModal(props) {
                              <FlexItem grow={1}>Table No: {orderDetail.table_no}</FlexItem> <FlexItem grow={1}>Table No: 10</FlexItem>
                         </Flex>
                         <PriceTable>
-                        <Flex className='billHeader'><FlexItem  grow={1}>Item</FlexItem><FlexItem >Quantity</FlexItem> <FlexItem >Price</FlexItem></Flex>
+                        <Flex className='billHeader'><FlexItem  grow={1}>Item</FlexItem><FlexItem ><span>Quantity</span></FlexItem> <FlexItem ><span>Price</span></FlexItem></Flex>
 
                             {
                                 orderDetail.products.filter(product=>product.is_alcohol===false).length>0 
@@ -108,17 +202,28 @@ function GenerateBillModal(props) {
                                                 </FlexItem>
                                                 <FlexItem >
                                                     <Flex column>
-                                    <ProductCost>Rs.{orderDetail.products.filter(product=>product.is_alcohol===false).reduce((a,p)=>(a + p.price * p.qty),0)}</ProductCost>
+                                                        <ProductCost>Rs.{billObject.food.sub_total}</ProductCost>
                                                     </Flex>
                                                 </FlexItem>
                                         </Flex>
+                                        
                                         <Flex>
                                                 <FlexItem grow={1}>
                                                     <SectionName> Gst</SectionName>
                                                 </FlexItem>
                                                 <FlexItem >
                                                     <Flex column>
-                                    <ProductCost>+Rs.{orderDetail.products.filter(product=>product.is_alcohol===false).reduce((a,p)=>(a + p.price * p.qty),0) * restaurant.gst_tax/100}</ProductCost>
+                                                        <ProductCost>+Rs.{parseInt(billObject.food.tax.value)}</ProductCost>
+                                                    </Flex>
+                                                </FlexItem>
+                                        </Flex>
+                                        <Flex>
+                                                <FlexItem grow={1}>
+                                                    <SectionName>Food Discount  @<input type='number' style={{width:'50px'}} name='food_discount' min="0" value={foodDiscount} onChange={discountChange}/></SectionName>
+                                                </FlexItem>
+                                                <FlexItem >
+                                                    <Flex column>
+                                    <ProductCost>-Rs.{parseInt(billObject.food.discount.value)}</ProductCost>
                                                     </Flex>
                                                 </FlexItem>
                                         </Flex>
@@ -172,29 +277,27 @@ function GenerateBillModal(props) {
                                         </Flex>
                                         <Flex>
                                                 <FlexItem grow={1}>
-                                                    <SectionName> Vat</SectionName>
+                                                    <SectionName>Vat @<input type='number' style={{width:'50px'}} min="0" name='vat_tax' value={vatTax} onChange={(e)=>{setVatTax(e.target.value)}}/></SectionName>
                                                 </FlexItem>
                                                 <FlexItem >
                                                     <Flex column>
-                                    <ProductCost>+Rs.{orderDetail.products.filter(product=>product.is_alcohol===true).reduce((a,p)=>(a + p.price * p.qty),0)*restaurant.vat_tax}</ProductCost>
+                                                        <ProductCost> + Rs.{parseInt(billObject.drinks.vat_tax.value)}</ProductCost>
+                                                    </Flex>
+                                                </FlexItem>
+                                        </Flex>
+                                        <Flex>
+                                                <FlexItem grow={1}>
+                                                    <SectionName>Drinks Discount @<input type='number' min="0" style={{width:'50px'}} name='drinks_discount' value={drinksDiscount} onChange={discountChange}/></SectionName>
+                                                </FlexItem>
+                                                <FlexItem >
+                                                    <Flex column>
+                                                        <ProductCost>-Rs.{parseInt(billObject.alchohol.discount.value)}</ProductCost>
                                                     </Flex>
                                                 </FlexItem>
                                         </Flex>
                                     </>
                                     :''
                             }
-                            
-                            
-                            <Flex>
-                                    <FlexItem grow={1}>
-                                        <SectionName> Discount</SectionName>
-                                    </FlexItem>
-                                    <FlexItem >
-                                        <Flex column>
-                                            <ProductCost>-Rs.<input value={discount} onChange={discountChange}/></ProductCost>
-                                        </Flex>
-                                    </FlexItem>
-                            </Flex>
                             {/* <Flex>
                                     <FlexItem grow={1}>
                                         <SectionName> Vat</SectionName>
@@ -205,13 +308,14 @@ function GenerateBillModal(props) {
                                         </Flex>
                                     </FlexItem>
                             </Flex> */}
+                            
                             <Flex>
                                     <FlexItem grow={1}>
-                                        <SectionName> Service Charge</SectionName>
+                                        <SectionName>Service charge  @<input type='number' style={{width:'50px'}} min="0" name='vat_tax' value={serviceCharge} onChange={(e)=>{setServiceCharge(e.target.value)}}/></SectionName>
                                     </FlexItem>
                                     <FlexItem >
                                         <Flex column>
-                        <ProductCost>+Rs.{orderDetail.products.reduce((a,p)=>(a + p.price * p.qty),0) * restaurant.service_charge}</ProductCost>
+                        <ProductCost>+Rs.{billObject.service_charge.value}</ProductCost>
                                         </Flex>
                                     </FlexItem>
                             </Flex>
@@ -222,12 +326,13 @@ function GenerateBillModal(props) {
                                     </FlexItem>
                                     <FlexItem >
                                         <Flex column>
-                                            <ProductCost>Rs.1200</ProductCost>
+                                            <ProductCost>Rs.{billObject.grand_total}</ProductCost>
                                         </Flex>
                                     </FlexItem>
                             </Flex>
                             <Separator/>
                         </PriceTable>
+                        <SolidButton onClick={generateOrderBill}>Generate Order Bill</SolidButton>
                     </Flex>
                 </BillContainer>
 
@@ -265,6 +370,10 @@ const PriceTable = styled.div`
     .billHeader{
         text-align:left;
         font-weight:800;
+        span{
+            width:90px;
+            padding: 0 10px;
+        }
     }
 `
 const RestoName = styled.div`
@@ -326,7 +435,8 @@ const ProductName  = styled.div`
 const ProductCost = styled.div`
     color:#333333;
     font-size:14px;
-    width:50px;
+    width:100px;
+    padding:0 10px;
     text-align:center;
 `
 const ExtraItem = styled.div`
