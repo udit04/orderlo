@@ -8,24 +8,28 @@ function Orders(props) {
     const [orderTab,setOrderTab] = useState(0)
 
     useEffect(() => {
-
-        getOrders(props.id);
-
-    }, [])
+        const interval = setInterval(() => {
+            getOrders(props.id);
+          }, 5000);
+          return () => clearInterval(interval);
+    }, [ordersData])
 
     useEffect(() => {
-
         getOrders(props.id);
-
-    }, [props.id])
+    }, [props.id]);
 
     const getOrders = (id)=>{
-        RestoService.getOrders({id}).then(res=>{
+        const query = {id};
+        if(ordersData && ordersData.menu){
+            query.order_length = ordersData.menu.length
+        }
+        RestoService.getOrders(query).then(res=>{
             if(res.status === 200 && res.data.menu){
                 setOrdersData(res.data);
                 props.setOrderDetail(res.data.menu[0]);
             }else{
-                setErr(err);
+                if(!res.data.message)
+                    setErr(err);
             }
         }).catch(err=>{
             setErr(err);
@@ -42,9 +46,22 @@ function Orders(props) {
             }
         ).then(res=>{
             if(res.status===200){
+                const new_orders = ordersData;
+                new_orders.menu = ordersData.menu.map((order)=>{
+                    order = Object.assign({},order);
+                    if(order.id === order_id){
+                        order.order_status = "accepted";
+                        order.payment_status = "pending";
+                    }
+                    return order;
+                });
+                //setOrdersData(new_orders);
                 getOrders(props.id);
             }
-        }).catch(console.log('something went wrong'))
+        }).catch(err=>{
+            console.log('err',err);
+            console.log('something went wrong')
+        })
     }
     const cancelOrder = (order_id)=>{
             RestoService.acceptOrder(
@@ -75,6 +92,7 @@ function Orders(props) {
                 getOrders(props.id);
             }
         }).catch(err=>{
+            console.log('err',err);
             console.log('something went wrong')
         })
     }
@@ -92,21 +110,21 @@ function Orders(props) {
                 <OrdersListWrapper>
                     <OrdersCount>Today <span>{ordersData.menu.length}</span></OrdersCount>
                     { orderTab ===0 && 
-                    ordersData.menu.filter(data=>((data.order_status==="accepted"||data.order_status==="created") ) ).map(data=>{
+                    ordersData.menu.filter(data=>((data.order_status==="accepted"||data.order_status==="created") ) ).map((data,i)=>{
                         return(
-                            <Order deliverOrder={deliverOrder} acceptOrder={acceptOrder} cancelOrder={cancelOrder}  setOrderDetail={props.setOrderDetail} data={data}/>
+                            <Order deliverOrder={deliverOrder} acceptOrder={acceptOrder} cancelOrder={cancelOrder}  setOrderDetail={props.setOrderDetail} data={data} key={i}/>
                         )
                     })}
                     { orderTab === 1 && 
-                    ordersData.menu.filter(data=>(data.order_status==="delivered") && data.payment_status ==='success').map(data=>{
+                    ordersData.menu.filter(data=>(data.order_status==="delivered") && data.payment_status ==='success').map((data,i)=>{
                         return(
-                            <Order deliverOrder={deliverOrder} acceptOrder={acceptOrder} cancelOrder={cancelOrder} deliverOrder={deliverOrder}  setOrderDetail={props.setOrderDetail} data={data}/>
+                            <Order deliverOrder={deliverOrder} acceptOrder={acceptOrder} cancelOrder={cancelOrder} deliverOrder={deliverOrder}  setOrderDetail={props.setOrderDetail} data={data} key={i}/>
                         )
                     })}
                     { orderTab === 2 && 
-                    ordersData.menu.filter(data=>(data.order_status!=="created" && data.order_status!=="accepted") ).map(data=>{
+                    ordersData.menu.filter(data=>(data.order_status!=="created" && data.order_status!=="accepted") ).map((data,i)=>{
                         return(
-                            <Order deliverOrder={deliverOrder} acceptOrder={acceptOrder} cancelOrder={cancelOrder} setOrderDetail={props.setOrderDetail} data={data}/>
+                            <Order deliverOrder={deliverOrder} acceptOrder={acceptOrder} cancelOrder={cancelOrder} setOrderDetail={props.setOrderDetail} data={data} key={i}/>
                         )
                     })}
                     {/* <Order/>
@@ -122,7 +140,6 @@ function Orders(props) {
 
 function Order(props){
     const {data,cancelOrder,acceptOrder,deliverOrder } = props;
-    
     return (
         <OrderWrapper onClick={()=>{props.setOrderDetail(data)}}>
             <Flex alignCenter>
