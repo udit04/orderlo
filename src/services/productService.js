@@ -19,4 +19,9 @@ const getStoreRestos = (body)=>{
 const placeOrder = (body)=>{
     return ax.post(`/v1/api/place_order`,body);
 }
-export default {getRestoProducts,getStoreRestos,placeOrder}
+
+const editOrder = (body)=>{
+    return ax.post(`/v1/api/edit_order`,body);
+}
+
+export default {getRestoProducts,getStoreRestos,placeOrder,editOrder}

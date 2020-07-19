@@ -10,6 +10,7 @@ import ProductSearch from '../ProductSearch';
 
 function EditOrderModal(props) {
     const {onClose,restaurant,orderDetail,res_id} = props;
+
     const contentRef = React.createRef();
     
     const [sidebar, setsidebar] = useState(false);
@@ -18,16 +19,14 @@ function EditOrderModal(props) {
     const [collections,setCollections] = useState([]);
     const [store,setStore] = useState(null);
     const [search,setSearch ] = useState('');
-    const [cartProducts,setCartProducts]= useState([]);
+    const [cartProducts,setCartProducts]= useState(orderDetail.products);
 
     useEffect(() => {
         if(res_id)
         {
             productService.getRestoProducts({id:res_id}).then(res=>{
                 if(res.status===200){
-                    console.log(res.data.menu[0]['products'])
                     setproductsData(res.data.menu);
-
                 }else{
                     
                 }
@@ -63,13 +62,64 @@ function EditOrderModal(props) {
         
         setFilteredData(filteredCollections);
     }
-    const onAdd = ()=>{
 
+    const onAdd = (product)=>{
+        if(cartProducts.find((prod)=>prod.id === product.id)){
+            console.log('here')
+            setCartProducts(cartProducts.map((prod)=>{
+                if(prod.id === product.id){
+                    ++prod.qty;
+                }
+                return prod;
+            }))
+        }
+        else{
+            let arr = Array.from(cartProducts);
+            product.qty = 1;
+            arr.push(product);
+            setCartProducts(arr)
+        }
     }
 
-    const onRemove = ()=>{
-
+    const onRemove = (product)=>{
+        if(cartProducts.find((prod)=>prod.id === product.id)){
+            setCartProducts(cartProducts.map((prod)=>{
+                if(prod.id === product.id){
+                    --prod.qty;
+                }
+                if(prod.qty===0){
+                    return null;
+                }
+                return prod;
+            }).filter((item)=>item!==null))
+        }
     }
+
+    const editOrder = ()=>{
+        let arr = cartProducts.map((prod)=>{
+            return {
+                product_id:prod.id,
+                addons:[],
+                qty:prod.quantity
+            }
+        })
+        const body_to_send = {
+            "restaurant_id" : res_id,
+            "order_id" : orderDetail.id,
+            "products": arr
+        };
+        productService.editOrder(body_to_send).then(res=>{
+            if(res.status===200){
+            }else{
+            }
+        }).catch(err=>{
+            console.log(err);
+        }) 
+    }
+
+    const foodProducts = cartProducts.filter(p=>p.is_alcohol===false);
+    const alcoholProducts = cartProducts.filter(p=>p.is_alcohol===true);
+
     return (
         <div>
             <StyledModal contentRef={contentRef} onClose={onClose}> 
@@ -147,14 +197,20 @@ function EditOrderModal(props) {
                         </Flex>
                         <Flex column style={{padding:'1rem',width:'100%',maxWidth:'600px'}}>
                             {
-                                orderDetail.products && orderDetail.products.length > 0
+                                cartProducts && cartProducts.length > 0
                                     &&
-                                <>
-                                
-                                <DetailMain>Food Bill Details</DetailMain>
-                                <ProductListDashboard onAdd={onAdd} onRemove={onRemove} noImage={true} search={search} restaurant={restaurant} productsData={orderDetail.products.filter(p=>p.is_alcohol===false)}/>
-                                <DetailMain>Liquor Bill Details</DetailMain>
-                                <ProductListDashboard onAdd={onAdd} onRemove={onRemove} noImage={true} search={search} restaurant={restaurant} productsData={orderDetail.products.filter(p=>p.is_alcohol===true)}/>
+                                <>  
+                                    
+                                    <DetailMain>Food Bill Details</DetailMain>
+                                    {console.log('cartProducts',cartProducts.length)}
+                                    <ProductListDashboard onAdd={onAdd} onRemove={onRemove} noImage={true} search={search} restaurant={restaurant} productsData={foodProducts} />
+                                    {
+                                        alcoholProducts.length>0 ? 
+                                        <>
+                                        <DetailMain>Liquor Bill Details</DetailMain>
+                                        <ProductListDashboard onAdd={onAdd} onRemove={onRemove} noImage={true} search={search} restaurant={restaurant} productsData={alcoholProducts}/></> : null
+                                    }
+                                    
                                 </>
                             }
                         </Flex>

@@ -16,7 +16,7 @@ function OrderDetails(props) {
         return (
         <DetailsWrapper>
             <div>
-            <DetailHeader  > OrderDetails 
+            <DetailHeader  > Order Details 
                 { ['created','accepted'].includes(orderDetail.order_status) 
                     && 
                 <span>New order</span>}
@@ -65,7 +65,7 @@ function OrderDetails(props) {
                                         <Flex>
                                             <IsVeg style={{marginTop:'5px',marginRight:'5px'}} is_veg={product.is_veg}/>
                                             <Flex column>
-                                                <Flex><ProductName>{product.name} </ProductName><ProductCount> x {product.qty}</ProductCount></Flex>
+                                                <Flex><ProductName>{product.name}&nbsp;</ProductName><ProductCount> x {product.qty}</ProductCount></Flex>
                                                 {/* <ExtraItem>Extra cheese</ExtraItem> */}
                                             </Flex>
                                             

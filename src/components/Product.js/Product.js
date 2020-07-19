@@ -46,7 +46,7 @@ export function DashboardProduct(props){
                 {!props.dashboard
                 ?
                 <Flex alignCenter justifyBetween>
-                    <AddButtonDashboard quantity={data.qty} onAdd={onAdd} onRemove={onRemove} restaurant={restaurant} product={data}></AddButtonDashboard>
+                    <AddButtonDashboard quantity={data.qty} product={data} onAdd={onAdd} onRemove={onRemove} restaurant={restaurant}></AddButtonDashboard>
                 </Flex>
                 :
                 ''
