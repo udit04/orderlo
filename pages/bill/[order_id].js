@@ -47,7 +47,7 @@ export default function Bill(props) {
                     <RestoAddress>{orderDetails.restaurant.address}</RestoAddress>
                     <Flex column className='billMeta'>
                         <Flex>
-                             <FlexItem grow={2}>Customer Name - {orderDetails.user.first_name + orderDetails.user.last_name}</FlexItem>
+                             <FlexItem grow={2}>Customer Name - {orderDetails.user.first_name + " "+ orderDetails.user.last_name}</FlexItem>
                         </Flex>
                         <Flex >
                             <FlexItem grow={1}>Date : {(new Date(orderDetails.order_date)).getDate() + '/' + ((new Date(orderDetails.order_date)).getMonth()+1) + '/' + ((new Date(orderDetails.order_date)).getFullYear() - 2000)}</FlexItem>
