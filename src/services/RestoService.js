@@ -8,8 +8,21 @@ const ax = axios.create({
   });
   
  const getOrders = (body)=>{
-    const {id} = body;
-    return ax.get(`/v1/api/restaurant_order_history?restaurant_id=${id}`)
+    const {id,user_id} = body;
+    let qs = [];
+    if(id){
+        qs.push(`restaurant_id=${id}`)
+    }
+    if(user_id){
+        qs.push(`user_id=${user_id}`)
+    }
+    qs = qs.join("&");
+    return ax.get(`/v1/api/restaurant_order_history?${qs}`)
+}
+
+const getBillDetails = (body)=>{
+    const {order_id} = body;
+    return ax.get(`/v1/api/fetch_order_bill_details?order_id=${order_id}`)
 }
 
 const acceptOrder = (body)=>{
@@ -22,4 +35,5 @@ const cancelOrder = (body)=>{
 const generateBill = (body)=>{
     return ax.post(`/v1/api/generate_bill`,body);
 }
-export default {getOrders, acceptOrder, generateBill}
+
+export default {getOrders, acceptOrder,generateBill, getBillDetails}
