@@ -3,13 +3,13 @@ import styled from 'styled-components'
 import Flex from 'styled-flex-component'
 import { RupeeIcon } from '../../Icons';
 import { IsVeg } from '../IsVeg';
-import AddButton from '../AddButton';
+import AddButton,{AddButtonDashboard} from '../AddButton';
 export default function Product(props) {
-    const {data,restaurant} = props;
+    const {data,restaurant,noImage} = props;
     if(!data) return <React.Fragment></React.Fragment>
     return (
         <Wrapper>
-            <img src={data.image}/>
+            {!noImage && <img src={data.image}/>}
             <ProductContent>
                 <Flex column>
                     <ProductName>{data.name} <IsVeg is_veg={data.is_veg}/></ProductName>
@@ -21,6 +21,32 @@ export default function Product(props) {
                 ?
                 <Flex alignCenter justifyBetween>
                     <AddButton restaurant={restaurant} product={data}></AddButton>
+                </Flex>
+                :
+                ''
+                }
+            </ProductContent>
+        </Wrapper>
+    )
+}
+
+export function DashboardProduct(props){
+    const {data,restaurant,noImage,onRemove,onAdd} = props;
+    if(!data) return <React.Fragment></React.Fragment>
+    return (
+        <Wrapper>
+            {!noImage && <img src={data.image}/>}
+            <ProductContent>
+                <Flex column>
+                    <ProductName>{data.name} <IsVeg is_veg={data.is_veg}/></ProductName>
+                    <RestaurentName>{restaurant.name} </RestaurentName>
+                    <LocationName><RupeeIcon color={'#f1a62d'} height={8} width={8}/>{data.price}</LocationName>
+    
+                </Flex>
+                {!props.dashboard
+                ?
+                <Flex alignCenter justifyBetween>
+                    <AddButtonDashboard quantity={data.qty} onAdd={onAdd} onRemove={onRemove} restaurant={restaurant} product={data}></AddButtonDashboard>
                 </Flex>
                 :
                 ''

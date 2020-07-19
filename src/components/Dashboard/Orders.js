@@ -3,13 +3,14 @@ import styled from 'styled-components'
 import Flex,{FlexItem} from 'styled-flex-component'
 import RestoService from '../../services/RestoService'
 function Orders(props) {
+    const { setOrderDetail, setEditOrder } = props;
     const [err, setErr] = useState(null)
     const [ordersData,setOrdersData] = useState(null);
     const [orderTab,setOrderTab] = useState(0)
 
     useEffect(() => {
         const interval = setInterval(() => {
-            getOrders(props.id);
+            // getOrders(props.id);
           }, 5000);
           return () => clearInterval(interval);
     }, [ordersData])
@@ -96,6 +97,10 @@ function Orders(props) {
             console.log('something went wrong')
         })
     }
+    const editOrder = (data)=>{
+        setOrderDetail(data);
+        setEditOrder(true);
+    }
     return (
         <OrdersWrapper>
             <div className="title">Orders</div>
@@ -108,23 +113,23 @@ function Orders(props) {
             {   ordersData && ordersData.menu && ordersData.menu.length>0
                 &&
                 <OrdersListWrapper>
-                    <OrdersCount>Today <span>{ordersData.menu.length}</span></OrdersCount>
+                    <OrdersCount>Today <span>{ordersData.menu.length} Orders</span></OrdersCount>
                     { orderTab ===0 && 
                     ordersData.menu.filter(data=>((data.order_status==="accepted"||data.order_status==="created") ) ).map((data,i)=>{
                         return(
-                            <Order deliverOrder={deliverOrder} acceptOrder={acceptOrder} cancelOrder={cancelOrder}  setOrderDetail={props.setOrderDetail} data={data} key={i}/>
+                            <Order editOrder={editOrder} deliverOrder={deliverOrder} acceptOrder={acceptOrder} cancelOrder={cancelOrder}  setOrderDetail={props.setOrderDetail} data={data} key={i}/>
                         )
                     })}
                     { orderTab === 1 && 
                     ordersData.menu.filter(data=>(data.order_status==="delivered") && data.payment_status ==='success').map((data,i)=>{
                         return(
-                            <Order deliverOrder={deliverOrder} acceptOrder={acceptOrder} cancelOrder={cancelOrder} deliverOrder={deliverOrder}  setOrderDetail={props.setOrderDetail} data={data} key={i}/>
+                            <Order editOrder={editOrder} deliverOrder={deliverOrder} acceptOrder={acceptOrder} cancelOrder={cancelOrder} deliverOrder={deliverOrder}  setOrderDetail={props.setOrderDetail} data={data} key={i}/>
                         )
                     })}
                     { orderTab === 2 && 
                     ordersData.menu.filter(data=>(data.order_status!=="created" && data.order_status!=="accepted") ).map((data,i)=>{
                         return(
-                            <Order deliverOrder={deliverOrder} acceptOrder={acceptOrder} cancelOrder={cancelOrder} setOrderDetail={props.setOrderDetail} data={data} key={i}/>
+                            <Order editOrder={editOrder} deliverOrder={deliverOrder} acceptOrder={acceptOrder} cancelOrder={cancelOrder} setOrderDetail={props.setOrderDetail} data={data} key={i}/>
                         )
                     })}
                     {/* <Order/>
@@ -139,7 +144,7 @@ function Orders(props) {
 
 
 function Order(props){
-    const {data,cancelOrder,acceptOrder,deliverOrder } = props;
+    const {data,cancelOrder,acceptOrder,deliverOrder ,editOrder} = props;
     return (
         <OrderWrapper onClick={()=>{props.setOrderDetail(data)}}>
             <Flex alignCenter>
@@ -212,6 +217,10 @@ function Order(props){
                             && 
                         <FieldValue onClick={()=>cancelOrder(data.id)}>cancel</FieldValue>
                     }
+                    {   data.order_status ==='accepted'
+                            && 
+                        <ConfirmButton onClick={()=>editOrder(data)}>Edit Order</ConfirmButton>
+                    }
                 </Flex>
             </Flex>
         </OrderWrapper>
@@ -261,6 +270,7 @@ const OrderTab = styled.div`
     }
     &.active{
         color: #3c4dae;
+        font-weight:bold;
         border-bottom:2px solid currentColor;
         
     }
@@ -275,7 +285,7 @@ const OrderTab = styled.div`
         font-weight:800;
         /* top: 0; */
         bottom: 80%;
-        right: 0px;
+        right: 20px;
     }
 `
 const OrdersCount = styled.div`

@@ -153,6 +153,23 @@ export default function AddButton(props) {
 }
 
 
+export function AddButtonDashboard(props) {
+    const {onAdd,onRemove,quantity} = props;
+    return (
+        quantity>0
+        ?
+        <Flex >
+           <RemoveProduct onClick={onRemove}> -</RemoveProduct>
+           <QuantityCount>{quantity}</QuantityCount>
+            <IncrementProduct onClick={onAdd}>+</IncrementProduct>
+        </Flex>
+        :
+        <Button onClick={onAdd}>
+            Add
+        </Button>
+    )
+}
+
 
 const Button = styled.div`
     border-radius:5px;
