@@ -8,13 +8,16 @@ const ax = axios.create({
   });
   
  const getOrders = (body)=>{
-    const {id,user_id} = body;
+    const {id,user_id,order_length} = body;
     let qs = [];
     if(id){
         qs.push(`restaurant_id=${id}`)
     }
     if(user_id){
         qs.push(`user_id=${user_id}`)
+    }
+    if(order_length){
+        qs.push(`order_length=${order_length}`)
     }
     qs = qs.join("&");
     return ax.get(`/v1/api/restaurant_order_history?${qs}`)
