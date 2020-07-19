@@ -15,23 +15,23 @@ function OrderSidebar(props) {
                 <Flex column>
                     
                     <SideOption className={props.activeTab===0?'activeMenuTab':''} onClick={()=>{props.setActiveTab(0)} }>
-                        <img src=''/>
+                    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><path d="M3 11h58v42H3z" fill="#e1ecfd"/><path d="M23 26l-1 6H8l-1-6z" fill="#aa7b4f"/><path d="M23 26H7l1-5h14z" fill="#cca174"/><path d="M13 26h4v3h-4z" fill="#f5e0cd"/><path d="M43 17h3v5h-3zM49 16h3v6h-3z" fill="#ffda44"/><path d="M52 17h3v5h-3zM46 18h3v4h-3z" fill="#ff9811"/><path d="M28 40h8v4h-8z" fill="#46f8ff"/><path d="M37 22l-1 10h-8l-1-10z" fill="#5bcbfa"/><path d="M26 19h12v3H26z" fill="#2488ff"/><path d="M35 19h-2v-3a1 1 0 011-1l2-1v2l-1 1z" fill="#5bcbfa"/><path d="M11 40h8v4h-8z" fill="#46f8ff"/><path d="M3 3h58v8H3z" fill="#2488ff"/><path d="M54 32H44l-1-10h12zM6 6h2v2H6z" fill="#ec455a"/><path d="M10 6h2v2h-2z" fill="#ffda44"/><path d="M14 6h2v2h-2z" fill="#91dc5a"/><g fill="#1a6fb0"><path d="M11 35h2v2h-2zM15 35h4v2h-4zM28 35h2v2h-2zM32 35h4v2h-4z"/></g><path d="M57 41v12l-3 4v5H41v-6l-3-4v-8l3-3v-8a2 2 0 012-2 2 2 0 011 0 2 2 0 010 1 2 2 0 011 0 2 2 0 010 1v7a2 2 0 012-2 2 2 0 012 2 2 2 0 012-2 2 2 0 012 2v1a2 2 0 012-2 2 2 0 012 2z" fill="#f09898"/></svg>
                         <div className='optionName'>
                             Orders
                         </div>
                     </SideOption>
-                    <SideOption className={props.activeTab===1?'activeMenuTab':''} onClick={()=>{props.setActiveTab(1)}} >
+                    {/* <SideOption className={props.activeTab===1?'activeMenuTab':''} onClick={()=>{props.setActiveTab(1)}} >
                         <img src=''/>
                         <div className='optionName'>
                             Menu
                         </div>
-                    </SideOption>
-                    <SideOption className={props.activeTab===2?'activeMenuTab':''} onClick={()=>{props.setActiveTab(2)}} >
+                    </SideOption> */}
+                    {/* <SideOption className={props.activeTab===2?'activeMenuTab':''} onClick={()=>{props.setActiveTab(2)}} >
                         <img src=''/>
                         <div className='optionName'>
                             Reports
                         </div>
-                    </SideOption> 
+                    </SideOption>  */}
                 </Flex>
             </Flex>
         </SidebarContainer>
