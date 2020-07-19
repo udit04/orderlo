@@ -14,9 +14,13 @@ function GenerateBillModal(props) {
     const [vatTax,setVatTax] = useState(restaurant.vat_tax);
     const [gstTax,setGstTax] = useState(restaurant.gst_tax);
     const [billObject,setBillObject] = useState(null);
+    const [message,setMessage] = useState('');
     useEffect(() => {
         console.log(orderDetail)
         setBillObject(getBillObject());
+        ()=>{
+            setMessage('');
+        }
     }, [])
 
     const discountChange = (e)=>{
@@ -136,8 +140,12 @@ function GenerateBillModal(props) {
         console.log('__generateBill',getBillObject());
         RestoService.generateBill(getBillObject()).then(res=>{
             console.log(res);
+            if(res.status){
+                setMessage(res.data.message);
+            }
         }).catch(err=>{
             console.log(err);
+            setMessage('something went wrong');
         })
     }
     if(billObject === null){
@@ -148,13 +156,16 @@ function GenerateBillModal(props) {
                 
                 <BillContainer ref={contentRef}>
             <RestoName> {restaurant.name}</RestoName>
+            <div style={{textAlign:'center'}}>{message}</div>
                     <RestoAddress>{restaurant.address}</RestoAddress>
                     <Flex column className='billMeta'>
                         <Flex >
-            <FlexItem grow={1}>Date : {(new Date(orderDetail.createdAt)).getDate() + '/' + ((new Date(orderDetail.createdAt)).getMonth()+1) + '/' + ((new Date(orderDetail.createdAt)).getFullYear() - 2000)}</FlexItem> <FlexItem grow={1}>Date : 15/06/20</FlexItem>
+            <FlexItem grow={1}>Date : {(new Date(orderDetail.createdAt)).getDate() + '/' + ((new Date(orderDetail.createdAt)).getMonth()+1) + '/' + ((new Date(orderDetail.createdAt)).getFullYear() - 2000)}</FlexItem> 
+            {/* <FlexItem grow={1}>Date : 15/06/20</FlexItem> */}
                         </Flex>
                         <Flex>
-                             <FlexItem grow={1}>Table No: {orderDetail.table_no}</FlexItem> <FlexItem grow={1}>Table No: 10</FlexItem>
+                             <FlexItem grow={1}>Table No: {orderDetail.table_no}</FlexItem> 
+                             {/* <FlexItem grow={1}>Table No: 10</FlexItem> */}
                         </Flex>
                         <PriceTable>
                         <Flex className='billHeader'><FlexItem  grow={1}>Item</FlexItem><FlexItem ><span>Quantity</span></FlexItem> <FlexItem ><span>Price</span></FlexItem></Flex>
