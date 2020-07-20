@@ -12,7 +12,7 @@ export default function Product(props) {
             <img src={data.image}/>
             <ProductContent>
                 <Flex column>
-                    <ProductName>{data.name} <IsVeg is_veg={data.is_veg}/></ProductName>
+                    <ProductName><IsVeg is_veg={data.is_veg}/> {data.name} </ProductName>
                     <RestaurentName>{restaurant.name} </RestaurentName>
                     <LocationName><RupeeIcon color={'#f1a62d'} height={8} width={8}/>{data.price}</LocationName>
                 
@@ -65,5 +65,5 @@ const LocationName = styled.div`
     font-size:14px;
     color:#f1a62d;
     font-weight:800;
-    margin-top: 5px;
+    /* margin-top: 5px; */
 `
