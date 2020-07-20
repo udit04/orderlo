@@ -23,6 +23,7 @@ export default function Restaurant(props) {
     const { res_id } = router.query;
     const [search,setSearch ] = useState('');
     const [cartProducts,setCartProducts]= useState([]);
+    const [activeCollection,setActiveCollection] = useState('');
     useEffect(() => {
         const cartData = JSON.parse(window.localStorage.getItem('cartData'));
         if(cartData){
@@ -217,6 +218,11 @@ export default function Restaurant(props) {
         
         setFilteredData(filteredCollections);
     }
+
+    const activateCollection = (e)=>{
+        setActiveCollection(e.target.innerText);
+        document.getElementById(e.target.innerText).scrollIntoView({behavior: "smooth", block: "center", inline: "center"});
+    }
     return (
         <div>
             
@@ -243,7 +249,7 @@ export default function Restaurant(props) {
                 </ProductSearcWrapper>
                 
                 <Categories>
-                    <CategoriesTitle>Top Categories</CategoriesTitle>
+                    {/* <CategoriesTitle>Top Categories</CategoriesTitle> */}
                     <CateogryWrapper>
                         {   productsData && search!==''
                                 ?
@@ -252,7 +258,7 @@ export default function Restaurant(props) {
                                     <>{
                                         collection.products.filter(p=>(p.name.toLowerCase().indexOf(search.toLowerCase()) !== -1)).length>0
                                         &&
-                                        <Category onClick={()=>{if(window!==undefined) document.getElementById(collection.name).scrollIntoView({behavior: "smooth", block: "center", inline: "center"});}} >{collection.name}</Category>
+                                        <Category className={activeCollection===collection.name?'active':''} onClick={activateCollection} >{collection.name}</Category>
                                         }
                                     
                                     {
@@ -262,7 +268,7 @@ export default function Restaurant(props) {
                                                 {
                                                     coll.products.filter(p=>(p.name.toLowerCase().indexOf(search.toLowerCase()) !== -1)).length>0
                                                         &&
-                                                    <Category onClick={()=>{if(window!==undefined) document.getElementById(coll.name).scrollIntoView({behavior: "smooth", block: "center", inline: "center"});}}   >{coll.name}</Category>
+                                                    <Category className={activeCollection===collection.name?'active':''} onClick={activateCollection}   >{coll.name}</Category>
 
                                                 }
                                                 </>
@@ -280,12 +286,12 @@ export default function Restaurant(props) {
                             productsData.map(collection=>{
                                 return(
                                     <>
-                                    <Category onClick={()=>{if (window!==undefined) document.getElementById(collection.name).scrollIntoView({behavior: "smooth", block: "center", inline: "center"});}}>{collection.name}</Category>
+                                    <Category className={activeCollection===collection.name?'active':''} onClick={activateCollection}>{collection.name}</Category>
                                     {
                                         collection.subCategory.map(coll=>{
                                             return(
                                                 <>
-                                                <Category onClick={()=>{if (window!==undefined) document.getElementById(coll.name).scrollIntoView({behavior: "smooth", block: "center", inline: "center"});}} >{coll.name}</Category>
+                                                <Category className={activeCollection===collection.name?'active':''} onClick={activateCollection} >{coll.name}</Category>
                                                 </>
                                             )
                                         })
@@ -326,7 +332,7 @@ export default function Restaurant(props) {
                             }
                             <ProductList search={search} restaurant={restaurant} productsData={collection.products}/>
                             {
-                                collection.subCategory.map(coll=>{
+                                collection.subCategory.map((coll,index)=>{
                                     return(
                                         <>
                                         {coll.products.filter(p=>(p.name.toLowerCase().indexOf(search.toLowerCase()) !== -1)).length>0
@@ -403,6 +409,7 @@ const CateogryWrapper = styled.div`
     overflow-x: scroll;
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none;  /* IE 10+ */
+    border-bottom: 1px solid #eeeeee;
     &::-webkit-scrollbar {
         width: 0px;
         background: transparent; /* Chrome/Safari/Webkit */
@@ -413,7 +420,7 @@ const Category = styled.div`
     
     margin: 0.5rem;
     white-space: nowrap;
-    color: #FF9800;
+    color: #999999;
     -webkit-text-decoration: none;
     -webkit-text-decoration: none;
     text-decoration: none;
@@ -423,11 +430,16 @@ const Category = styled.div`
     padding: 0.5rem;
     margin: 0;
     font-size: 1rem;
-    font-weight: 800;
+    font-weight: 500;
     background: hsl(37 87% 92% / 1);
     margin-right: 1rem;
     border-radius: 5px;
-
+    background:#fff;
+    &.active{
+        color: #FF9800;
+        background: hsl(37 87% 92% / 1);
+        font-weight: 500;
+    }
     &:nth-child(1){
         margin-left:1rem;
     }
