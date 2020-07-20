@@ -7,6 +7,7 @@ import SkeletonLoader from '../SkeletonLoader';
 import ProductList,{ProductListDashboard} from '../ProductList';
 import productService from '../../services/productService';
 import ProductSearch from '../ProductSearch';
+import { SolidButton } from '../Login/LoginStyled';
 
 function EditOrderModal(props) {
     const {onClose,restaurant,orderDetail,res_id} = props;
@@ -213,6 +214,7 @@ function EditOrderModal(props) {
                                     
                                 </>
                             }
+                            <SolidButton style={{background: 'rgb(241 166 45)',maxWidth: '250px',margin:'0 auto'}}> Add Items</SolidButton>
                         </Flex>
                     </Flex>
                 </EditContainer>
