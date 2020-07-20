@@ -175,7 +175,7 @@ function Order(props){
                                         </Flex>   
                                         <Flex column>
                                             <ConfirmButton onClick={()=>acceptOrder(data.id)}>Accept</ConfirmButton>
-                                            <OrderStatus error={data.order_status==='rejected'}>{data.order_status} : <span style={{color:data.payment_status!=='success'?'#f1a62d;':''}}>payment - {data.payment_status}</span></OrderStatus>
+                                            <OrderStatus error={data.order_status==='rejected'}>{data.order_status} : <span style={{color:data.payment_status!=='success'?'#f1a62d':''}}>payment - {data.payment_status}</span></OrderStatus>
 
                                         </Flex>
                                     </Flex>

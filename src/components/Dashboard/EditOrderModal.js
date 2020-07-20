@@ -21,7 +21,7 @@ function EditOrderModal(props) {
     const [store,setStore] = useState(null);
     const [search,setSearch ] = useState('');
     const [cartProducts,setCartProducts]= useState(orderDetail.products);
-
+    const [message,setMessage] = useState('');
     useEffect(() => {
         if(res_id)
         {
@@ -111,10 +111,14 @@ function EditOrderModal(props) {
         };
         productService.editOrder(body_to_send).then(res=>{
             if(res.status===200){
+                setMessage('Items added successfully');
             }else{
+                setMessage('something went wrong');
             }
         }).catch(err=>{
             console.log(err);
+            setMessage('something went wrong');
+
         }) 
     }
 
@@ -125,6 +129,7 @@ function EditOrderModal(props) {
         <div>
             <StyledModal contentRef={contentRef} onClose={onClose}> 
                 <EditContainer ref={contentRef}>
+                    <div style={{textAlign:'center'}}>{message!=='' && message}</div>
                     <Flex>
                         <Flex column style={{width:'500px',height: '600px',overflowY: 'scroll',paddingRight: '1rem',borderRight: '4px solid #eeeeee',marginRight:'1rem'}}>
                                 
@@ -214,7 +219,7 @@ function EditOrderModal(props) {
                                     
                                 </>
                             }
-                            <SolidButton style={{background: 'rgb(241 166 45)',maxWidth: '250px',margin:'0 auto'}}> Add Items</SolidButton>
+                            <SolidButton onClick={editOrder} style={{background: 'rgb(241 166 45)',maxWidth: '250px',margin:'0 auto'}}> Add Items</SolidButton>
                         </Flex>
                     </Flex>
                 </EditContainer>
