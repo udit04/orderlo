@@ -23,6 +23,7 @@ export default function Restaurant(props) {
     const { res_id } = router.query;
     const [search,setSearch ] = useState('');
     const [cartProducts,setCartProducts]= useState([]);
+    const [activeCollection,setActiveCollection] = useState('');
     useEffect(() => {
         const cartData = JSON.parse(window.localStorage.getItem('cartData'));
         if(cartData){
@@ -33,130 +34,16 @@ export default function Restaurant(props) {
         }
         
     }, [])
+    useEffect(()=>{
+        if(activeCollection!=='' && document.getElementById(activeCollection))
+        document.getElementById(activeCollection).scrollIntoView({behavior: "smooth", block: "center", inline: "center"});
+    },[activeCollection])
     useEffect(() => {
         if(res_id)
         {
             productService.getRestoProducts({id:res_id}).then(res=>{
                 if(res.status===200){
                     console.log(res.data.menu[0]['products'])
-                    const menuData = {
-                        "message": "Menu fetched successfully!",
-                        "menu": [
-                          {
-                            "tags": null,
-                            "subCategory": [
-                              {
-                                "name": "Mocktails",
-                                "tags": null,
-                                "description": "awesome mocktails",
-                                "is_active": 1,
-                                "products": [
-                                  {
-                                    "nutritional_val": [],
-                                    "price_by_qty": [],
-                                    "addons": [],
-                                    "_id": "5ee53d65b5d43b1a3d4c51b1",
-                                    "id": 1,
-                                    "updatedAt": "2020-06-13T20:56:05.266Z",
-                                    "createdAt": "2020-06-13T20:56:05.266Z",
-                                    "name": "Pomgranade Lemonade",
-                                    "price": 550,
-                                    "is_veg": true,
-                                    "description": "Lemonade pomegranate juice and a spoonful of pomegranate seeds.",
-                                    "category_id": 1,
-                                    "restaurant_id": 1,
-                                    "image": "https://via.placeholder.com/150",
-                                    "is_active": true,
-                                    "store_id": [],
-                                    "__v": 0
-                                  }
-                                ]
-                              },
-                              {
-                                "name": "cocktails",
-                                "tags": null,
-                                "description": "awesome cocktails",
-                                "is_active": 1,
-                                "products": [
-                                  {
-                                    "nutritional_val": [],
-                                    "price_by_qty": [],
-                                    "addons": [],
-                                    "_id": "5ee53d65b5d43b1a3d4c51b1",
-                                    "id": 2,
-                                    "updatedAt": "2020-06-13T20:56:05.266Z",
-                                    "createdAt": "2020-06-13T20:56:05.266Z",
-                                    "name": "Pomgranade Lemonade",
-                                    "price": 550,
-                                    "is_veg": true,
-                                    "description": "Lemonade pomegranate juice and a spoonful of pomegranate seeds.",
-                                    "category_id": 1,
-                                    "restaurant_id": 1,
-                                    "image": "https://via.placeholder.com/150",
-                                    "is_active": true,
-                                    "store_id": [],
-                                    "__v": 0
-                                  }
-                                ]
-                              }
-                            ],
-                            "_id": "5f04d8e1eb08f7001efc114d",
-                            "restaurant_id": 1,
-                            "name": "Beverages",
-                            "is_active": true,
-                            "description": "awesome beverages",
-                            "createdAt": "2020-07-07T20:19:45.628Z",
-                            "updatedAt": "2020-07-07T20:20:08.980Z",
-                            "id": 1,
-                            "__v": 0,
-                            "products": []
-                          },
-                          {
-                            "tags": null,
-                            "subCategory": [],
-                            "_id": "5f04d8e1eb08f7001efc114d",
-                            "restaurant_id": 1,
-                            "name": "Snacks",
-                            "is_active": true,
-                            "description": "awesome beverages",
-                            "createdAt": "2020-07-07T20:19:45.628Z",
-                            "updatedAt": "2020-07-07T20:20:08.980Z",
-                            "id": 1,
-                            "__v": 0,
-                            "products": [
-                              {
-                                "nutritional_val": [],
-                                "price_by_qty": [],
-                                "addons": [],
-                                "_id": "5ee53d65b5d43b1a3d4c51b1",
-                                "id": 3,
-                                "updatedAt": "2020-06-13T20:56:05.266Z",
-                                "createdAt": "2020-06-13T20:56:05.266Z",
-                                "name": "Chicken Lollipop",
-                                "price": 550,
-                                "is_veg": true,
-                                "description": "Lemonade pomegranate juice and a spoonful of pomegranate seeds.",
-                                "category_id": 1,
-                                "restaurant_id": 1,
-                                "image": "https://via.placeholder.com/150",
-                                "is_active": true,
-                                "store_id": [],
-                                "__v": 0
-                              }
-                            ]
-                          }
-                        ],
-                        "restaurant": {
-                          "name": "Cafe Boho",
-                          "id": 10,
-                          "address": "23 Gangaur Ghat Marg, Opposite Cafe Edelwiess Next to Bagore Ki Haveli, Udaipur 313001 India",
-                          "status": "opened",
-                          "email": "cafebohoudaipur@gmail.com",
-                          "phone_number": "7727893776",
-                          "image": "https://images.happycow.net/venues/1024/19/31/hcmp193147_817951.jpeg",
-                          "is_active": true
-                        }
-                      }
                     setproductsData(res.data.menu);
 
                     // const collectionsData =  res.data.products.reduce(function (accumulator, element) {
@@ -217,6 +104,10 @@ export default function Restaurant(props) {
         
         setFilteredData(filteredCollections);
     }
+
+    const activateCollection = (e)=>{
+        setActiveCollection(e.target.innerText);
+    }
     return (
         <div>
             
@@ -243,7 +134,7 @@ export default function Restaurant(props) {
                 </ProductSearcWrapper>
                 
                 <Categories>
-                    <CategoriesTitle>Top Categories</CategoriesTitle>
+                    {/* <CategoriesTitle>Top Categories</CategoriesTitle> */}
                     <CateogryWrapper>
                         {   productsData && search!==''
                                 ?
@@ -252,7 +143,7 @@ export default function Restaurant(props) {
                                     <>{
                                         collection.products.filter(p=>(p.name.toLowerCase().indexOf(search.toLowerCase()) !== -1)).length>0
                                         &&
-                                        <Category onClick={()=>{if(window!==undefined) document.getElementById(collection.name).scrollIntoView({behavior: "smooth", block: "center", inline: "center"});}} >{collection.name}</Category>
+                                        <Category className={activeCollection===collection.name?'active':''} onClick={activateCollection} >{collection.name}</Category>
                                         }
                                     
                                     {
@@ -262,7 +153,7 @@ export default function Restaurant(props) {
                                                 {
                                                     coll.products.filter(p=>(p.name.toLowerCase().indexOf(search.toLowerCase()) !== -1)).length>0
                                                         &&
-                                                    <Category onClick={()=>{if(window!==undefined) document.getElementById(coll.name).scrollIntoView({behavior: "smooth", block: "center", inline: "center"});}}   >{coll.name}</Category>
+                                                    <Category className={activeCollection===collection.name?'active':''} onClick={activateCollection}   >{coll.name}</Category>
 
                                                 }
                                                 </>
@@ -280,12 +171,12 @@ export default function Restaurant(props) {
                             productsData.map(collection=>{
                                 return(
                                     <>
-                                    <Category onClick={()=>{if (window!==undefined) document.getElementById(collection.name).scrollIntoView({behavior: "smooth", block: "center", inline: "center"});}}>{collection.name}</Category>
+                                    <Category className={activeCollection===collection.name?'active':''} onClick={activateCollection}>{collection.name}</Category>
                                     {
                                         collection.subCategory.map(coll=>{
                                             return(
                                                 <>
-                                                <Category onClick={()=>{if (window!==undefined) document.getElementById(coll.name).scrollIntoView({behavior: "smooth", block: "center", inline: "center"});}} >{coll.name}</Category>
+                                                <Category className={activeCollection===collection.name?'active':''} onClick={activateCollection} >{coll.name}</Category>
                                                 </>
                                             )
                                         })
@@ -326,7 +217,7 @@ export default function Restaurant(props) {
                             }
                             <ProductList search={search} restaurant={restaurant} productsData={collection.products}/>
                             {
-                                collection.subCategory.map(coll=>{
+                                collection.subCategory.map((coll,index)=>{
                                     return(
                                         <>
                                         {coll.products.filter(p=>(p.name.toLowerCase().indexOf(search.toLowerCase()) !== -1)).length>0
@@ -403,6 +294,7 @@ const CateogryWrapper = styled.div`
     overflow-x: scroll;
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none;  /* IE 10+ */
+    border-bottom: 1px solid #eeeeee;
     &::-webkit-scrollbar {
         width: 0px;
         background: transparent; /* Chrome/Safari/Webkit */
@@ -410,12 +302,29 @@ const CateogryWrapper = styled.div`
 
 `
 const Category = styled.div`
-    margin:0.5rem;
-    white-space:nowrap;
+    
+    margin: 0.5rem;
+    white-space: nowrap;
     color: #999999;
+    -webkit-text-decoration: none;
+    -webkit-text-decoration: none;
     text-decoration: none;
     margin-left: 0;
-    text-transform:capitalize;
+    text-transform: capitalize;
+    font-size: 1.25rem;
+    padding: 0.5rem;
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 500;
+    background: hsl(37 87% 92% / 1);
+    margin-right: 1rem;
+    border-radius: 5px;
+    background:#fff;
+    &.active{
+        color: #FF9800;
+        background: hsl(37 87% 92% / 1);
+        font-weight: 500;
+    }
     &:nth-child(1){
         margin-left:1rem;
     }
@@ -429,6 +338,7 @@ export const CollectionName = styled.div`
     padding-bottom:0.25rem;
     font-weight: 700;
     color:#333;
+    font-size:1.25rem;
     text-transform:capitalize;
 `
 const StoreImage = styled.img`

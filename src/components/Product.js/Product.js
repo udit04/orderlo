@@ -12,7 +12,7 @@ export default function Product(props) {
             {!noImage && <img src={data.image}/>}
             <ProductContent>
                 <Flex column>
-                    <ProductName>{data.name} <IsVeg is_veg={data.is_veg}/></ProductName>
+                    <ProductName><IsVeg is_veg={data.is_veg}/> {data.name} </ProductName>
                     <RestaurentName>{restaurant.name} </RestaurentName>
                     <LocationName><RupeeIcon color={'#f1a62d'} height={8} width={8}/>{data.price}</LocationName>
                 
@@ -76,7 +76,7 @@ const ProductContent = styled.div`
 `
 const ProductName = styled.div`
     color:#333333;
-    font-size:12px;
+    font-size:16px;
     font-weight:500;
     line-height: 1;
     @media screen and (min-width:600px){
@@ -84,12 +84,12 @@ const ProductName = styled.div`
     }
 `
 const RestaurentName = styled.div`
-    font-size:10px;
+    font-size:12px;
     color:#aaa;
 `
 const LocationName = styled.div`
-    font-size:12px;
+    font-size:14px;
     color:#f1a62d;
     font-weight:800;
-    margin-top: 5px;
+    /* margin-top: 5px; */
 `
