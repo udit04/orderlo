@@ -34,130 +34,16 @@ export default function Restaurant(props) {
         }
         
     }, [])
+    useEffect(()=>{
+        if(activeCollection!=='' && document.getElementById(activeCollection))
+        document.getElementById(activeCollection).scrollIntoView({behavior: "smooth", block: "center", inline: "center"});
+    },[activeCollection])
     useEffect(() => {
         if(res_id)
         {
             productService.getRestoProducts({id:res_id}).then(res=>{
                 if(res.status===200){
                     console.log(res.data.menu[0]['products'])
-                    const menuData = {
-                        "message": "Menu fetched successfully!",
-                        "menu": [
-                          {
-                            "tags": null,
-                            "subCategory": [
-                              {
-                                "name": "Mocktails",
-                                "tags": null,
-                                "description": "awesome mocktails",
-                                "is_active": 1,
-                                "products": [
-                                  {
-                                    "nutritional_val": [],
-                                    "price_by_qty": [],
-                                    "addons": [],
-                                    "_id": "5ee53d65b5d43b1a3d4c51b1",
-                                    "id": 1,
-                                    "updatedAt": "2020-06-13T20:56:05.266Z",
-                                    "createdAt": "2020-06-13T20:56:05.266Z",
-                                    "name": "Pomgranade Lemonade",
-                                    "price": 550,
-                                    "is_veg": true,
-                                    "description": "Lemonade pomegranate juice and a spoonful of pomegranate seeds.",
-                                    "category_id": 1,
-                                    "restaurant_id": 1,
-                                    "image": "https://via.placeholder.com/150",
-                                    "is_active": true,
-                                    "store_id": [],
-                                    "__v": 0
-                                  }
-                                ]
-                              },
-                              {
-                                "name": "cocktails",
-                                "tags": null,
-                                "description": "awesome cocktails",
-                                "is_active": 1,
-                                "products": [
-                                  {
-                                    "nutritional_val": [],
-                                    "price_by_qty": [],
-                                    "addons": [],
-                                    "_id": "5ee53d65b5d43b1a3d4c51b1",
-                                    "id": 2,
-                                    "updatedAt": "2020-06-13T20:56:05.266Z",
-                                    "createdAt": "2020-06-13T20:56:05.266Z",
-                                    "name": "Pomgranade Lemonade",
-                                    "price": 550,
-                                    "is_veg": true,
-                                    "description": "Lemonade pomegranate juice and a spoonful of pomegranate seeds.",
-                                    "category_id": 1,
-                                    "restaurant_id": 1,
-                                    "image": "https://via.placeholder.com/150",
-                                    "is_active": true,
-                                    "store_id": [],
-                                    "__v": 0
-                                  }
-                                ]
-                              }
-                            ],
-                            "_id": "5f04d8e1eb08f7001efc114d",
-                            "restaurant_id": 1,
-                            "name": "Beverages",
-                            "is_active": true,
-                            "description": "awesome beverages",
-                            "createdAt": "2020-07-07T20:19:45.628Z",
-                            "updatedAt": "2020-07-07T20:20:08.980Z",
-                            "id": 1,
-                            "__v": 0,
-                            "products": []
-                          },
-                          {
-                            "tags": null,
-                            "subCategory": [],
-                            "_id": "5f04d8e1eb08f7001efc114d",
-                            "restaurant_id": 1,
-                            "name": "Snacks",
-                            "is_active": true,
-                            "description": "awesome beverages",
-                            "createdAt": "2020-07-07T20:19:45.628Z",
-                            "updatedAt": "2020-07-07T20:20:08.980Z",
-                            "id": 1,
-                            "__v": 0,
-                            "products": [
-                              {
-                                "nutritional_val": [],
-                                "price_by_qty": [],
-                                "addons": [],
-                                "_id": "5ee53d65b5d43b1a3d4c51b1",
-                                "id": 3,
-                                "updatedAt": "2020-06-13T20:56:05.266Z",
-                                "createdAt": "2020-06-13T20:56:05.266Z",
-                                "name": "Chicken Lollipop",
-                                "price": 550,
-                                "is_veg": true,
-                                "description": "Lemonade pomegranate juice and a spoonful of pomegranate seeds.",
-                                "category_id": 1,
-                                "restaurant_id": 1,
-                                "image": "https://via.placeholder.com/150",
-                                "is_active": true,
-                                "store_id": [],
-                                "__v": 0
-                              }
-                            ]
-                          }
-                        ],
-                        "restaurant": {
-                          "name": "Cafe Boho",
-                          "id": 10,
-                          "address": "23 Gangaur Ghat Marg, Opposite Cafe Edelwiess Next to Bagore Ki Haveli, Udaipur 313001 India",
-                          "status": "opened",
-                          "email": "cafebohoudaipur@gmail.com",
-                          "phone_number": "7727893776",
-                          "image": "https://images.happycow.net/venues/1024/19/31/hcmp193147_817951.jpeg",
-                          "is_active": true
-                        }
-                      }
                     setproductsData(res.data.menu);
 
                     // const collectionsData =  res.data.products.reduce(function (accumulator, element) {
@@ -221,7 +107,6 @@ export default function Restaurant(props) {
 
     const activateCollection = (e)=>{
         setActiveCollection(e.target.innerText);
-        document.getElementById(e.target.innerText).scrollIntoView({behavior: "smooth", block: "center", inline: "center"});
     }
     return (
         <div>
