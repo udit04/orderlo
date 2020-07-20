@@ -50,7 +50,7 @@ const ProductContent = styled.div`
 `
 const ProductName = styled.div`
     color:#333333;
-    font-size:12px;
+    font-size:16px;
     font-weight:500;
     line-height: 1;
     @media screen and (min-width:600px){
@@ -58,11 +58,11 @@ const ProductName = styled.div`
     }
 `
 const RestaurentName = styled.div`
-    font-size:10px;
+    font-size:12px;
     color:#aaa;
 `
 const LocationName = styled.div`
-    font-size:12px;
+    font-size:14px;
     color:#f1a62d;
     font-weight:800;
     margin-top: 5px;
