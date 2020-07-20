@@ -26,7 +26,12 @@ function Orders(props) {
         RestoService.getOrders(query).then(res=>{
             if(res.status === 200 && res.data.menu){
                 setOrdersData(res.data);
-                //props.setOrderDetail(res.data.menu[0]);
+                if(props.orderDetail){
+                    const order = res.data.menu.filter((order)=>order.id === props.orderDetail.id)
+                    if(order && order[0])
+                        props.setOrderDetail(order[0]);
+                }
+
             }else{
                 if(!res.data.message)
                     setErr(err);
@@ -164,10 +169,13 @@ function Order(props){
                                 ?
                                 <>
                                     <Flex alignCenter justifyBetween>
-                                        <Flex column><FieldName>Total</FieldName>
+                                        {
+                                            data.grand_total ? 
+                                            <Flex column><FieldName>Total</FieldName>
                                         
-                                            <FieldValue>Rs. {data.cart_amount}</FieldValue>
-                                        </Flex>   
+                                            <FieldValue>Rs. {data.grand_total}</FieldValue>
+                                            </Flex>  : <Flex column></Flex>
+                                        } 
                                         <Flex column>
                                             <ConfirmButton onClick={()=>acceptOrder(data.id)}>Accept</ConfirmButton>
                                             <OrderStatus error={data.order_status==='rejected'}>{data.order_status} : <span style={{color:data.payment_status!=='success'?'#f1a62d;':''}}>payment - {data.payment_status}</span></OrderStatus>
@@ -178,11 +186,13 @@ function Order(props){
                                 :
                                 <>
                                     <Flex alignCenter justifyBetween>
-                                        <Flex column><FieldName>Total</FieldName>
+                                        {
+                                            data.grand_total ? 
+                                            <Flex column><FieldName>Total</FieldName>
                                         
-                                            <FieldValue>Rs. {data.cart_amount}</FieldValue>
-                                            {/* <OrderStatus error={data.order_status==='rejected'}>{data.order_status} : payment - {data.payment_status}</OrderStatus> */}
-                                        </Flex>   
+                                            <FieldValue>Rs. {data.grand_total}</FieldValue>
+                                            </Flex>  : <Flex column></Flex>
+                                        }  
                                         {
                                         (data.order_status==='accepted' && data.payment_status==='pending')
                                             ?
