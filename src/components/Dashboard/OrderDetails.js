@@ -138,7 +138,7 @@ function OrderDetails(props) {
                 </Flex>
             <Separator/> */}
             {
-                ['created','accepted'].includes(orderDetail.order_status)
+                ['accepted'].includes(orderDetail.order_status)
                     &&
                 <SolidButton onClick={props.openBillModal}>
                     Generate Bill

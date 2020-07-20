@@ -5,7 +5,6 @@ import restoService from '../../src/services/RestoService';
 import styled from 'styled-components'
 import Flex,{FlexItem} from 'styled-flex-component'
 import StyledModal from '../../src/components/Modal/StyledModal';
-import { IsVeg } from '../../src/components/IsVeg';
 
 export default function Bill(props) {
     const router = useRouter();
