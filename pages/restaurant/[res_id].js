@@ -410,13 +410,24 @@ const CateogryWrapper = styled.div`
 
 `
 const Category = styled.div`
-    margin:0.5rem;
-    white-space:nowrap;
-    color: #999999;
+    
+    margin: 0.5rem;
+    white-space: nowrap;
+    color: #FF9800;
+    -webkit-text-decoration: none;
+    -webkit-text-decoration: none;
     text-decoration: none;
     margin-left: 0;
-    text-transform:capitalize;
-    font-size:1.25rem;
+    text-transform: capitalize;
+    font-size: 1.25rem;
+    padding: 0.5rem;
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 800;
+    background: hsl(37 87% 92% / 1);
+    margin-right: 1rem;
+    border-radius: 5px;
+
     &:nth-child(1){
         margin-left:1rem;
     }
