@@ -416,6 +416,7 @@ const Category = styled.div`
     text-decoration: none;
     margin-left: 0;
     text-transform:capitalize;
+    font-size:1.25rem;
     &:nth-child(1){
         margin-left:1rem;
     }
@@ -429,6 +430,7 @@ export const CollectionName = styled.div`
     padding-bottom:0.25rem;
     font-weight: 700;
     color:#333;
+    font-size:1.25rem;
     text-transform:capitalize;
 `
 const StoreImage = styled.img`

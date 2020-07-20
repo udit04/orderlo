@@ -157,9 +157,9 @@ export default function AddButton(props) {
 const Button = styled.div`
     border-radius:5px;
     background:#f1a62d;
-    padding:0.25rem 0.8rem;
+    padding:0.25rem 1rem;
     color:#ffffff;
-    font-size:12px;
+    font-size:14px;
     font-weight:800;
     display:flex;
 `
