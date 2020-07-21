@@ -14,15 +14,15 @@ function EditOrderModal(props) {
 
     const contentRef = React.createRef();
 
-    const temp_orderDetail = Object.assign({},orderDetail);
-    temp_orderDetail.temp_products = Array.from(temp_orderDetail.products);
+
+
     const [sidebar, setsidebar] = useState(false);
     const [productsData, setproductsData] = useState(null)
     const [filteredData,setFilteredData] = useState([]);
     const [collections,setCollections] = useState([]);
     const [store,setStore] = useState(null);
     const [search,setSearch ] = useState('');
-    const [cartProducts,setCartProducts]= useState(temp_orderDetail.temp_products);
+    const [cartProducts,setCartProducts]= useState(orderDetail.products.filter((prod)=>prod.qty>0));
     const [message,setMessage] = useState('');
     useEffect(() => {
         if(res_id)
@@ -123,7 +123,7 @@ function EditOrderModal(props) {
 
         }) 
     }
-
+    console.log('cartProducts',cartProducts);
     const foodProducts = cartProducts.filter(p=>p.is_alcohol===false);
     const alcoholProducts = cartProducts.filter(p=>p.is_alcohol===true);
 
