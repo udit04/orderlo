@@ -27,6 +27,9 @@ export default function Restaurant(props) {
     useEffect(() => {
         const cartData = JSON.parse(window.localStorage.getItem('cartData'));
         if(cartData){
+            if(cartData.restaurant.id !== res_id){
+                localStorage.removeItem('cartData',null);
+            }
             if(cartData.store){
                 console.log(cartData.store,'___store');
                 setStore(cartData.store);

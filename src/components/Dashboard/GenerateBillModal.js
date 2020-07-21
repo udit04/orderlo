@@ -308,7 +308,7 @@ function GenerateBillModal(props) {
                             </Flex>
                             <Separator/>
                         </PriceTable>
-                        <SolidButton onClick={generateOrderBill}>Generate Order Bill</SolidButton>
+                        <SolidButton  onClick={generateOrderBill}>Generate Order Bill</SolidButton>
                     </Flex>
                 </BillContainer>
 
@@ -327,6 +327,7 @@ const BillContainer = styled.div`
     min-height: 400px;
     max-height: 90vh;
     padding:2rem;
+    overflow:scroll;
     .billMeta{
         font-size:1rem;
         color:#999;

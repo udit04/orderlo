@@ -114,6 +114,9 @@ function EditOrderModal(props) {
         productService.editOrder(body_to_send).then(res=>{
             if(res.status===200){
                 setMessage('Items added successfully');
+                setTimeout(()=>{
+                    onClose();
+                },3000)
             }else{
                 setMessage('something went wrong');
             }
@@ -163,7 +166,7 @@ function EditOrderModal(props) {
         <div>
             <StyledModal contentRef={contentRef} onClose={onClose}> 
                 <EditContainer ref={contentRef}>
-                    <div style={{textAlign:'center'}}>{message!=='' && message}</div>
+                    
                     <Flex>
                         <Flex column style={{width:'500px',height: '600px',overflowY: 'scroll',paddingRight: '1rem',borderRight: '4px solid #eeeeee',marginRight:'1rem'}}>
                                 
@@ -235,7 +238,7 @@ function EditOrderModal(props) {
                             }
                             
                         </Flex>
-                        <Flex column style={{padding:'1rem',width:'100%',maxWidth:'600px'}}>
+                        <Flex column style={{padding:'1rem',width:'100%',maxWidth:'600px',maxHeight:'500px'}}>
                             {
                                 cartProducts && cartProducts.length > 0
                                     &&
@@ -252,6 +255,7 @@ function EditOrderModal(props) {
                                     
                                 </>
                             }
+                            <div style={{textAlign:'center'}}>{message!=='' && message}</div>
                             <SolidButton onClick={editOrder} style={{background: 'rgb(241 166 45)',maxWidth: '250px',margin:'0 auto'}}> Add Items</SolidButton>
                         </Flex>
                     </Flex>

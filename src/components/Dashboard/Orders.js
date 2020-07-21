@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import Flex,{FlexItem} from 'styled-flex-component'
 import RestoService from '../../services/RestoService'
 function Orders(props) {
-    const { setOrderDetail, setEditOrder } = props;
+    const { setOrderDetail,showEditOrders, setEditOrder } = props;
     const [err, setErr] = useState(null)
     const [ordersData,setOrdersData] = useState(null);
     const [orderTab,setOrderTab] = useState(0)
@@ -18,6 +18,11 @@ function Orders(props) {
     useEffect(() => {
         getOrders(props.id);
     }, [props.id]);
+
+    useEffect(() => {
+        if(!showEditOrders)
+        getOrders(props.id);
+    }, [showEditOrders]);
 
     const getOrders = (id)=>{
         const query = {id};
@@ -221,16 +226,18 @@ function Order(props){
                 </FlexItem>
                 
                 <Flex column  className='orderColumn noBorder'>
-                    <FieldName>inform</FieldName>
+                    {   
+                        data.order_status ==='accepted'
+                            && 
+                        <ConfirmButton onClick={()=>editOrder(data)}>Edit Order</ConfirmButton>
+                    }
+                    {/* <FieldName style={{textAlign:'center'}}>inform</FieldName> */}
                     {   
                         data.order_status ==='created'
                             && 
                         <FieldValue onClick={()=>cancelOrder(data.id)}>cancel</FieldValue>
                     }
-                    {   data.order_status ==='accepted'
-                            && 
-                        <ConfirmButton onClick={()=>editOrder(data)}>Edit Order</ConfirmButton>
-                    }
+                    
                 </Flex>
             </Flex>
         </OrderWrapper>
@@ -248,6 +255,7 @@ const OrdersWrapper = styled.div`
     margin: 1rem auto;
     padding:1rem 2rem;
     margin-top:0;
+
     .title{
         font-size:20px;
         font-weight:800;
@@ -255,7 +263,7 @@ const OrdersWrapper = styled.div`
         margin-bottom:1rem;
     }
     .orderColumn{
-        border-right:1px solid #ccc;
+        border-right:3px solid #eee;
         padding:0rem 1rem;
         height: 100%;
     }
@@ -299,7 +307,9 @@ const OrderTab = styled.div`
     }
 `
 const OrdersCount = styled.div`
-    color:#999;
+    color:#3c4dae;
+    font-weight:800;
+
     span{
         color:#aaa;
     }
@@ -317,6 +327,8 @@ const OrderWrapper = styled.div`
     border-radius:5px;
     padding:0.5rem;
     margin:1rem 0;
+    min-height: 100px;
+    padding: 1.2rem 0;
 `
 export const FieldName = styled.div`
     color:#aaa;
