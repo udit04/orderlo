@@ -47,7 +47,7 @@ export function ProductListDashboard(props) {
             return (
                 <ProductContainer className={props.className?props.className:''}>
                     <Flex column >
-                        {props.productsData.filter(p=>(p.name.toLowerCase().indexOf(props.search.toLowerCase()) !== -1)).map((data,i)=><DashboardProduct onAdd={onAdd} onRemove={onRemove} noImage dashboard={props.dashboard} restaurant={props.restaurant} data={data} key={i}/>)}
+                        {props.productsData.filter(p=>(p.name.toLowerCase().indexOf(props.search.toLowerCase()) !== -1)).map((data,i)=><DashboardProduct onAdd={onAdd} onRemove={onRemove} quantity={data.qty} noImage dashboard={props.dashboard} restaurant={props.restaurant} data={data} key={i}/>)}
                         {/* <Product/> */}
                     </Flex>
                 </ProductContainer>  
