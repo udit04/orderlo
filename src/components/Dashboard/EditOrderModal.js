@@ -13,14 +13,16 @@ function EditOrderModal(props) {
     const {onClose,restaurant,orderDetail,res_id} = props;
 
     const contentRef = React.createRef();
-    
+
+    const temp_orderDetail = Object.assign({},orderDetail);
+    temp_orderDetail.temp_products = Array.from(temp_orderDetail.products);
     const [sidebar, setsidebar] = useState(false);
     const [productsData, setproductsData] = useState(null)
     const [filteredData,setFilteredData] = useState([]);
     const [collections,setCollections] = useState([]);
     const [store,setStore] = useState(null);
     const [search,setSearch ] = useState('');
-    const [cartProducts,setCartProducts]= useState(orderDetail.products);
+    const [cartProducts,setCartProducts]= useState(temp_orderDetail.temp_products);
     const [message,setMessage] = useState('');
     useEffect(() => {
         if(res_id)
@@ -39,34 +41,33 @@ function EditOrderModal(props) {
 
     const onProductSearch = (e)=>{
         setSearch(e.target.value);
-        let filtered = [];
-        productsData.forEach(element => {
-            if((element.name.toLowerCase()).indexOf(e.target.value.toLowerCase()) !== -1){
-                filtered.push(element)
-            }
-        });
-        const dataCollections =  filtered.reduce(function (accumulator, element) {
-            accumulator[element.category] = accumulator[element.category] || [];
-            accumulator[element.category].push(element);
-            return accumulator;
-        }, Object.create(null));
+        // let filtered = [];
+        // productsData.forEach(element => {
+        //     if((element.name.toLowerCase()).indexOf(e.target.value.toLowerCase()) !== -1){
+        //         filtered.push(element)
+        //     }
+        // });
+        // const dataCollections =  filtered.reduce(function (accumulator, element) {
+        //     accumulator[element.category] = accumulator[element.category] || [];
+        //     accumulator[element.category].push(element);
+        //     return accumulator;
+        // }, Object.create(null));
 
-        let filteredCollections = []
+        // let filteredCollections = []
 
-        for (const key in dataCollections) {
-            console.log(key,dataCollections[key]);
-            filteredCollections.push({
-                name:key,
-                products:[...dataCollections[key]]
-            })
-        }
+        // for (const key in dataCollections) {
+        //     console.log(key,dataCollections[key]);
+        //     filteredCollections.push({
+        //         name:key,
+        //         products:[...dataCollections[key]]
+        //     })
+        // }
         
-        setFilteredData(filteredCollections);
+        // setFilteredData(filteredCollections);
     }
 
     const onAdd = (product)=>{
         if(cartProducts.find((prod)=>prod.id === product.id)){
-            console.log('here')
             setCartProducts(cartProducts.map((prod)=>{
                 if(prod.id === product.id){
                     ++prod.qty;
@@ -76,8 +77,9 @@ function EditOrderModal(props) {
         }
         else{
             let arr = Array.from(cartProducts);
-            product.qty = 1;
-            arr.push(product);
+            const temp_prod = Object.assign({},product);
+            temp_prod.qty = 1;
+            arr.push(temp_prod);
             setCartProducts(arr)
         }
     }
@@ -101,7 +103,7 @@ function EditOrderModal(props) {
             return {
                 product_id:prod.id,
                 addons:[],
-                qty:prod.quantity
+                qty:prod.qty
             }
         })
         const body_to_send = {
@@ -125,6 +127,38 @@ function EditOrderModal(props) {
     const foodProducts = cartProducts.filter(p=>p.is_alcohol===false);
     const alcoholProducts = cartProducts.filter(p=>p.is_alcohol===true);
 
+    const new_productsData = productsData && productsData.map((collection)=>{
+        if(collection.products){
+            collection.products = collection.products.map((prod)=>{
+                const po = Object.assign({},prod);
+                po.qty = 0;
+                const index = cartProducts.findIndex((p)=>p.id === po.id);
+                if(index>-1){
+                    po.qty =  cartProducts[index].qty;
+                }
+                return po;
+            })
+        }
+        if(collection.subCategory && collection.subCategory.length>0){
+            collection.subCategory = collection.subCategory.map((sc)=>{
+                const temp_sc = Object.assign({},sc);
+                if(temp_sc.products){
+                    temp_sc.products = temp_sc.products && temp_sc.products.map((prod)=>{
+                        const po = Object.assign({},prod);
+                        po.qty = 0;
+                        const index = cartProducts.findIndex((p)=>p.id === po.id);
+                        if(index>-1){
+                            po.qty =  cartProducts[index].qty;
+                        }
+                        return po;
+                    })
+                }
+                return temp_sc;
+            })
+        }
+        return collection;
+    })
+
     return (
         <div>
             <StyledModal contentRef={contentRef} onClose={onClose}> 
@@ -138,9 +172,9 @@ function EditOrderModal(props) {
                             </ProductSearcWrapper>
                                     
                            
-                            {productsData && search!==''
+                            {new_productsData && search!==''
                                 ?
-                                productsData.map(collection=>{
+                                new_productsData.map(collection=>{
                                     return(
                                         <>
                                         
@@ -150,12 +184,12 @@ function EditOrderModal(props) {
                                             <CollectionName id={collection.name} >{collection.name}</CollectionName>
                                         
                                         }
-                                        <ProductListDashboard cartProducts={orderDetail.products} search={search} restaurant={restaurant} productsData={collection.products}/>
+                                        <ProductListDashboard cartProducts={orderDetail.products} onAdd={onAdd} onRemove={onRemove} search={search} restaurant={restaurant} productsData={collection.products}/>
                                         {
-                                            collection.subCategory.map(coll=>{
+                                            collection.subCategory && collection.subCategory.map(coll=>{
                                                 return(
                                                     <>
-                                                    {coll.products.filter(p=>(p.name.toLowerCase().indexOf(search.toLowerCase()) !== -1)).length>0
+                                                    {coll.products && coll.products.filter(p=>(p.name.toLowerCase().indexOf(search.toLowerCase()) !== -1)).length>0
                                                         &&
                                                     <CollectionName id={coll.name} >{coll.name}</CollectionName>
                                                     }
@@ -170,9 +204,9 @@ function EditOrderModal(props) {
                                 :
                                 ''
                             }
-                            {productsData && search === ''
+                            {new_productsData && search === ''
                                 ?
-                                productsData.map(collection=>{
+                                new_productsData.map(collection=>{
                                     return(
                                         <>
                                         <CollectionName id={collection.name} >{collection.name}</CollectionName>
@@ -195,7 +229,7 @@ function EditOrderModal(props) {
                             }
                             
                             
-                            {(search==='' && productsData === null)
+                            {(search==='' && new_productsData === null)
                                 &&
                                 <SkeletonLoader screen='mobile'/>
                             }
@@ -208,13 +242,12 @@ function EditOrderModal(props) {
                                 <>  
                                     
                                     <DetailMain>Food Bill Details</DetailMain>
-                                    {console.log('cartProducts',cartProducts.length)}
-                                    <ProductListDashboard onAdd={onAdd} onRemove={onRemove} noImage={true} search={search} restaurant={restaurant} productsData={foodProducts} />
+                                    <ProductListDashboard onAdd={onAdd} onRemove={onRemove} noImage={true} restaurant={restaurant} productsData={foodProducts} />
                                     {
                                         alcoholProducts.length>0 ? 
                                         <>
                                         <DetailMain>Liquor Bill Details</DetailMain>
-                                        <ProductListDashboard onAdd={onAdd} onRemove={onRemove} noImage={true} search={search} restaurant={restaurant} productsData={alcoholProducts}/></> : null
+                                        <ProductListDashboard onAdd={onAdd} onRemove={onRemove} noImage={true} restaurant={restaurant} productsData={alcoholProducts}/></> : null
                                     }
                                     
                                 </>

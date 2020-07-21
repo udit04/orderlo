@@ -10,8 +10,8 @@ function GenerateBillModal(props) {
     const contentRef = React.createRef();
     const [foodDiscount, setFoodDiscount] = useState(0);
     const [drinksDiscount,setDrinksDiscount] = useState(0);
-    const [serviceCharge,setServiceCharge] = useState(restaurant.service_charge)
-    const [vatTax,setVatTax] = useState(restaurant.vat_tax);
+    const [serviceCharge,setServiceCharge] = useState(restaurant.service_charge || 0)
+    const [vatTax,setVatTax] = useState(restaurant.vat_tax || 0);
     const [gstTax,setGstTax] = useState(restaurant.gst_tax || 5);
     const [billObject,setBillObject] = useState(null);
     const [message,setMessage] = useState('');
@@ -145,7 +145,7 @@ function GenerateBillModal(props) {
                                     <BillCategory as='h3'>Food</BillCategory>
                                     
                                     {orderDetail.products.filter(product=>product.is_alcohol===false).map(product=>{
-                                            return(
+                                            return product.qty ? (
                                                 <CartProduct>
                                                     <Flex>
                                                         <FlexItem grow='1'>
@@ -171,8 +171,7 @@ function GenerateBillModal(props) {
                                                         </FlexItem>
                                                     </Flex>
                                                 </CartProduct>
-
-                                            )
+                                            ) : null
                                         })
                                     }
                                     <Flex>
@@ -213,7 +212,7 @@ function GenerateBillModal(props) {
                                 <>
                                     <BillCategory as='h3'>Drinks</BillCategory>
                                     {orderDetail.products.filter(product=>product.is_alcohol===true).length>0 && orderDetail.products.filter(product=>product.is_alcohol===true).map(product=>{
-                                            return(
+                                            return product.qty ? (
                                                 <CartProduct>
                                                     <Flex>
                                                         <FlexItem grow='1'>
@@ -239,8 +238,7 @@ function GenerateBillModal(props) {
                                                         </FlexItem>
                                                     </Flex>
                                                 </CartProduct>
-
-                                            )
+                                            ) : null
                                         })
                                         }
                                         <Flex>
@@ -255,21 +253,21 @@ function GenerateBillModal(props) {
                                         </Flex>
                                         <Flex>
                                                 <FlexItem grow={1}>
-                                                    <SectionName>Vat(%) @<input type='number' style={{width:'50px'}} min="0" name='vat_tax' value={vatTax} onChange={(e)=>{setVatTax(e.target.value)}}/></SectionName>
+                                                    <SectionName>Drinks Discount(%) @<input type='number' min="0" style={{width:'50px'}} name='drinks_discount' value={drinksDiscount} onChange={discountChange}/></SectionName>
                                                 </FlexItem>
                                                 <FlexItem >
                                                     <Flex column>
-                                                        <ProductCost> + Rs.{parseFloat(billObject.alchohol && billObject.alchohol.vat_tax.value)}</ProductCost>
+                                                        <ProductCost>-Rs.{parseFloat(billObject.alcohol.discount.value)}</ProductCost>
                                                     </Flex>
                                                 </FlexItem>
                                         </Flex>
                                         <Flex>
                                                 <FlexItem grow={1}>
-                                                    <SectionName>Drinks Discount(%) @<input type='number' min="0" style={{width:'50px'}} name='drinks_discount' value={drinksDiscount} onChange={discountChange}/></SectionName>
+                                                    <SectionName>Vat(%) @<input type='number' style={{width:'50px'}} min="0" name='vat_tax' value={vatTax} onChange={(e)=>{setVatTax(e.target.value)}}/></SectionName>
                                                 </FlexItem>
                                                 <FlexItem >
                                                     <Flex column>
-                                                        <ProductCost>-Rs.{parseFloat(billObject.alchohol && billObject.alchohol.discount.value)}</ProductCost>
+                                                        <ProductCost> + Rs.{parseFloat(billObject.alcohol.vat_tax.value)}</ProductCost>
                                                     </Flex>
                                                 </FlexItem>
                                         </Flex>
