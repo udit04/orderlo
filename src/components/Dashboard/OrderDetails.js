@@ -105,7 +105,7 @@ function OrderDetails(props) {
                     </FlexItem>
                     <FlexItem >
                         <Flex column>
-                            <ProductCost>{orderDetail.products.reduce((total,a)=>total.qty+a.qty)}</ProductCost>
+                            <ProductCost>{orderDetail.products.length}</ProductCost>
                         </Flex>
                     </FlexItem>
                 </Flex>
