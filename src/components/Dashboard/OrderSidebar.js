@@ -96,12 +96,11 @@ const SideOption = styled.div`
         content: '';
         position: absolute;
         display: block;
-        height: 40px;
-        width: 100%;
+        height: 50px;
+        width: 100px;
         bottom: 40px;
-        left: 77px;
+        left: 50px;
         background: #eeeeee;
-        /* border: 1px solid #f1a62d; */
         background-color: #eeeeee;
         border-right: 0;
 

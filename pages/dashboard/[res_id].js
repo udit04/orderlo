@@ -9,6 +9,7 @@ import Router,{ useRouter } from 'next/router'
 import StyledModal from '../../src/components/Modal/StyledModal';
 import { IsVeg } from '../../src/components/IsVeg';
 import GenerateBillModal from '../../src/components/Dashboard/GenerateBillModal';
+import EditOrderModal from '../../src/components/Dashboard/EditOrderModal';
 function Dashboard(props) {
 
     const [activeTab, setActiveTab] = useState(0);
@@ -19,6 +20,7 @@ function Dashboard(props) {
     const [id,setId] = useState(null);
     const contentRef = React.createRef();
     const [restaurant,setRestaurant] = useState(null)
+    const [editOrder, setEditOrder] = useState(false);
     useEffect(()=>{
         const restoDetail = JSON.parse(localStorage.getItem('restoDetail'));
         if(restoDetail && restoDetail.restaurant){
@@ -42,7 +44,7 @@ function Dashboard(props) {
             {
                 activeTab === 0
                     &&
-                <Orders restaurant={restaurant} res_id={id} setOrderDetail={setOrderDetail} orderDetail={orderDetail} id={id} activeTab={activeTab}/>
+                <Orders showEditOrders={editOrder} setEditOrder={setEditOrder} restaurant={restaurant} res_id={id} setOrderDetail={setOrderDetail} id={id} activeTab={activeTab}/>
             }
             {
                 activeTab === 1
@@ -57,6 +59,11 @@ function Dashboard(props) {
             
             <OrderDetails restaurant={restaurant} openBillModal={()=>{setBillModal(true)}} res_id={res_id} orderDetail={orderDetail} activeTab={activeTab}/>
             {(billModal && restaurant) && <GenerateBillModal billModal={billModal} setBillModal={setBillModal} restaurant={restaurant} orderDetail={orderDetail}/>}
+            {(editOrder && restaurant && orderDetail)
+                &&
+            <EditOrderModal  orderDetail={orderDetail} res_id={id} restaurant={restaurant} onClose={()=>{setEditOrder(false)}}>
+            </EditOrderModal>
+            }
         </Flex>
     )
         }

@@ -57,7 +57,8 @@ function OrderDetails(props) {
             <Separator/>
             {
                 orderDetail.products.map(product=>{
-                    return(
+                    return product.qty ?
+                    (
                         <CartProduct>
                             <Flex>
                                 <FlexItem grow='1'>
@@ -80,7 +81,7 @@ function OrderDetails(props) {
                                 </FlexItem>
                             </Flex>
                         </CartProduct>
-                    )
+                    ) : null
                 })
             }
            
@@ -140,7 +141,7 @@ function OrderDetails(props) {
             {
                 ['accepted'].includes(orderDetail.order_status)
                     &&
-                <SolidButton onClick={props.openBillModal}>
+                <SolidButton style={{maxWidth:'250px',margin:'auto',display:'block'}} onClick={props.openBillModal}>
                     Generate Bill
                 </SolidButton>
             }
@@ -221,8 +222,8 @@ const DetailMain = styled.div`
 
 const Separator = styled.div`
     width:100%;
-    height:1px;
-    background:#ccc;
+    height:2px;
+    background:#eee;
     margin-right:1rem;
     margin-bottom:1rem;
 `

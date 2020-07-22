@@ -145,7 +145,7 @@ function GenerateBillModal(props) {
                                     <BillCategory as='h3'>Food</BillCategory>
                                     
                                     {orderDetail.products.filter(product=>product.is_alcohol===false).map(product=>{
-                                            return(
+                                            return product.qty ? (
                                                 <CartProduct>
                                                     <Flex>
                                                         <FlexItem grow='1'>
@@ -171,8 +171,7 @@ function GenerateBillModal(props) {
                                                         </FlexItem>
                                                     </Flex>
                                                 </CartProduct>
-
-                                            )
+                                            ) : null
                                         })
                                     }
                                     <Flex>
@@ -213,7 +212,7 @@ function GenerateBillModal(props) {
                                 <>
                                     <BillCategory as='h3'>Drinks</BillCategory>
                                     {orderDetail.products.filter(product=>product.is_alcohol===true).length>0 && orderDetail.products.filter(product=>product.is_alcohol===true).map(product=>{
-                                            return(
+                                            return product.qty ? (
                                                 <CartProduct>
                                                     <Flex>
                                                         <FlexItem grow='1'>
@@ -239,8 +238,7 @@ function GenerateBillModal(props) {
                                                         </FlexItem>
                                                     </Flex>
                                                 </CartProduct>
-
-                                            )
+                                            ) : null
                                         })
                                         }
                                         <Flex>
@@ -310,7 +308,7 @@ function GenerateBillModal(props) {
                             </Flex>
                             <Separator/>
                         </PriceTable>
-                        <SolidButton onClick={generateOrderBill}>Generate Order Bill</SolidButton>
+                        <SolidButton  onClick={generateOrderBill}>Generate Order Bill</SolidButton>
                     </Flex>
                 </BillContainer>
 
@@ -329,6 +327,7 @@ const BillContainer = styled.div`
     min-height: 400px;
     max-height: 90vh;
     padding:2rem;
+    overflow:scroll;
     .billMeta{
         font-size:1rem;
         color:#999;
