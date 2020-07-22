@@ -20,8 +20,11 @@ function Orders(props) {
     }, [props.id]);
 
     useEffect(() => {
-        if(!showEditOrders)
-        getOrders(props.id);
+        if(!showEditOrders && localStorage.getItem('edit_data'))
+        {
+            getOrders(props.id);
+            localStorage.removeItem('edit_data')
+        }
     }, [showEditOrders]);
 
     const getOrders = (id)=>{
