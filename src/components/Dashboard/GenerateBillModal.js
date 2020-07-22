@@ -123,6 +123,8 @@ function GenerateBillModal(props) {
                 <StyledModal onClose={()=>{setBillModal(false)}} contentRef={contentRef}>
                 
                 <BillContainer ref={contentRef}>
+                    
+                    <div style={{fontWeight:'bold',fontSize:'22px',marginRight:'-15px',marginTop:'-20px',color:'red',textAlign:'right',cursor:'pointer'}}><span onClick={()=>setBillModal(false)}>X</span></div>
             <RestoName> {restaurant.name}</RestoName>
             <div style={{textAlign:'center'}}>{message}</div>
                     <RestoAddress>{restaurant.address}</RestoAddress>
@@ -165,7 +167,7 @@ function GenerateBillModal(props) {
                                                             <ProductCount> x {product.qty}</ProductCount>
                                                         </FlexItem>
                                                         <FlexItem >
-                                                            <Flex column>
+                                                            <Flex column className='rightmost'>
                                                                 <ProductCost>Rs.{parseInt(product.price) * product.qty}</ProductCost>
                                                             </Flex>
                                                         </FlexItem>
@@ -179,7 +181,7 @@ function GenerateBillModal(props) {
                                                 <SectionName>Food Subtotal</SectionName>
                                             </FlexItem>
                                             <FlexItem >
-                                                <Flex column>
+                                                <Flex column className='rightmost'>
                                                     <ProductCost>Rs.{billObject.food.sub_total}</ProductCost>
                                                 </Flex>
                                             </FlexItem>
@@ -189,7 +191,7 @@ function GenerateBillModal(props) {
                                                 <SectionName>Food Discount(%) @&nbsp;&nbsp;<input type='number' style={{width:'50px'}} name='food_discount' min="0" value={foodDiscount} onChange={discountChange}/></SectionName>
                                             </FlexItem>
                                             <FlexItem >
-                                                <Flex column>
+                                                <Flex column className='rightmost'>
                                                     <ProductCost>-Rs.{parseFloat(billObject.food.discount.value)}</ProductCost>
                                                 </Flex>
                                             </FlexItem>
@@ -199,7 +201,7 @@ function GenerateBillModal(props) {
                                                 <SectionName> Gst @ 5%</SectionName>
                                             </FlexItem>
                                             <FlexItem >
-                                                <Flex column>
+                                                <Flex column className='rightmost'>
                                                     <ProductCost>+Rs.{parseFloat(billObject.food.tax.value)}</ProductCost>
                                                 </Flex>
                                             </FlexItem>
@@ -232,7 +234,7 @@ function GenerateBillModal(props) {
                                                             <ProductCount> x {product.qty}</ProductCount>
                                                         </FlexItem>
                                                         <FlexItem >
-                                                            <Flex column>
+                                                            <Flex column className='rightmost'>
                                                                 <ProductCost>Rs.{parseFloat(product.price) * product.qty}</ProductCost>
                                                             </Flex>
                                                         </FlexItem>
@@ -246,7 +248,7 @@ function GenerateBillModal(props) {
                                                 <SectionName>Drinks Subtotal</SectionName>
                                             </FlexItem>
                                             <FlexItem >
-                                                <Flex column>
+                                                <Flex column className='rightmost'>
                                                     <ProductCost>Rs.{billObject.alcohol.sub_total}</ProductCost>
                                                 </Flex>
                                             </FlexItem>
@@ -256,7 +258,7 @@ function GenerateBillModal(props) {
                                                     <SectionName>Drinks Discount(%) @<input type='number' min="0" style={{width:'50px'}} name='drinks_discount' value={drinksDiscount} onChange={discountChange}/></SectionName>
                                                 </FlexItem>
                                                 <FlexItem >
-                                                    <Flex column>
+                                                    <Flex column className='rightmost'>
                                                         <ProductCost>-Rs.{parseFloat(billObject.alcohol.discount.value)}</ProductCost>
                                                     </Flex>
                                                 </FlexItem>
@@ -266,7 +268,7 @@ function GenerateBillModal(props) {
                                                     <SectionName>Vat(%) @<input type='number' style={{width:'50px'}} min="0" name='vat_tax' value={vatTax} onChange={(e)=>{setVatTax(e.target.value)}}/></SectionName>
                                                 </FlexItem>
                                                 <FlexItem >
-                                                    <Flex column>
+                                                    <Flex column className='rightmost'>
                                                         <ProductCost> + Rs.{parseFloat(billObject.alcohol.vat_tax.value)}</ProductCost>
                                                     </Flex>
                                                 </FlexItem>
@@ -290,7 +292,7 @@ function GenerateBillModal(props) {
                                         <SectionName>Service charge(%) @&nbsp;<input type='number' style={{width:'50px'}} min="0" name='vat_tax' value={serviceCharge} onChange={(e)=>{setServiceCharge(e.target.value)}}/></SectionName>
                                     </FlexItem>
                                     <FlexItem >
-                                        <Flex column>
+                                        <Flex column className='rightmost'>
                         <ProductCost>+Rs.{parseFloat(billObject.service_charge.value)}</ProductCost>
                                         </Flex>
                                     </FlexItem>
@@ -301,7 +303,7 @@ function GenerateBillModal(props) {
                                         <SectionName> Grand Total</SectionName>
                                     </FlexItem>
                                     <FlexItem >
-                                        <Flex column>
+                                        <Flex column className='rightmost'>
                                             <ProductCost>Rs.{parseFloat(billObject.grand_total)}</ProductCost>
                                         </Flex>
                                     </FlexItem>
@@ -331,6 +333,9 @@ const BillContainer = styled.div`
     .billMeta{
         font-size:1rem;
         color:#999;
+    }
+    .rightmost{
+        margin-right: -15px;
     }
 `
 const SectionName= styled.div`
