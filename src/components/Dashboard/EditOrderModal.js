@@ -229,7 +229,11 @@ function EditOrderModal(props) {
                                 </>
                             }
                             <div style={{textAlign:'center'}}>{message!=='' && message}</div>
-                            <SolidButton onClick={editOrder} style={{background: 'rgb(241 166 45)',maxWidth: '250px',margin:'0 auto'}}> Add Items</SolidButton>
+                            <div style={{textAlign:'center'}}>
+                                <SolidButton onClick={editOrder} style={{background: 'rgb(241 166 45)',maxWidth: '250px',margin:'0 auto'}}> Add Items</SolidButton>&nbsp;&nbsp;
+                                <SolidButton onClick={()=>onClose()} style={{background: 'red',maxWidth: '250px',margin:'0 auto'}}>Cancel</SolidButton>
+                            </div>
+
                         </Flex>
                     </Flex>
                 </EditContainer>

@@ -74,7 +74,7 @@ function OrderDetails(props) {
                                     </Flex>
                                 </FlexItem>
                                 <FlexItem >
-                                    <Flex column>
+                                    <Flex column className='rightmost'>
                                         <ProductCost>Rs.{parseInt(product.price) * product.qty}</ProductCost>
                                     </Flex>
                                 </FlexItem>
@@ -164,6 +164,9 @@ const DetailsWrapper = styled.div`
     &> div{
         position: sticky;
         top: 0;
+    }
+    .rightmost{
+        margin-right: -20px
     }
 `
 
