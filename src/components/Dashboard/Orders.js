@@ -229,7 +229,7 @@ function Order(props){
                     {   
                         data.order_status ==='accepted'
                             && 
-                        <ConfirmButton onClick={()=>editOrder(data)}>Edit Order</ConfirmButton>
+                        <ConfirmButton onClick={()=>editOrder(data)} style={{color:"#FF9800",background:"hsl(37 87% 92% / 1)"}}>Edit Order</ConfirmButton>
                     }
                     {/* <FieldName style={{textAlign:'center'}}>inform</FieldName> */}
                     {   
