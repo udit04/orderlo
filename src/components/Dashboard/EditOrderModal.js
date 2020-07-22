@@ -11,11 +11,7 @@ import { SolidButton } from '../Login/LoginStyled';
 
 function EditOrderModal(props) {
     const {onClose,restaurant,orderDetail,res_id} = props;
-
     const contentRef = React.createRef();
-
-
-
     const [sidebar, setsidebar] = useState(false);
     const [productsData, setproductsData] = useState(null)
     const [filteredData,setFilteredData] = useState([]);
@@ -41,29 +37,6 @@ function EditOrderModal(props) {
 
     const onProductSearch = (e)=>{
         setSearch(e.target.value);
-        // let filtered = [];
-        // productsData.forEach(element => {
-        //     if((element.name.toLowerCase()).indexOf(e.target.value.toLowerCase()) !== -1){
-        //         filtered.push(element)
-        //     }
-        // });
-        // const dataCollections =  filtered.reduce(function (accumulator, element) {
-        //     accumulator[element.category] = accumulator[element.category] || [];
-        //     accumulator[element.category].push(element);
-        //     return accumulator;
-        // }, Object.create(null));
-
-        // let filteredCollections = []
-
-        // for (const key in dataCollections) {
-        //     console.log(key,dataCollections[key]);
-        //     filteredCollections.push({
-        //         name:key,
-        //         products:[...dataCollections[key]]
-        //     })
-        // }
-        
-        // setFilteredData(filteredCollections);
     }
 
     const onAdd = (product)=>{
@@ -116,7 +89,7 @@ function EditOrderModal(props) {
                 setMessage('Items added successfully');
                 setTimeout(()=>{
                     onClose();
-                },3000)
+                },1000)
             }else{
                 setMessage('something went wrong');
             }
@@ -126,7 +99,6 @@ function EditOrderModal(props) {
 
         }) 
     }
-    console.log('cartProducts',cartProducts);
     const foodProducts = cartProducts.filter(p=>p.is_alcohol===false);
     const alcoholProducts = cartProducts.filter(p=>p.is_alcohol===true);
 

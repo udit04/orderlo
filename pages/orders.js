@@ -15,7 +15,6 @@ export default function OrderHistory(props) {
         {
             restoService.getOrders({user_id:userData.user_id}).then(res=>{
                 if(res.status===200){
-                    console.log(res.data);
                     if(res.data.menu.length >0)
                         setOrders(res.data.menu);
                 }

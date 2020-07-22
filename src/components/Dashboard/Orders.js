@@ -33,7 +33,7 @@ function Orders(props) {
             if(res.status === 200 && res.data.menu){
                 setOrdersData(res.data);
                 if(props.orderDetail){
-                    const order = res.data.menu.filter((order)=>order.id === props.orderDetail.id)
+                    const order = res.data.menu.filter((order)=>order.id === props.orderDetail.id);
                     if(order && order[0])
                         props.setOrderDetail(order[0]);
                 }
