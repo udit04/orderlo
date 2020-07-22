@@ -87,6 +87,7 @@ function EditOrderModal(props) {
         productService.editOrder(body_to_send).then(res=>{
             if(res.status===200){
                 setMessage('Items added successfully');
+                localStorage.setItem('edit_data',true);
                 setTimeout(()=>{
                     onClose();
                 },1000)

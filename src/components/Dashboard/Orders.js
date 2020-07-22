@@ -20,8 +20,11 @@ function Orders(props) {
     }, [props.id]);
 
     useEffect(() => {
-        if(!showEditOrders)
-        getOrders(props.id);
+        if(!showEditOrders && localStorage.getItem('edit_data'))
+        {
+            getOrders(props.id);
+            localStorage.removeItem('edit_data')
+        }
     }, [showEditOrders]);
 
     const getOrders = (id)=>{
@@ -225,11 +228,11 @@ function Order(props){
                    
                 </FlexItem>
                 
-                <Flex column  className='orderColumn noBorder'>
+                <Flex column className='orderColumn noBorder'>
                     {   
-                        data.order_status ==='accepted'
-                            && 
-                        <ConfirmButton onClick={()=>editOrder(data)} style={{color:"#FF9800",background:"hsl(37 87% 92% / 1)"}}>Edit Order</ConfirmButton>
+                        data.order_status ==='accepted' && !data.grand_total
+                            ?
+                        <ConfirmButton onClick={()=>editOrder(data)} style={{color:"#FF9800",background:"hsl(37 87% 92% / 1)"}}>Edit Order</ConfirmButton> : <></>
                     }
                     {/* <FieldName style={{textAlign:'center'}}>inform</FieldName> */}
                     {   
