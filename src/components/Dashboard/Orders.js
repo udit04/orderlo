@@ -33,7 +33,7 @@ function Orders(props) {
             if(res.status === 200 && res.data.menu){
                 setOrdersData(res.data);
                 if(props.orderDetail){
-                    const order = res.data.menu.filter((order)=>order.id === props.orderDetail.id)
+                    const order = res.data.menu.filter((order)=>order.id === props.orderDetail.id);
                     if(order && order[0])
                         props.setOrderDetail(order[0]);
                 }
@@ -229,7 +229,7 @@ function Order(props){
                     {   
                         data.order_status ==='accepted'
                             && 
-                        <ConfirmButton onClick={()=>editOrder(data)}>Edit Order</ConfirmButton>
+                        <ConfirmButton onClick={()=>editOrder(data)} style={{color:"#FF9800",background:"hsl(37 87% 92% / 1)"}}>Edit Order</ConfirmButton>
                     }
                     {/* <FieldName style={{textAlign:'center'}}>inform</FieldName> */}
                     {   

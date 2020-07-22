@@ -9,7 +9,6 @@ import StyledModal from '../Modal/StyledModal';
 
 function OrderDetails(props) {
     const {orderDetail} = props;
-    console.log(props.orderDetail && orderDetail.products);
     if(!orderDetail || orderDetail.products.length===0){
         return null;
     }else {

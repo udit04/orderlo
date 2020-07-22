@@ -44,7 +44,7 @@ function Dashboard(props) {
             {
                 activeTab === 0
                     &&
-                <Orders showEditOrders={editOrder} setEditOrder={setEditOrder} restaurant={restaurant} res_id={id} setOrderDetail={setOrderDetail} id={id} activeTab={activeTab}/>
+                <Orders showEditOrders={editOrder} setEditOrder={setEditOrder} restaurant={restaurant} res_id={id} setOrderDetail={setOrderDetail} id={id} activeTab={activeTab} orderDetail={orderDetail}/>
             }
             {
                 activeTab === 1
