@@ -16,7 +16,7 @@ function Orders(props) {
           else{
             interval = setInterval(() => {
                 getOrders(props.id);
-            }, 2000);
+            }, 30000);
           }
           if(!showEditOrders && localStorage.getItem('edit_data')){
             getOrders(props.id);
