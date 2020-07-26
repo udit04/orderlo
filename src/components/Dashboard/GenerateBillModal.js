@@ -357,7 +357,7 @@ const PriceTable = styled.div`
         font-weight:800;
         span{
             width:90px;
-            padding: 0 10px;
+            padding: 0 18px;
         }
     }
 `
