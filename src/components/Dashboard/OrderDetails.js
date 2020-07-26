@@ -22,13 +22,13 @@ function OrderDetails(props) {
             </DetailHeader>
             {   orderDetail.address
                 ? 
-                <p><b>Address:</b>{orderDetail.address}</p>
+                <p><b>Address: </b>{orderDetail.address}</p>
                 :
                 ''
             }
             {   orderDetail.table_no
                 ? 
-                <p><b>Table No:</b>{orderDetail.table_no}</p>
+                <p><b>Table No: </b>{orderDetail.table_no}</p>
                 :
                 ''
             }
@@ -50,25 +50,6 @@ function OrderDetails(props) {
                 </Flex>
             </DetailsMeta>
             <Separator/>
-            {
-                    orderDetail.address ? 
-                    <>
-                    <DetailsMeta>
-                    <Flex >
-                        {/* <FlexItem grow='1'>
-                            <Flex column>
-                                <FieldName>Total</FieldName>
-                                <FieldValue>Rs.{orderDetail.total_amount}</FieldValue>
-                            </Flex>
-                        </FlexItem> */}
-                        <FlexItem grow='1'>
-                            <Flex column>
-                                <FieldName>Order Address</FieldName>
-                                <FieldValue>{orderDetail.address}</FieldValue>
-                            </Flex>
-                        </FlexItem>
-                    </Flex></DetailsMeta><Separator/></> : null
-                }
             <DetailsMeta>
                 <Flex>
                     <FlexItem grow='1'>
