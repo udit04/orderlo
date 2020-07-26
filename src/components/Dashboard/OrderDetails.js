@@ -20,7 +20,18 @@ function OrderDetails(props) {
                     && 
                 <span>New order</span>} */}
             </DetailHeader>
-
+            {   orderDetail.address
+                ? 
+                <p><b>Address:</b>{orderDetail.address}</p>
+                :
+                ''
+            }
+            {   orderDetail.table_no
+                ? 
+                <p><b>Table No:</b>{orderDetail.table_no}</p>
+                :
+                ''
+            }
             <Separator/>
             <DetailsMeta>
                 <Flex >
