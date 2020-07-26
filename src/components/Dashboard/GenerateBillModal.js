@@ -110,6 +110,9 @@ function GenerateBillModal(props) {
         RestoService.generateBill(getBillObject()).then(res=>{
             if(res.status){
                 setMessage(res.data.message);
+                setTimeout(() => {
+                    setBillModal(false);
+                }, 1500);
             }
         }).catch(err=>{
             console.log(err);
@@ -126,7 +129,6 @@ function GenerateBillModal(props) {
                     
                     <div style={{fontWeight:'bold',fontSize:'22px',marginRight:'-15px',marginTop:'-20px',color:'red',textAlign:'right',cursor:'pointer'}}><span onClick={()=>setBillModal(false)}>X</span></div>
             <RestoName> {restaurant.name}</RestoName>
-            <div style={{textAlign:'center'}}>{message}</div>
                     <RestoAddress>{restaurant.address}</RestoAddress>
                     <Flex column className='billMeta'>
                         <Flex >
@@ -310,6 +312,7 @@ function GenerateBillModal(props) {
                             </Flex>
                             <Separator/>
                         </PriceTable>
+                        <div style={{textAlign:'center',color:'green'}}>{message}</div>
                         <SolidButton  onClick={generateOrderBill}>Generate Order Bill</SolidButton>
                     </Flex>
                 </BillContainer>
