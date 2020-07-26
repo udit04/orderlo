@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import Flex,{FlexItem} from 'styled-flex-component'
 import RestoService from '../../services/RestoService'
 function Orders(props) {
-    const { setOrderDetail,showEditOrders, setEditOrder } = props;
+    const { setOrderDetail,showEditOrders, setEditOrder,orderDetail } = props;
     const [err, setErr] = useState(null)
     const [ordersData,setOrdersData] = useState(null);
     const [orderTab,setOrderTab] = useState(0)
@@ -132,19 +132,19 @@ function Orders(props) {
                     { orderTab ===0 && 
                     ordersData.menu.filter(data=>((data.order_status==="accepted"||data.order_status==="created") ) ).map((data,i)=>{
                         return(
-                            <Order editOrder={editOrder} deliverOrder={deliverOrder} acceptOrder={acceptOrder} cancelOrder={cancelOrder}  setOrderDetail={props.setOrderDetail} data={data} key={i}/>
+                            <Order isSelected={orderDetail && data.id=== orderDetail.id} editOrder={editOrder} deliverOrder={deliverOrder} acceptOrder={acceptOrder} cancelOrder={cancelOrder}  setOrderDetail={props.setOrderDetail} data={data} key={i}/>
                         )
                     })}
                     { orderTab === 1 && 
                     ordersData.menu.filter(data=>(data.order_status==="delivered") && data.payment_status ==='success').map((data,i)=>{
                         return(
-                            <Order editOrder={editOrder} deliverOrder={deliverOrder} acceptOrder={acceptOrder} cancelOrder={cancelOrder} deliverOrder={deliverOrder}  setOrderDetail={props.setOrderDetail} data={data} key={i}/>
+                            <Order isSelected={orderDetail && data.id=== orderDetail.id} editOrder={editOrder} deliverOrder={deliverOrder} acceptOrder={acceptOrder} cancelOrder={cancelOrder} deliverOrder={deliverOrder}  setOrderDetail={props.setOrderDetail} data={data} key={i}/>
                         )
                     })}
                     { orderTab === 2 && 
                     ordersData.menu.filter(data=>(data.order_status!=="created" && data.order_status!=="accepted") ).map((data,i)=>{
                         return(
-                            <Order editOrder={editOrder} deliverOrder={deliverOrder} acceptOrder={acceptOrder} cancelOrder={cancelOrder} setOrderDetail={props.setOrderDetail} data={data} key={i}/>
+                            <Order isSelected={orderDetail && data.id=== orderDetail.id} editOrder={editOrder} deliverOrder={deliverOrder} acceptOrder={acceptOrder} cancelOrder={cancelOrder} setOrderDetail={props.setOrderDetail} data={data} key={i}/>
                         )
                     })}
                     {/* <Order/>
@@ -157,16 +157,16 @@ function Orders(props) {
     )
 }
 
-
 function Order(props){
-    const {data,cancelOrder,acceptOrder,deliverOrder ,editOrder} = props;
+    const {data,cancelOrder,acceptOrder,deliverOrder ,editOrder,isSelected} = props;
     return (
-        <OrderWrapper onClick={()=>{props.setOrderDetail(data)}}>
+        <OrderWrapper className={isSelected?'selected':''} onClick={()=>{props.setOrderDetail(data)}}>
             <Flex alignCenter>
                 <Flex column className='orderColumn'>
                         <OrderNum>
-                            <Flex column>
-                                <div className='orderNumber'>{data.table_no}</div>
+                            <Flex column style={{alignItems:'center'}}>
+                                <div className={`orderNumber ${(data.order_status==='created'?'newOrder':'')}`} style={{color:data.table_no?'#3c4dae':'red'}}>{data.table_no?data.table_no:'DEL'}
+                                </div>
                                 <div className="time">{new Date(data.createdAt).toDateString()}</div>
                                 <div className="time">{new Date(data.createdAt).toLocaleTimeString()}</div>
                             </Flex>
@@ -335,6 +335,11 @@ const OrderWrapper = styled.div`
     margin:1rem 0;
     min-height: 100px;
     padding: 1.2rem 0;
+    cursor:pointer;
+    &.selected{
+       border: 1px solid #ff9a12;
+
+    }
 `
 export const FieldName = styled.div`
     color:#aaa;
@@ -349,11 +354,26 @@ export const FieldValue = styled.div`
 const OrderNum  = styled.div`
 
     .orderNumber{
+        position:relative;
         font-size:2rem;
         font-weight:bold;
         color:#3c4dae;
         line-height:1.2;
         text-align:center;
+        width: 65px;
+        &.newOrder:before{
+            content:'New';
+            position: absolute;
+            padding: 0.1rem 0.3rem;
+            font-size: 10px;
+            color: #fff;
+            background: #f1a62d;
+            border-radius: 2px;
+            font-weight: 800;
+            /* bottom: 100%; */
+            right: 7px;
+            top: -15px;
+        }
     }
     .time{
         font-size:12px;

@@ -16,11 +16,22 @@ function OrderDetails(props) {
         <DetailsWrapper>
             <div>
             <DetailHeader  > Order Details 
-                { ['created','accepted'].includes(orderDetail.order_status) 
+                {/* { ['created','accepted'].includes(orderDetail.order_status) 
                     && 
-                <span>New order</span>}
+                <span>New order</span>} */}
             </DetailHeader>
-
+            {   orderDetail.address
+                ? 
+                <p><b>Address: </b>{orderDetail.address}</p>
+                :
+                ''
+            }
+            {   orderDetail.table_no
+                ? 
+                <p><b>Table No: </b>{orderDetail.table_no}</p>
+                :
+                ''
+            }
             <Separator/>
             <DetailsMeta>
                 <Flex >

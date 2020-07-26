@@ -140,7 +140,7 @@ function GenerateBillModal(props) {
                              {/* <FlexItem grow={1}>Table No: 10</FlexItem> */}
                         </Flex>
                         <PriceTable>
-                        <Flex className='billHeader'><FlexItem  grow={1}>Item</FlexItem><FlexItem ><span>Quantity</span></FlexItem> <FlexItem ><span>Price</span></FlexItem></Flex>
+                        <Flex className='billHeader'><FlexItem  grow={1}>Item</FlexItem><FlexItem ><span>Qty</span></FlexItem> <FlexItem ><span>Price</span></FlexItem></Flex>
 
                             {
                                 orderDetail.products.filter(product=>product.is_alcohol===false).length>0 
@@ -357,7 +357,7 @@ const PriceTable = styled.div`
         font-weight:800;
         span{
             width:90px;
-            padding: 0 10px;
+            padding: 0 18px;
         }
     }
 `

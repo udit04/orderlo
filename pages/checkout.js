@@ -18,6 +18,9 @@ export default function checkout() {
     const [loginPopup,setLoginPopup] = useState(false);
     const [tableModal,setTableModal] = useState(false);
     const [table,setTable] = useState('');
+    const [address,setAddress] = useState('');
+    const [radioValue,setRadioValue] = useState('');
+
     useEffect(() => {
         
         if(cartContext.cartData && cartContext.cartData.products && cartContext.cartData.products.length >0 ){ 
@@ -51,7 +54,7 @@ export default function checkout() {
     const placeOrderClick = ()=>{
         const cartData = cartContext.cartData;
         const authData = userContext.authData;
-        if(table!==''){
+        if(table!=='' || address!==''){
             if(cartData && authData.userData && authData.userData.user_id){
                 const products = cartData.products.map(product=>{
                     return {
@@ -71,7 +74,8 @@ export default function checkout() {
                     "total_tax":5,
                     "total_amount": ( (parseFloat(cartContext.cartData.restaurant.vat_tax) + parseFloat(cartContext.cartData.restaurant.gst_tax))*cartObject.cartPrice/100)+(cartContext.cartData.restaurant.service_charge*cartObject.cartPrice/100)+(cartObject.cartPrice),
                     "discount": 0,
-                    "table_no": table
+                    "table_no": table===''?null:table,
+                    "address": address===''?null:address
                 }
                 productService.placeOrder(placeOrderObject).then(res=>{
                     if(res.status===200){
@@ -150,13 +154,36 @@ export default function checkout() {
                         &&
                     <TableNoModal>
                         <CloseIcon color={'#000'} onClick={()=>{setTableModal(false)}} height={20} width={20} style={{position:'absolute',top:'20px',right:'20px'}}/>
-                        <div>
-                            <p>Enter table number</p>
-                            <TextInputWrapper>
-                                <TextInput type='number'  value={table} placeholder='Enter table number' name='table_number' onChange={(e)=>{setTable(e.target.value)}}>
-                                </TextInput>
-                            </TextInputWrapper>
-                            <SolidButton disabled={table===''} onClick={()=>{placeOrderClick();}}>Proceed</SolidButton>
+                        <div style={{width: '100%'}}>
+                            <div style={{display:'flex'}}>
+                                <label class='container' htmlFor="orderOption1">Delivery<input id='orderOption1' onChange={(e)=>{setRadioValue(e.target.value)}} type='radio' name='deliveryOption' value='delivery'/><span class="checkmark"></span></label>
+                                <label class='container' htmlFor="orderOption2">DineIn<input id='orderOption2' onChange={(e)=>{setRadioValue(e.target.value)}} type='radio' name='deliveryOption' value='dinein'/><span class="checkmark"></span></label>
+                            </div>
+
+                            {
+                                radioValue==='dinein' &&
+                                <div>
+                                    <p>Enter table number</p>
+                                    <TextInputWrapper>
+                                        <TextInput type='number'  value={table} placeholder='Enter table number' name='table_number' onChange={(e)=>{setTable(e.target.value)}}>
+                                        </TextInput>
+                                    </TextInputWrapper>
+                                    <SolidButton disabled={table===''} onClick={()=>{placeOrderClick();}}>Proceed</SolidButton>
+                                </div>
+                            }
+
+                            {
+                                radioValue==='delivery' &&
+                                <div>
+                                    <p>Enter delivery address</p>
+                                    <TextInputWrapper>
+                                        <TextInput style={{marginBottom:'1rem'}} onChange={(e)=>{setAddress(e.target.value)}} type="text" placeholder='Enter Address'/>
+
+                                    </TextInputWrapper>
+                                    <SolidButton disabled={address===''} onClick={()=>{placeOrderClick();}}>Proceed</SolidButton>
+                                </div>
+                            }
+                            
                         </div>
                     </TableNoModal>
                }
@@ -178,6 +205,70 @@ const TableNoModal = styled.div`
     flex-direction:column;
     bottom:0;
     padding:2rem;
+
+    .container {
+        display: block;
+        position: relative;
+        padding-left: 35px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        font-size: 22px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        margin-right: 10px;
+      }
+      
+      /* Hide the browser's default radio button */
+      .container input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+      }
+      
+      /* Create a custom radio button */
+      .checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 25px;
+        width: 25px;
+        background-color: #eee;
+        border-radius: 50%;
+      }
+      
+      /* On mouse-over, add a grey background color */
+      .container:hover input ~ .checkmark {
+        background-color: #ccc;
+      }
+      
+      /* When the radio button is checked, add a blue background */
+      .container input:checked ~ .checkmark {
+        background-color: #2196F3;
+      }
+      
+      /* Create the indicator (the dot/circle - hidden when not checked) */
+      .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+      }
+      
+      /* Show the indicator (dot/circle) when checked */
+      .container input:checked ~ .checkmark:after {
+        display: block;
+      }
+      
+      /* Style the indicator (dot/circle) */
+      .container .checkmark:after {
+           top: 9px;
+          left: 9px;
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background: white;
+      }
 `
 
 const CartTotal = styled.div`

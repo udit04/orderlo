@@ -150,8 +150,9 @@ export const SolidButton = styled.button`
     padding: 1rem;
     font-size: 1.2rem;
     margin-top:1rem;
+    cursor:pointer;
     &:disabled{
-        opacity:0.8;
+        opacity:0.5;
     }
 `
 export const LoginText = styled.div`
