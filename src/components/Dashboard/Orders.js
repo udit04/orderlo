@@ -163,7 +163,9 @@ function Order(props){
                 <Flex column className='orderColumn'>
                         <OrderNum>
                             <Flex column>
-                                <div className='orderNumber'>{data.table_no}</div>
+                                <div className={`orderNumber ${(data.order_status==='created'?'newOrder':'')}`}>{data.table_no?data.table_no:0}
+                                </div>
+
                                 <div className="time">{new Date(data.createdAt).toLocaleTimeString()}</div>
                             </Flex>
                             
@@ -349,11 +351,25 @@ export const FieldValue = styled.div`
 const OrderNum  = styled.div`
 
     .orderNumber{
+        position:relative;
         font-size:2rem;
         font-weight:bold;
         color:#3c4dae;
         line-height:1.2;
         text-align:center;
+        &.newOrder:before{
+            content:'New';
+            position: absolute;
+            padding: 0.1rem 0.3rem;
+            font-size: 10px;
+            color: #fff;
+            background: #f1a62d;
+            border-radius: 2px;
+            font-weight: 800;
+            /* bottom: 100%; */
+            right: 7px;
+            top: -15px;
+        }
     }
     .time{
         font-size:12px;
