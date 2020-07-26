@@ -163,7 +163,7 @@ function Order(props){
                 <Flex column className='orderColumn'>
                         <OrderNum>
                             <Flex column>
-                                <div className={`orderNumber ${(data.order_status==='created'?'newOrder':'')}`}>{data.table_no?data.table_no:0}
+                                <div className={`orderNumber ${(data.order_status==='created'?'newOrder':'')}`}>{data.table_no?data.table_no:'DEL'}
                                 </div>
 
                                 <div className="time">{new Date(data.createdAt).toLocaleTimeString()}</div>
@@ -333,6 +333,7 @@ const OrderWrapper = styled.div`
     margin:1rem 0;
     min-height: 100px;
     padding: 1.2rem 0;
+    cursor:pointer;
     &.selected{
        border: 1px solid #ff9a12;
 
@@ -357,6 +358,7 @@ const OrderNum  = styled.div`
         color:#3c4dae;
         line-height:1.2;
         text-align:center;
+        width: 65px;
         &.newOrder:before{
             content:'New';
             position: absolute;
