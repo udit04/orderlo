@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import Flex,{FlexItem} from 'styled-flex-component'
 import RestoService from '../../services/RestoService'
 function Orders(props) {
-    const { setOrderDetail,showEditOrders, setEditOrder } = props;
+    const { setOrderDetail,showEditOrders, setEditOrder,orderDetail } = props;
     const [err, setErr] = useState(null)
     const [ordersData,setOrdersData] = useState(null);
     const [orderTab,setOrderTab] = useState(0)
@@ -130,19 +130,19 @@ function Orders(props) {
                     { orderTab ===0 && 
                     ordersData.menu.filter(data=>((data.order_status==="accepted"||data.order_status==="created") ) ).map((data,i)=>{
                         return(
-                            <Order editOrder={editOrder} deliverOrder={deliverOrder} acceptOrder={acceptOrder} cancelOrder={cancelOrder}  setOrderDetail={props.setOrderDetail} data={data} key={i}/>
+                            <Order isSelected={orderDetail && data.id=== orderDetail.id} editOrder={editOrder} deliverOrder={deliverOrder} acceptOrder={acceptOrder} cancelOrder={cancelOrder}  setOrderDetail={props.setOrderDetail} data={data} key={i}/>
                         )
                     })}
                     { orderTab === 1 && 
                     ordersData.menu.filter(data=>(data.order_status==="delivered") && data.payment_status ==='success').map((data,i)=>{
                         return(
-                            <Order editOrder={editOrder} deliverOrder={deliverOrder} acceptOrder={acceptOrder} cancelOrder={cancelOrder} deliverOrder={deliverOrder}  setOrderDetail={props.setOrderDetail} data={data} key={i}/>
+                            <Order isSelected={orderDetail && data.id=== orderDetail.id} editOrder={editOrder} deliverOrder={deliverOrder} acceptOrder={acceptOrder} cancelOrder={cancelOrder} deliverOrder={deliverOrder}  setOrderDetail={props.setOrderDetail} data={data} key={i}/>
                         )
                     })}
                     { orderTab === 2 && 
                     ordersData.menu.filter(data=>(data.order_status!=="created" && data.order_status!=="accepted") ).map((data,i)=>{
                         return(
-                            <Order editOrder={editOrder} deliverOrder={deliverOrder} acceptOrder={acceptOrder} cancelOrder={cancelOrder} setOrderDetail={props.setOrderDetail} data={data} key={i}/>
+                            <Order isSelected={orderDetail && data.id=== orderDetail.id} editOrder={editOrder} deliverOrder={deliverOrder} acceptOrder={acceptOrder} cancelOrder={cancelOrder} setOrderDetail={props.setOrderDetail} data={data} key={i}/>
                         )
                     })}
                     {/* <Order/>
@@ -155,11 +155,10 @@ function Orders(props) {
     )
 }
 
-
 function Order(props){
-    const {data,cancelOrder,acceptOrder,deliverOrder ,editOrder} = props;
+    const {data,cancelOrder,acceptOrder,deliverOrder ,editOrder,isSelected} = props;
     return (
-        <OrderWrapper onClick={()=>{props.setOrderDetail(data)}}>
+        <OrderWrapper className={isSelected?'selected':''} onClick={()=>{props.setOrderDetail(data)}}>
             <Flex alignCenter>
                 <Flex column className='orderColumn'>
                         <OrderNum>
@@ -332,6 +331,10 @@ const OrderWrapper = styled.div`
     margin:1rem 0;
     min-height: 100px;
     padding: 1.2rem 0;
+    &.selected{
+       border: 1px solid #ff9a12;
+
+    }
 `
 export const FieldName = styled.div`
     color:#aaa;
