@@ -16,9 +16,9 @@ function OrderDetails(props) {
         <DetailsWrapper>
             <div>
             <DetailHeader  > Order Details 
-                { ['created','accepted'].includes(orderDetail.order_status) 
+                {/* { ['created','accepted'].includes(orderDetail.order_status) 
                     && 
-                <span>New order</span>}
+                <span>New order</span>} */}
             </DetailHeader>
 
             <Separator/>
@@ -39,6 +39,25 @@ function OrderDetails(props) {
                 </Flex>
             </DetailsMeta>
             <Separator/>
+            {
+                    orderDetail.address ? 
+                    <>
+                    <DetailsMeta>
+                    <Flex >
+                        {/* <FlexItem grow='1'>
+                            <Flex column>
+                                <FieldName>Total</FieldName>
+                                <FieldValue>Rs.{orderDetail.total_amount}</FieldValue>
+                            </Flex>
+                        </FlexItem> */}
+                        <FlexItem grow='1'>
+                            <Flex column>
+                                <FieldName>Order Address</FieldName>
+                                <FieldValue>{orderDetail.address}</FieldValue>
+                            </Flex>
+                        </FlexItem>
+                    </Flex></DetailsMeta><Separator/></> : null
+                }
             <DetailsMeta>
                 <Flex>
                     <FlexItem grow='1'>

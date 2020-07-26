@@ -164,8 +164,8 @@ function Order(props){
             <Flex alignCenter>
                 <Flex column className='orderColumn'>
                         <OrderNum>
-                            <Flex column>
-                                <div className={`orderNumber ${(data.order_status==='created'?'newOrder':'')}`}>{data.table_no?data.table_no:'DEL'}
+                            <Flex column style={{alignItems:'center'}}>
+                                <div className={`orderNumber ${(data.order_status==='created'?'newOrder':'')}`} style={{color:data.table_no?'#3c4dae':'red'}}>{data.table_no?data.table_no:'DEL'}
                                 </div>
                                 <div className="time">{new Date(data.createdAt).toDateString()}</div>
                                 <div className="time">{new Date(data.createdAt).toLocaleTimeString()}</div>

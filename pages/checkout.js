@@ -155,9 +155,9 @@ export default function checkout() {
                     <TableNoModal>
                         <CloseIcon color={'#000'} onClick={()=>{setTableModal(false)}} height={20} width={20} style={{position:'absolute',top:'20px',right:'20px'}}/>
                         <div style={{width: '100%'}}>
-                            <div>
-                                <label htmlFor="orderOption1"><input id='orderOption1' onChange={(e)=>{setRadioValue(e.target.value)}} type='radio' name='deliveryOption' value='delivery'/>Delivery</label>
-                                <label htmlFor="orderOption2"><input id='orderOption2' onChange={(e)=>{setRadioValue(e.target.value)}} type='radio' name='deliveryOption' value='dinein'/>DineIn</label>
+                            <div style={{display:'flex'}}>
+                                <label class='container' htmlFor="orderOption1">Delivery<input id='orderOption1' onChange={(e)=>{setRadioValue(e.target.value)}} type='radio' name='deliveryOption' value='delivery'/><span class="checkmark"></span></label>
+                                <label class='container' htmlFor="orderOption2">DineIn<input id='orderOption2' onChange={(e)=>{setRadioValue(e.target.value)}} type='radio' name='deliveryOption' value='dinein'/><span class="checkmark"></span></label>
                             </div>
 
                             {
@@ -205,6 +205,70 @@ const TableNoModal = styled.div`
     flex-direction:column;
     bottom:0;
     padding:2rem;
+
+    .container {
+        display: block;
+        position: relative;
+        padding-left: 35px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        font-size: 22px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        margin-right: 10px;
+      }
+      
+      /* Hide the browser's default radio button */
+      .container input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+      }
+      
+      /* Create a custom radio button */
+      .checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 25px;
+        width: 25px;
+        background-color: #eee;
+        border-radius: 50%;
+      }
+      
+      /* On mouse-over, add a grey background color */
+      .container:hover input ~ .checkmark {
+        background-color: #ccc;
+      }
+      
+      /* When the radio button is checked, add a blue background */
+      .container input:checked ~ .checkmark {
+        background-color: #2196F3;
+      }
+      
+      /* Create the indicator (the dot/circle - hidden when not checked) */
+      .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+      }
+      
+      /* Show the indicator (dot/circle) when checked */
+      .container input:checked ~ .checkmark:after {
+        display: block;
+      }
+      
+      /* Style the indicator (dot/circle) */
+      .container .checkmark:after {
+           top: 9px;
+          left: 9px;
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background: white;
+      }
 `
 
 const CartTotal = styled.div`
