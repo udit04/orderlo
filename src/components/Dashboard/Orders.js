@@ -8,24 +8,26 @@ function Orders(props) {
     const [ordersData,setOrdersData] = useState(null);
     const [orderTab,setOrderTab] = useState(0)
 
-    // useEffect(() => {
-    //     const interval = setInterval(() => {
-    //         getOrders(props.id);
-    //       }, 5000);
-    //       return () => clearInterval(interval);
-    // }, [ordersData])
+    useEffect(() => {
+        let interval = null;
+          if(showEditOrders){
+            clearInterval(interval);
+          }
+          else{
+            interval = setInterval(() => {
+                getOrders(props.id);
+            }, 30000);
+          }
+          if(!showEditOrders && localStorage.getItem('edit_data')){
+            getOrders(props.id);
+            localStorage.removeItem('edit_data')
+          }
+          return () => clearInterval(interval);
+    }, [ordersData,showEditOrders])
 
     useEffect(() => {
         getOrders(props.id);
     }, [props.id]);
-
-    useEffect(() => {
-        if(!showEditOrders && localStorage.getItem('edit_data'))
-        {
-            getOrders(props.id);
-            localStorage.removeItem('edit_data')
-        }
-    }, [showEditOrders]);
 
     const getOrders = (id)=>{
         const query = {id};
@@ -165,6 +167,7 @@ function Order(props){
                         <OrderNum>
                             <Flex column>
                                 <div className='orderNumber'>{data.table_no}</div>
+                                <div className="time">{new Date(data.createdAt).toDateString()}</div>
                                 <div className="time">{new Date(data.createdAt).toLocaleTimeString()}</div>
                             </Flex>
                             
@@ -211,7 +214,7 @@ function Order(props){
                                             ?
                                             <Flex column>
                                                 <ConfirmButton onClick={()=>deliverOrder(data.id)}>MARK AS DONE</ConfirmButton>
-                                                <OrderStatus error={data.order_status==='rejected'}>{data.order_status} : <span style={{color:data.payment_status!=='success'?'#f1a62d;':''}}>payment - {data.payment_status}</span></OrderStatus>
+                                                <OrderStatus error={data.order_status==='rejected'}>{data.order_status} : <span style={{color:data.payment_status!=='success'?'#f1a62d':''}}>payment - {data.payment_status}</span></OrderStatus>
 
                                             </Flex>
                                             :

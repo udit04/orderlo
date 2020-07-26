@@ -1,39 +1,38 @@
 import React,{useState,useEffect} from 'react'
-import styled from 'styled-components'
 import Orders from '../../src/components/Dashboard/Orders';
 import OrderDetails from '../../src/components/Dashboard/OrderDetails';
-import Flex,{FlexItem} from 'styled-flex-component'
+import Flex from 'styled-flex-component'
 import OrderSidebar from '../../src/components/Dashboard/OrderSidebar';
 import RestoMenu from '../../src/components/Dashboard/RestoMenu';
 import Router,{ useRouter } from 'next/router'
-import StyledModal from '../../src/components/Modal/StyledModal';
-import { IsVeg } from '../../src/components/IsVeg';
 import GenerateBillModal from '../../src/components/Dashboard/GenerateBillModal';
 import EditOrderModal from '../../src/components/Dashboard/EditOrderModal';
 function Dashboard(props) {
 
     const [activeTab, setActiveTab] = useState(0);
-    const   [orderDetail, setOrderDetail] = useState(null);
+    const [orderDetail, setOrderDetail] = useState(null);
     const router = useRouter()
     const { res_id } = router.query
     const [billModal, setBillModal] = useState(false)
     const [id,setId] = useState(null);
-    const contentRef = React.createRef();
     const [restaurant,setRestaurant] = useState(null)
     const [editOrder, setEditOrder] = useState(false);
     useEffect(()=>{
         const restoDetail = JSON.parse(localStorage.getItem('restoDetail'));
         if(restoDetail && restoDetail.restaurant){
-            setId(restoDetail.restaurant.id)
-            setRestaurant(restoDetail.restaurant)
+            if(res_id && parseInt(restoDetail.restaurant.id) !== parseInt(res_id)){
+                Router.push('/restologin');
+            }
+            else{
+                setId(restoDetail.restaurant.id);
+                setRestaurant(restoDetail.restaurant);
+            }
         }else{
             Router.push('/restologin');
         }
-
-    },[])
+    },[router.query]);
     
     if(!id){
-
         return(
             <div></div>
         )
