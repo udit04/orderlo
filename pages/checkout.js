@@ -20,6 +20,7 @@ export default function checkout() {
     const [table,setTable] = useState('');
     const [address,setAddress] = useState('');
     const [radioValue,setRadioValue] = useState('');
+    const [placeOrderErrMsg,setPlaceOrderErrorMessage] = useState(null);
 
     useEffect(() => {
         
@@ -74,22 +75,23 @@ export default function checkout() {
                     "total_tax":5,
                     "total_amount": ( (parseFloat(cartContext.cartData.restaurant.vat_tax) + parseFloat(cartContext.cartData.restaurant.gst_tax))*cartObject.cartPrice/100)+(cartContext.cartData.restaurant.service_charge*cartObject.cartPrice/100)+(cartObject.cartPrice),
                     "discount": 0,
-                    "table_no": table===''?null:table,
+                    "table_no": table===''?null:parseInt(table),
                     "address": address===''?null:address
                 }
                 productService.placeOrder(placeOrderObject).then(res=>{
                     if(res.status===200){
-                        
                         setOrderSuccess(true);
                         const updatedCartData = {
                             ...cartContext.cartData,
                             products:[]
                         }
-                        window.localStorage.setItem('cartData',JSON.stringify(updatedCartData))
-                        
+                        window.localStorage.setItem('cartData',JSON.stringify(updatedCartData));
                     }
                 }) .catch(err=>{
-                    console.log()
+                    setPlaceOrderErrorMessage(err.response.data && err.response.data.message);
+                    setTimeout(() => {
+                        setPlaceOrderErrorMessage(null);                        
+                    }, 2000);
                 });
             }else{
                 setLoginPopup(true);
@@ -107,13 +109,9 @@ export default function checkout() {
     
     if(!cartObject ){
         if(cartContext.cartData && cartContext.cartData.restaurant && !cartContext.cartData.products.length){
-
-            Router.push(`/restaurant/${cartContext.cartData.restaurant.id}`)
-            
-        }else{
+            Router.push(`/restaurant/${cartContext.cartData.restaurant.id}`)  
         }
-        return <div></div>
-
+        return <div></div>;
     }
     else{
         if(orderSuccess){
@@ -168,6 +166,7 @@ export default function checkout() {
                                         <TextInput type='number'  value={table} placeholder='Enter table number' name='table_number' onChange={(e)=>{setTable(e.target.value)}}>
                                         </TextInput>
                                     </TextInputWrapper>
+                                    {placeOrderErrMsg ? <div className='placeOrderErrMsg'><label>{placeOrderErrMsg}</label></div>: null}
                                     <SolidButton disabled={table===''} onClick={()=>{placeOrderClick();}}>Proceed</SolidButton>
                                 </div>
                             }
@@ -180,6 +179,7 @@ export default function checkout() {
                                         <TextInput style={{marginBottom:'1rem'}} onChange={(e)=>{setAddress(e.target.value)}} type="text" placeholder='Enter Address'/>
 
                                     </TextInputWrapper>
+                                    {placeOrderErrMsg ? <div><label>{placeOrderErrMsg}</label></div>: null}
                                     <SolidButton disabled={address===''} onClick={()=>{placeOrderClick();}}>Proceed</SolidButton>
                                 </div>
                             }
@@ -268,6 +268,11 @@ const TableNoModal = styled.div`
           height: 8px;
           border-radius: 50%;
           background: white;
+      }
+      .placeOrderErrMsg {
+          color:red;
+          margin-top: 20px;
+          text-align: center;
       }
 `
 
