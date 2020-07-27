@@ -39,7 +39,7 @@ function Orders(props) {
                 setOrdersData(res.data);
                 if(props.orderDetail){
                     const order = res.data.menu.filter((order)=>order.id === props.orderDetail.id);
-                    if(order && order[0])
+                    if(order && order[0] && order[0].payment_status!=='success')
                         props.setOrderDetail(order[0]);
                 }
 
@@ -75,7 +75,6 @@ function Orders(props) {
                 getOrders(props.id);
             }
         }).catch(err=>{
-            console.log('err',err);
             console.log('something went wrong')
         })
     }
@@ -105,6 +104,7 @@ function Orders(props) {
             }
         ).then(res=>{
             if(res.status===200){
+                setOrderDetail(null);
                 getOrders(props.id);
             }
         }).catch(err=>{
