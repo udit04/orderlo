@@ -1,9 +1,11 @@
 import React from 'react';
 import { RestoLoginService } from '../src/services/restoLoginService';
 import Restaurant from './restaurant/[res_id]';
+import styled from 'styled-components'
+import {notFoundImg} from '../src/helpers/constants';
 
 export default function RestaurantName(props) {
-  if(!(props.resto && props.resto.restaurant)) return <></>;
+  if(!(props.resto && props.resto.restaurant)) return <Resto ><img src={notFoundImg} /></Resto>;
   return (
       <Restaurant res_id = {props.resto.restaurant.id} />
   );
@@ -32,3 +34,19 @@ export const getServerSideProps = async (ctx)=>{
       }
     }
 }
+
+const Resto = styled.div`
+    .not-found {
+        top: 50%;
+        left: 50%;
+        position: absolute;
+        transform: translate(-50%, -50%);
+    }
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    img {
+        width: 300px;
+    }
+`
