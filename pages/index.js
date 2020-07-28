@@ -18,14 +18,14 @@ export default function Index() {
   }, [])
 
   return <></>;
-  return (
-      <Block >
-        {/* <Login /> */}
-        <SimpleSlider />
-        <Login />
-        {/* <Signup/> */}
-      </Block>
-  );
+  // return (
+  //     <Block >
+  //       {/* <Login /> */}
+  //       <SimpleSlider />
+  //       <Login />
+  //       {/* <Signup/> */}
+  //     </Block>
+  // );
 }
 
 const Block = styled.div`
