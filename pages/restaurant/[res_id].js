@@ -1,8 +1,6 @@
 import React,{useState,useEffect} from 'react'
 import ProductList from '../../src/components/ProductList';
-import SimpleSlider from '../../src/components/Slider';
-import Header from '../../src/components/Header';
-import Sidebar from '../../src/components/Sidebar';
+//import Sidebar from '../../src/components/Sidebar';
 import  Flex  from 'styled-flex-component';
 import styled from 'styled-components'
 import productService from '../../src/services/productService';
@@ -31,7 +29,6 @@ export default function Restaurant(props) {
                 localStorage.removeItem('cartData',null);
             }
             if(cartData.store){
-                console.log(cartData.store,'___store');
                 setStore(cartData.store);
             }
         }
@@ -42,31 +39,13 @@ export default function Restaurant(props) {
         document.getElementById(activeCollection).scrollIntoView({behavior: "smooth", block: "center", inline: "center"});
     },[activeCollection])
     useEffect(() => {
-        if(res_id)
+        const resto_id = res_id || props.res_id;
+        if(resto_id)
         {
-            productService.getRestoProducts({id:res_id}).then(res=>{
+            productService.getRestoProducts({id:resto_id}).then(res=>{
                 if(res.status===200){
-                    console.log(res.data.menu[0]['products'])
                     setproductsData(res.data.menu);
-
-                    // const collectionsData =  res.data.products.reduce(function (accumulator, element) {
-                    //     accumulator[element.category] = accumulator[element.category] || [];
-                    //     accumulator[element.category].push(element);
-                    //     return accumulator;
-                    // }, Object.create(null));
-                    // console.log(Array.isArray(collectionsData));
-                    // let collectionsNew = []
-
-                    // for (const key in collectionsData) {
-                    //     console.log(key,collectionsData[key]);
-                    //     collectionsNew.push({
-                    //         name:key,
-                    //         products:[...collectionsData[key]]
-                    //     })
-                    // }
-                    // setCollections(collectionsNew);
                     setrestaurant(res.data.restaurant);
-                    // setCollections(collectionsData);
                 }else{
                     
                 }
@@ -98,7 +77,6 @@ export default function Restaurant(props) {
         let filteredCollections = []
 
         for (const key in dataCollections) {
-            console.log(key,dataCollections[key]);
             filteredCollections.push({
                 name:key,
                 products:[...dataCollections[key]]

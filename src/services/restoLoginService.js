@@ -29,6 +29,8 @@ const signupResto = (body)=>{
     )
 }
 
+const getRestoByName = (body)=>{
+    return ax.get(`/v1/api/get_restaurant_by_name?restaurant_name=${body.name}`)
+}
 
-
-export const RestoLoginService  = {signupResto, loginResto};
+export const RestoLoginService  = {signupResto, loginResto,getRestoByName};

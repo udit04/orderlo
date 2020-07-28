@@ -32,12 +32,9 @@ export default function checkout() {
             cartQuantity += element.quantity;
             cartPrice += element.quantity*element.price;
             });
-            console.log(cartQuantity,cartPrice);
             if((cartQuantity>0 && cartPrice>0)){
-                console.log(cartContext.cartData.products);
                 setCartObject(()=>{return{itemsCount:cartQuantity,cartPrice:cartPrice}});
             }else{
-                console.log(cartContext.cartData.products,'___');
             }
         
         }else{
@@ -49,7 +46,7 @@ export default function checkout() {
         
     }, [cartContext.cartData && cartContext.cartData.products])
     const onBack=()=>{
-        Router.push(`/restaurant/${cartContext.cartData.restaurant.id}`)
+        Router.back();
     }
 
     const placeOrderClick = ()=>{
