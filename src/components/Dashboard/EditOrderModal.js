@@ -2,7 +2,6 @@ import React,{ useState, useEffect } from 'react'
 import StyledModal from '../Modal/StyledModal'
 import styled from 'styled-components';
 import Flex from 'styled-flex-component'
-import Router,{useRouter} from 'next/router';
 import SkeletonLoader from '../SkeletonLoader';
 import ProductList,{ProductListDashboard} from '../ProductList';
 import productService from '../../services/productService';
@@ -12,13 +11,11 @@ import { SolidButton } from '../Login/LoginStyled';
 function EditOrderModal(props) {
     const {onClose,restaurant,orderDetail,res_id} = props;
     const contentRef = React.createRef();
-    const [sidebar, setsidebar] = useState(false);
+    const temp_orderDetail = Object.assign({},orderDetail);
     const [productsData, setproductsData] = useState(null)
-    const [filteredData,setFilteredData] = useState([]);
-    const [collections,setCollections] = useState([]);
     const [store,setStore] = useState(null);
     const [search,setSearch ] = useState('');
-    const [cartProducts,setCartProducts]= useState(orderDetail.products.filter((prod)=>prod.qty>0));
+    const [cartProducts,setCartProducts]= useState(temp_orderDetail.products.filter((prod)=>prod.qty>0));
     const [message,setMessage] = useState('');
     useEffect(() => {
         if(res_id)
@@ -26,8 +23,7 @@ function EditOrderModal(props) {
             productService.getRestoProducts({id:res_id}).then(res=>{
                 if(res.status===200){
                     setproductsData(res.data.menu);
-                }else{
-                    
+                }else{           
                 }
             }).catch(err=>{
                 console.log(err);
@@ -40,16 +36,17 @@ function EditOrderModal(props) {
     }
 
     const onAdd = (product)=>{
-        if(cartProducts.find((prod)=>prod.id === product.id)){
-            setCartProducts(cartProducts.map((prod)=>{
-                if(prod.id === product.id){
-                    ++prod.qty;
+        let arr = Array.from(cartProducts);
+        if(arr.find((prod)=>prod.id === product.id)){
+            setCartProducts(arr.map((prod)=>{
+                let temp_prod = Object.assign({},prod);
+                if(temp_prod.id === product.id){
+                    ++temp_prod.qty;
                 }
-                return prod;
-            }))
+                return temp_prod;
+            }));
         }
         else{
-            let arr = Array.from(cartProducts);
             const temp_prod = Object.assign({},product);
             temp_prod.qty = 1;
             arr.push(temp_prod);
@@ -81,7 +78,7 @@ function EditOrderModal(props) {
         })
         const body_to_send = {
             "restaurant_id" : res_id,
-            "order_id" : orderDetail.id,
+            "order_id" : temp_orderDetail.id,
             "products": arr
         };
         productService.editOrder(body_to_send).then(res=>{
@@ -160,7 +157,7 @@ function EditOrderModal(props) {
                                             <CollectionName id={collection.name} >{collection.name}</CollectionName>
                                         
                                         }
-                                        <ProductListDashboard cartProducts={orderDetail.products} onAdd={onAdd} onRemove={onRemove} search={search} restaurant={restaurant} productsData={collection.products}/>
+                                        <ProductListDashboard cartProducts={temp_orderDetail.products} onAdd={onAdd} onRemove={onRemove} search={search} restaurant={restaurant} productsData={collection.products}/>
                                         {
                                             collection.subCategory && collection.subCategory.map(coll=>{
                                                 return(
@@ -169,7 +166,7 @@ function EditOrderModal(props) {
                                                         &&
                                                     <CollectionName id={coll.name} >{coll.name}</CollectionName>
                                                     }
-                                                    <ProductListDashboard cartProducts={orderDetail.products} onAdd={onAdd} onRemove={onRemove} search={search} restaurant={restaurant} productsData={coll.products}/>
+                                                    <ProductListDashboard cartProducts={temp_orderDetail.products} onAdd={onAdd} onRemove={onRemove} search={search} restaurant={restaurant} productsData={coll.products}/>
                                                     </>
                                                 )
                                             })
@@ -186,13 +183,13 @@ function EditOrderModal(props) {
                                     return(
                                         <>
                                         <CollectionName id={collection.name} >{collection.name}</CollectionName>
-                                        <ProductListDashboard cartProducts={orderDetail.products} onAdd={onAdd} onRemove={onRemove} search={search} restaurant={restaurant} productsData={collection.products}/>
+                                        <ProductListDashboard cartProducts={temp_orderDetail.products} onAdd={onAdd} onRemove={onRemove} search={search} restaurant={restaurant} productsData={collection.products}/>
                                         {
                                             collection.subCategory.map(coll=>{
                                                 return(
                                                     <>
                                                     <CollectionName id={coll.name} >{coll.name}</CollectionName>
-                                                    <ProductListDashboard cartProducts={orderDetail.products} onAdd={onAdd} onRemove={onRemove} search={search} restaurant={restaurant} productsData={coll.products}/>
+                                                    <ProductListDashboard cartProducts={temp_orderDetail.products} onAdd={onAdd} onRemove={onRemove} search={search} restaurant={restaurant} productsData={coll.products}/>
                                                     </>
                                                 )
                                             })

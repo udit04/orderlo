@@ -3,11 +3,10 @@ import styled from 'styled-components'
 import Flex,{FlexItem} from 'styled-flex-component'
 import RestoService from '../../services/RestoService'
 function Orders(props) {
-    const { setOrderDetail,showEditOrders, setEditOrder,orderDetail } = props;
-    const [err, setErr] = useState(null)
+    const { setOrderDetail,showEditOrders, setEditOrder,orderDetail, billModal } = props;
+    const [err, setErr] = useState(null);
     const [ordersData,setOrdersData] = useState(null);
-    const [orderTab,setOrderTab] = useState(0)
-
+    const [orderTab,setOrderTab] = useState(0);
     useEffect(() => {
         let interval = null;
           if(showEditOrders){
@@ -15,23 +14,24 @@ function Orders(props) {
           }
           else{
             interval = setInterval(() => {
-                getOrders(props.id);
+                getOrders();
             }, 30000);
           }
-          if(!showEditOrders && localStorage.getItem('edit_data')){
-            getOrders(props.id);
-            localStorage.removeItem('edit_data')
+          if(!showEditOrders && localStorage.getItem('edit_data') || (!billModal && localStorage.getItem('bill_generated'))){
+            getOrders(true);
+            localStorage.removeItem('bill_generated');
+            localStorage.removeItem('edit_data');
           }
           return () => clearInterval(interval);
-    }, [ordersData,showEditOrders])
+    }, [ordersData,showEditOrders,billModal])
 
     useEffect(() => {
-        getOrders(props.id);
+        getOrders();
     }, [props.id]);
 
-    const getOrders = (id)=>{
-        const query = {id};
-        if(ordersData && ordersData.menu){
+    const getOrders = (skip_length_check)=>{
+        const query = {id:props.id};
+        if(!skip_length_check && ordersData && ordersData.menu){
             query.order_length = ordersData.menu.length
         }
         RestoService.getOrders(query).then(res=>{
@@ -49,7 +49,7 @@ function Orders(props) {
             }
         }).catch(err=>{
             setErr(err);
-            console.log(err)
+            console.log('err',err);
         })
     }
     const acceptOrder = (order_id)=>{
@@ -72,10 +72,10 @@ function Orders(props) {
                     return order;
                 });
                 //setOrdersData(new_orders);
-                getOrders(props.id);
+                getOrders(true);
             }
         }).catch(err=>{
-            console.log('something went wrong')
+            console.log('err',err);
         })
     }
     const cancelOrder = (order_id)=>{
@@ -88,13 +88,20 @@ function Orders(props) {
                 }
             ).then(res=>{
                 if(res.status===200){
-                    getOrders(props.id);
+                    getOrders(true);
                 }
             }).catch(err=>{
-                console.log('something went wrong')
+                console.log('err',err);
             })
     }
     const deliverOrder = (order_id)=>{
+        const orderDet = ordersData.menu.find((order)=>order.id === order_id);
+        if(!orderDet){
+            return;
+        }
+        if(!orderDet.grand_total){
+            return alert('Bill has not been generated yet!')
+        }
         RestoService.acceptOrder(
             {
                 "restaurant_id" : props.id,
@@ -105,11 +112,10 @@ function Orders(props) {
         ).then(res=>{
             if(res.status===200){
                 setOrderDetail(null);
-                getOrders(props.id);
+                getOrders(true);
             }
         }).catch(err=>{
             console.log('err',err);
-            console.log('something went wrong')
         })
     }
     const editOrder = (data)=>{
@@ -208,7 +214,7 @@ function Order(props){
                                             ?
                                             <Flex column>
                                                 <ConfirmButton onClick={()=>deliverOrder(data.id)}>MARK AS DONE</ConfirmButton>
-                                                <OrderStatus error={data.order_status==='rejected'}>{data.order_status} : <span style={{color:data.payment_status!=='success'?'#f1a62d':''}}>payment - {data.payment_status}</span></OrderStatus>
+                                                <OrderStatus error={data.order_status==='rejected'}>{data.grand_total ? 'bill generated' : data.order_status} : <span style={{color:data.payment_status!=='success'?'#f1a62d':''}}>payment - {data.payment_status}</span></OrderStatus>
 
                                             </Flex>
                                             :

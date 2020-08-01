@@ -110,6 +110,7 @@ function GenerateBillModal(props) {
     const generateOrderBill = ()=>{
         RestoService.generateBill(getBillObject()).then(res=>{
             if(res.status){
+                localStorage.setItem('bill_generated',true);
                 setMessage(res.data.message);
                 setTimeout(() => {
                     setBillModal(false);
