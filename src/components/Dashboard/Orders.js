@@ -7,7 +7,7 @@ function Orders(props) {
     const [err, setErr] = useState(null)
     const [ordersData,setOrdersData] = useState(null);
     const [orderTab,setOrderTab] = useState(0)
-
+    console.log('orderDetail',orderDetail);
     useEffect(() => {
         let interval = null;
           if(showEditOrders){
@@ -19,8 +19,7 @@ function Orders(props) {
             }, 30000);
           }
           if(!showEditOrders && localStorage.getItem('edit_data')){
-            getOrders(props.id);
-            localStorage.removeItem('edit_data')
+            getOrders(props.id,true);
           }
           return () => clearInterval(interval);
     }, [ordersData,showEditOrders])
@@ -29,18 +28,19 @@ function Orders(props) {
         getOrders(props.id);
     }, [props.id]);
 
-    const getOrders = (id)=>{
+    const getOrders = (id,skip_length_check)=>{
         const query = {id};
-        if(ordersData && ordersData.menu){
+        if(!skip_length_check && ordersData && ordersData.menu){
             query.order_length = ordersData.menu.length
         }
         RestoService.getOrders(query).then(res=>{
             if(res.status === 200 && res.data.menu){
                 setOrdersData(res.data);
-                if(props.orderDetail){
+                if(props.orderDetail && localStorage.getItem('edit_data')){
                     const order = res.data.menu.filter((order)=>order.id === props.orderDetail.id);
                     if(order && order[0] && order[0].payment_status!=='success')
                         props.setOrderDetail(order[0]);
+                    localStorage.removeItem('edit_data');
                 }
 
             }else{
@@ -72,7 +72,7 @@ function Orders(props) {
                     return order;
                 });
                 //setOrdersData(new_orders);
-                getOrders(props.id);
+                getOrders(props.id,true);
             }
         }).catch(err=>{
             console.log('something went wrong')
@@ -88,7 +88,7 @@ function Orders(props) {
                 }
             ).then(res=>{
                 if(res.status===200){
-                    getOrders(props.id);
+                    getOrders(props.id,true);
                 }
             }).catch(err=>{
                 console.log('something went wrong')
@@ -105,7 +105,7 @@ function Orders(props) {
         ).then(res=>{
             if(res.status===200){
                 setOrderDetail(null);
-                getOrders(props.id);
+                getOrders(props.id,true);
             }
         }).catch(err=>{
             console.log('err',err);
