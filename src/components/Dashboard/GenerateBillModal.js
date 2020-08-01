@@ -31,6 +31,7 @@ function GenerateBillModal(props) {
         }   
 
     }
+
     useEffect(() => {
         setBillObject(getBillObject());
     }, [foodDiscount,drinksDiscount,serviceCharge,vatTax,gstTax])
@@ -92,7 +93,7 @@ function GenerateBillModal(props) {
                     "value": parseFloat(food_discount_value.toFixed(2))
                 },
                 "tax" : {
-                    "percentage" : parseFloat(gstTax.toFixed(2)),
+                    "percentage" : parseInt(gstTax),
                     "value" : parseFloat(food_tax_value.toFixed(2))
                 },
                 "final_amount": parseFloat(food_final_amount.toFixed(2))
@@ -200,7 +201,7 @@ function GenerateBillModal(props) {
                                     </Flex>       
                                     <Flex>
                                             <FlexItem grow={1}>
-                                                <SectionName> Gst @ 5%</SectionName>
+                                                <SectionName> Gst @&nbsp;&nbsp;<input type='number' style={{width:'50px'}} name='gst_tax' value={gstTax} min="0" value={gstTax} onChange={(e)=>{setGstTax(e.target.value)} }/></SectionName>
                                             </FlexItem>
                                             <FlexItem >
                                                 <Flex column className='rightmost'>

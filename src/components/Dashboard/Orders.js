@@ -128,7 +128,7 @@ function Orders(props) {
             {   ordersData && ordersData.menu && ordersData.menu.length>0
                 &&
                 <OrdersListWrapper>
-                    <OrdersCount>Today <span>{ordersData.menu.length} Orders</span></OrdersCount>
+                    <OrdersCount>Today <span>{ordersData.menu.filter(order=>['accepted','created'].includes(order.order_status)).length} Orders</span></OrdersCount>
                     { orderTab ===0 && 
                     ordersData.menu.filter(data=>((data.order_status==="accepted"||data.order_status==="created") ) ).map((data,i)=>{
                         return(
@@ -162,7 +162,7 @@ function Order(props){
     return (
         <OrderWrapper className={isSelected?'selected':''} onClick={()=>{props.setOrderDetail(data)}}>
             <Flex alignCenter>
-                <Flex column className='orderColumn'>
+                <Flex column className='orderColumn' >
                         <OrderNum>
                             <Flex column style={{alignItems:'center'}}>
                                 <div className={`orderNumber ${(data.order_status==='created'?'newOrder':'')}`} style={{color:data.table_no?'#3c4dae':'red'}}>{data.table_no?data.table_no:'DEL'}
@@ -184,7 +184,7 @@ function Order(props){
                             data.order_status==='created'
                                 ?
                                 <>
-                                    <Flex alignCenter justifyBetween>
+                                    <Flex alignCenter justifyStart>
                                         {
                                             data.grand_total ? 
                                             <Flex column><FieldName>Total</FieldName>
@@ -192,8 +192,8 @@ function Order(props){
                                             <FieldValue>Rs. {data.grand_total}</FieldValue>
                                             </Flex>  : <Flex column></Flex>
                                         } 
-                                        <Flex column>
-                                            <ConfirmButton onClick={()=>acceptOrder(data.id)}>Accept</ConfirmButton>
+                                        <Flex column >
+                                            <ConfirmButton style={{background:'#df4020'}} onClick={()=>acceptOrder(data.id)}>Accept</ConfirmButton>
                                             <OrderStatus error={data.order_status==='rejected'}>{data.order_status} : <span style={{color:data.payment_status!=='success'?'#f1a62d':''}}>payment - {data.payment_status}</span></OrderStatus>
 
                                         </Flex>
@@ -201,7 +201,7 @@ function Order(props){
                                 </>
                                 :
                                 <>
-                                    <Flex alignCenter justifyBetween>
+                                    <Flex alignCenter justifyStart>
                                         {
                                             data.grand_total ? 
                                             <Flex column><FieldName>Total</FieldName>
@@ -235,13 +235,18 @@ function Order(props){
                     {   
                         data.order_status ==='accepted' && !data.grand_total
                             ?
-                        <ConfirmButton onClick={()=>editOrder(data)} style={{color:"#FF9800",background:"hsl(37 87% 92% / 1)"}}>Edit Order</ConfirmButton> : <></>
+                            <>
+                            {/* <ConfirmButton onClick={()=>editOrder(data)} style={{color:"#FF9800",background:"hsl(37 87% 92% / 1)"}}>Edit Order</ConfirmButton> : <></> */}
+
+                            <FieldValue style={{color:'#f1a62d'}} onClick={()=>editOrder(data)}>Edit Order</FieldValue>
+                            </>
+                            :''
                     }
                     {/* <FieldName style={{textAlign:'center'}}>inform</FieldName> */}
                     {   
                         data.order_status ==='created'
                             && 
-                        <FieldValue onClick={()=>cancelOrder(data.id)}>cancel</FieldValue>
+                        <FieldValue onClick={()=>cancelOrder(data.id)}>Cancel</FieldValue>
                     }
                     
                 </Flex>
@@ -272,6 +277,9 @@ const OrdersWrapper = styled.div`
         border-right:3px solid #eee;
         padding:0rem 1rem;
         height: 100%;
+        min-height: 72px;
+        justify-content: center;
+        min-width: 126px;
     }
     .noBorder{
         border:none;
@@ -285,7 +293,7 @@ const OrderTabs = styled.div`
 const OrderTab = styled.div`
     color:#aaaaaa;
     padding:0.5rem 1rem;
-    font-size: 1.25rem;
+    font-size: 1rem;
     position:relative;
     padding-top: 1rem;
     cursor:pointer;
@@ -320,25 +328,26 @@ const OrdersCount = styled.div`
         color:#aaa;
     }
     padding:1rem 0;
-    font-size:1.2rem;
+    font-size:1rem;
     padding-bottom:0;
 
 `
 const OrdersListWrapper = styled.div`
-
+    max-width:850px;
 `
 
 const OrderWrapper = styled.div`
     background:#fff;
     border-radius:5px;
     padding:0.5rem;
-    margin:1rem 0;
-    min-height: 100px;
+    margin: 0.5rem 0;
+    min-height: 80px;
     padding: 1.2rem 0;
     cursor:pointer;
     &.selected{
-       border: 1px solid #ff9a12;
-
+        margin-right: -2rem;
+        padding-right:2rem;
+        border-radius: 5px 0 0 5px;
     }
 `
 export const FieldName = styled.div`
@@ -388,9 +397,11 @@ const ConfirmButton = styled.div`
     color:#fff;
     font-weight:800;
     border-radius:5px;
-    font-size:1rem;
+    font-size:0.9rem;
     cursor:pointer;
     text-align:center;
+    padding: 0.5rem 1rem;
+    max-width: 170px;
 `
 
 const OrderStatus = styled.div`
