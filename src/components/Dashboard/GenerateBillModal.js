@@ -31,6 +31,7 @@ function GenerateBillModal(props) {
         }   
 
     }
+
     useEffect(() => {
         setBillObject(getBillObject());
     }, [foodDiscount,drinksDiscount,serviceCharge,vatTax,gstTax])
@@ -92,7 +93,7 @@ function GenerateBillModal(props) {
                     "value": parseFloat(food_discount_value.toFixed(2))
                 },
                 "tax" : {
-                    "percentage" : parseFloat(gstTax.toFixed(2)),
+                    "percentage" : parseInt(gstTax),
                     "value" : parseFloat(food_tax_value.toFixed(2))
                 },
                 "final_amount": parseFloat(food_final_amount.toFixed(2))
@@ -178,7 +179,7 @@ function GenerateBillModal(props) {
                                             ) : null
                                         })
                                     }
-                                    <Flex>
+                                    <Flex alignCenter>
                                             <FlexItem grow={1}>
                                                 <SectionName>Food Subtotal</SectionName>
                                             </FlexItem>
@@ -188,7 +189,7 @@ function GenerateBillModal(props) {
                                                 </Flex>
                                             </FlexItem>
                                     </Flex>
-                                    <Flex>
+                                    <Flex alignCenter>
                                             <FlexItem grow={1}>
                                                 <SectionName>Food Discount(%) @&nbsp;&nbsp;<input type='number' style={{width:'50px'}} name='food_discount' min="0" value={foodDiscount} onChange={discountChange}/></SectionName>
                                             </FlexItem>
@@ -198,9 +199,9 @@ function GenerateBillModal(props) {
                                                 </Flex>
                                             </FlexItem>
                                     </Flex>       
-                                    <Flex>
+                                    <Flex alignCenter>
                                             <FlexItem grow={1}>
-                                                <SectionName> Gst @ 5%</SectionName>
+                                                <SectionName> Gst @&nbsp;&nbsp;<input type='number' style={{width:'50px'}} name='gst_tax' value={gstTax} min="0" value={gstTax} onChange={(e)=>{setGstTax(e.target.value)} }/></SectionName>
                                             </FlexItem>
                                             <FlexItem >
                                                 <Flex column className='rightmost'>
@@ -255,7 +256,7 @@ function GenerateBillModal(props) {
                                                 </Flex>
                                             </FlexItem>
                                         </Flex>
-                                        <Flex>
+                                        <Flex alignCenter>
                                                 <FlexItem grow={1}>
                                                     <SectionName>Drinks Discount(%) @<input type='number' min="0" style={{width:'50px'}} name='drinks_discount' value={drinksDiscount} onChange={discountChange}/></SectionName>
                                                 </FlexItem>
@@ -265,7 +266,7 @@ function GenerateBillModal(props) {
                                                     </Flex>
                                                 </FlexItem>
                                         </Flex>
-                                        <Flex>
+                                        <Flex alignCenter>
                                                 <FlexItem grow={1}>
                                                     <SectionName>Vat(%) @<input type='number' style={{width:'50px'}} min="0" name='vat_tax' value={vatTax} onChange={(e)=>{setVatTax(e.target.value)}}/></SectionName>
                                                 </FlexItem>
@@ -289,7 +290,7 @@ function GenerateBillModal(props) {
                                     </FlexItem>
                             </Flex> */}
                             <br></br>
-                            <Flex>
+                            <Flex alignCenter>
                                     <FlexItem grow={1}>
                                         <SectionName>Service charge(%) @&nbsp;<input type='number' style={{width:'50px'}} min="0" name='vat_tax' value={serviceCharge} onChange={(e)=>{setServiceCharge(e.target.value)}}/></SectionName>
                                     </FlexItem>
@@ -300,7 +301,7 @@ function GenerateBillModal(props) {
                                     </FlexItem>
                             </Flex>
                             <Separator/>
-                            <Flex>
+                            <Flex alignCenter>
                                     <FlexItem grow={1}>
                                         <SectionName> Grand Total</SectionName>
                                     </FlexItem>
@@ -313,7 +314,7 @@ function GenerateBillModal(props) {
                             <Separator/>
                         </PriceTable>
                         <div style={{textAlign:'center',color:'green'}}>{message}</div>
-                        <SolidButton  onClick={generateOrderBill}>Generate Order Bill</SolidButton>
+                        <SolidButton style={{position:'sticky',bottom: '0',boxShadow: '0px -10px 20px 0px rgba(0,0,0,0.2)'}}  onClick={generateOrderBill}>Generate Order Bill</SolidButton>
                     </Flex>
                 </BillContainer>
 
@@ -343,11 +344,13 @@ const BillContainer = styled.div`
 `
 const SectionName= styled.div`
     font-size:1rem;font-weight:800;
-    color:#999;
+    color:#444;
+    margin:5px 0 ;
+    
 `
 const BillCategory = styled.div`
     font-size:1rem;
-    color:#666;
+    color:#333;
     margin:0;
 `
 const PriceTable = styled.div`
@@ -418,11 +421,12 @@ const ProductName  = styled.div`
     font-size:14px;
 `
 const ProductCost = styled.div`
-    color:#333333;
+    color:#444;
     font-size:14px;
     width:100px;
     padding:0 10px;
     text-align:center;
+    font-weight:600;
 `
 const ExtraItem = styled.div`
     color:#aaaaaa;

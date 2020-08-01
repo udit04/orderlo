@@ -49,7 +49,7 @@ function OrderDetails(props) {
                     </FlexItem>
                 </Flex>
             </DetailsMeta>
-            <Separator/>
+            {/* <Separator/> */}
             <DetailsMeta>
                 <Flex>
                     <FlexItem grow='1'>
@@ -65,11 +65,12 @@ function OrderDetails(props) {
                 </Flex>
             </DetailsMeta>
             <Separator/>
+            <ol style={{paddingLeft:'1rem'}}>
             {
                 orderDetail.products.map(product=>{
                     return product.qty ?
                     (
-                        <CartProduct>
+                        <CartProduct as='li' style={{paddingLeft:'0.5rem'}}>
                             <Flex>
                                 <FlexItem grow='1'>
                                     <Flex column>
@@ -94,7 +95,7 @@ function OrderDetails(props) {
                     ) : null
                 })
             }
-           
+           </ol>
             <Separator/>
             <Flex>
                 <FlexItem grow='1'>
