@@ -344,8 +344,9 @@ const BillContainer = styled.div`
 `
 const SectionName= styled.div`
     font-size:1rem;font-weight:800;
-    color:#333;
+    color:#444;
     margin:5px 0 ;
+    
 `
 const BillCategory = styled.div`
     font-size:1rem;
@@ -420,7 +421,7 @@ const ProductName  = styled.div`
     font-size:14px;
 `
 const ProductCost = styled.div`
-    color:#333333;
+    color:#444;
     font-size:14px;
     width:100px;
     padding:0 10px;
