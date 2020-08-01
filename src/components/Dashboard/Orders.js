@@ -128,7 +128,7 @@ function Orders(props) {
             {   ordersData && ordersData.menu && ordersData.menu.length>0
                 &&
                 <OrdersListWrapper>
-                    <OrdersCount>Today <span>{ordersData.menu.filter(order=>['accepted','created'].includes(order.order_status)).length} Orders</span></OrdersCount>
+                    {/* <OrdersCount>Today <span>{ordersData.menu.filter(order=>['accepted','created'].includes(order.order_status)).length} Orders</span></OrdersCount> */}
                     { orderTab ===0 && 
                     ordersData.menu.filter(data=>((data.order_status==="accepted"||data.order_status==="created") ) ).map((data,i)=>{
                         return(
@@ -202,13 +202,7 @@ function Order(props){
                                 :
                                 <>
                                     <Flex alignCenter justifyStart>
-                                        {
-                                            data.grand_total ? 
-                                            <Flex column><FieldName>Total</FieldName>
                                         
-                                            <FieldValue>Rs. {data.grand_total}</FieldValue>
-                                            </Flex>  : <Flex column></Flex>
-                                        }  
                                         {
                                         (data.order_status==='accepted' && data.payment_status==='pending')
                                             ?
@@ -223,6 +217,13 @@ function Order(props){
 
                                             </Flex>
                                         }
+                                        {/* {
+                                            data.grand_total ? 
+                                            <Flex column><FieldName>Total</FieldName>
+                                        
+                                            <FieldValue>Rs. {data.grand_total}</FieldValue>
+                                            </Flex>  : <Flex column></Flex>
+                                        }   */}
                                     </Flex>
                                 </>
                             }
@@ -233,7 +234,7 @@ function Order(props){
                 
                 <Flex column className='orderColumn noBorder'>
                     {   
-                        data.order_status ==='accepted' && !data.grand_total
+                        data.order_status ==='accepted' 
                             ?
                             <>
                             {/* <ConfirmButton onClick={()=>editOrder(data)} style={{color:"#FF9800",background:"hsl(37 87% 92% / 1)"}}>Edit Order</ConfirmButton> : <></> */}
@@ -249,6 +250,16 @@ function Order(props){
                         <FieldValue onClick={()=>cancelOrder(data.id)}>Cancel</FieldValue>
                     }
                     
+                    {
+                        (data.order_status ==='delivered' && data.grand_total )
+                        ? 
+                        <Flex column>
+                            <FieldName>Total</FieldName>
+                            <FieldValue>Rs. {data.grand_total}</FieldValue>
+                        </Flex>  
+                        : 
+                        <Flex column></Flex>
+                    }  
                 </Flex>
             </Flex>
         </OrderWrapper>
