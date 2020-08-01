@@ -4,6 +4,12 @@ import Flex from 'styled-flex-component'
 
 function OrderSidebar(props) {
     const {restaurant} = props;
+
+    const logout = ()=>{
+        localStorage.removeItem('restoDetail');
+        window.location.reload();
+    }
+
     return (
         <SidebarContainer>
             {/* Sidebar */}
@@ -20,12 +26,9 @@ function OrderSidebar(props) {
                             Orders
                         </div>
                     </SideOption>
-                    {/* <SideOption className={props.activeTab===1?'activeMenuTab':''} onClick={()=>{props.setActiveTab(1)}} >
-                        <img src=''/>
-                        <div className='optionName'>
-                            Menu
-                        </div>
-                    </SideOption> */}
+                    <SideOption className={props.activeTab===1?'activeMenuTab':''} onClick={logout} >
+                        <div className='optionName' style={{fontWeight:'bold'}}>Logout</div>
+                    </SideOption>
                     {/* <SideOption className={props.activeTab===2?'activeMenuTab':''} onClick={()=>{props.setActiveTab(2)}} >
                         <img src=''/>
                         <div className='optionName'>
