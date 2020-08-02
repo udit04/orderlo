@@ -48,9 +48,7 @@ export default function Login(){
                     setErr(res.data.message)
                     setDisable(true);
                 }
-                console.log(res);
             }).catch(err=>{
-                console.log(err);
                 setOtpMessage('');
                 setErr('some error occured')
                 setDisable(false);
@@ -95,7 +93,6 @@ export default function Login(){
                 setOtpMessage('');
             }
         }).catch(err=>{
-            console.log(err);
             setErr('some error occured');
             setOtpMessage('');
             if(err.response && err.response.data.message){
@@ -112,7 +109,6 @@ export default function Login(){
                     <LoginHeader>
                         Welcome to Ordrlo
                     </LoginHeader>
-                    <Tagline>tagline</Tagline>
                     {otpMessage && otpMessage!=='' && <SuccessText>{otpMessage}</SuccessText>}
                     {err && err!=='' && <ErrorText>{err}</ErrorText>}
                     <TextInputWrapper>
@@ -124,7 +120,7 @@ export default function Login(){
                         <>
                             <TextInputWrapper>
                             <TextInput type='number' id='otp' name='otp' placeholder='OTP' onChange={handleFormChange} value={otp}/>
-                            <Flex justifyEnd><span onClick={sendOtp}>Resend Otp</span></Flex>
+                            <Flex justifyEnd><span style={{cursor:"pointer"}} onClick={sendOtp}>Resend Otp</span></Flex>
                             <img src={require('../../../public/static/lock.png')}/>
                             </TextInputWrapper>
                             <Separator>Or</Separator>
