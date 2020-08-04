@@ -184,8 +184,7 @@ function Order(props){
     <FieldValue>{data.id}</FieldValue>
                 </Flex>
                 <FlexItem grow="1">
-                        <Flex column   className='orderColumn' justifyCenter={data.order_status==='created'} alignStretch>
-                  
+                        <Flex column   className='orderColumn' justifyCenter={data.order_status==='created'} alignStretch>                  
                             {
                             data.order_status==='created'
                                 ?
@@ -232,39 +231,39 @@ function Order(props){
                                         }   */}
                                     </Flex>
                                 </>
-                            }
-                        
-                    </Flex>
-                   
-                </FlexItem>
-                
+                            }    
+                    </Flex>  
+                </FlexItem> 
                 <Flex column className='orderColumn noBorder'>
                     {   
                         data.order_status ==='accepted' 
                             ?
                             <>
                             {/* <ConfirmButton onClick={()=>editOrder(data)} style={{color:"#FF9800",background:"hsl(37 87% 92% / 1)"}}>Edit Order</ConfirmButton> : <></> */}
-
+                            <ViewOrder >View Order</ViewOrder>
+                            <Seperator />
                             <FieldValue style={{color:'#f1a62d'}} onClick={()=>editOrder(data)}>Edit Order</FieldValue>
                             </>
                             :''
                     }
                     {/* <FieldName style={{textAlign:'center'}}>inform</FieldName> */}
-                    {   
+                    {
                         data.order_status ==='created'
                             && 
-                        <FieldValue onClick={()=>cancelOrder(data.id)}>Cancel</FieldValue>
+                        <><ViewOrder >View Order</ViewOrder><Seperator /><FieldValue onClick={()=>cancelOrder(data.id)}>Cancel</FieldValue>
+                        </>
                     }
                     
                     {
                         (data.order_status ==='delivered' && data.grand_total )
                         ? 
-                        <Flex column>
+                        <><Flex column>
                             <FieldName>Total</FieldName>
                             <FieldValue>Rs. {data.grand_total}</FieldValue>
-                        </Flex>  
+                        </Flex>
+                        </>
                         : 
-                        <Flex column></Flex>
+                        <><Flex column></Flex></>
                     }  
                 </Flex>
             </Flex>
@@ -375,6 +374,21 @@ export const FieldValue = styled.div`
     font-size:20px;
     color:#3c4dae;
     font-weight:bold;
+    text-align: center;
+`
+export const ViewOrder = styled.div`
+    font-size:20px;
+    color:palevioletred;
+    font-weight:bold;
+    text-align: center;
+`
+
+export const Seperator = styled.div`
+    height:2px;
+    color:gray;
+    background-color:gray;
+    width: 100%;
+    text-align: center;
 `
 
 const OrderNum  = styled.div`

@@ -44,7 +44,7 @@ function OrderDetails(props) {
                     <FlexItem grow='1'>
                         <Flex column>
                             <FieldName>Order number</FieldName>
-                            <FieldValue>{orderDetail.id}</FieldValue>
+                            <FieldValue style={{textAlign:'left'}}>{orderDetail.id}</FieldValue>
                         </Flex>
                     </FlexItem>
                 </Flex>
@@ -67,10 +67,10 @@ function OrderDetails(props) {
             <Separator/>
             <ol style={{paddingLeft:'1rem'}}>
             {
-                orderDetail.products.map(product=>{
+                orderDetail.products.map((product,i)=>{
                     return product.qty ?
                     (
-                        <CartProduct as='li' style={{paddingLeft:'0.5rem'}}>
+                        <CartProduct key={i} as='li' style={{paddingLeft:'0.5rem'}}>
                             <Flex>
                                 <FlexItem grow='1'>
                                     <Flex column>
