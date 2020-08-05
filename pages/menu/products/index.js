@@ -1,13 +1,14 @@
 import React,{useState, useEffect} from 'react'
 import styled from 'styled-components'
-import CreateCategory from '../src/components/StoreMenu/CreateCategory'
+import CreateCategory from '../../../src/components/StoreMenu/CreateCategory'
 import Flex from 'styled-flex-component'
-import { SolidButton, TextInputWrapper, TextInput } from '../src/components/Login/LoginStyled'
-import StyledModal from '../src/components/Modal/StyledModal'
-import { Router } from 'next/router';
-import menuService from '../src/services/menuService'
+import { SolidButton, TextInputWrapper, TextInput } from '../../../src/components/Login/LoginStyled'
+import StyledModal from '../../../src/components/Modal/StyledModal'
+import Router from 'next/router';
+import menuService from '../../../src/services/menuService'
 
-const categories = [{name:'Category 1'},{name:'Category 2'},{name:'Category 3'},{name:'Category 4'},{name:'Category 5'},{name:'Category 6'}]
+// const categories = [{name:'Category 1'},{name:'Category 2'},{name:'Category 3'},{name:'Category 4'},{name:'Category 5'},{name:'Category 6'}]
+
 
 function CreateMenu() {
     const modalRef = React.createRef();
@@ -15,19 +16,21 @@ function CreateMenu() {
     const [productModal, setProductModal] = useState(false)
     const [modal, setModal] = useState(false)
     const [restoDetail,setRestoDetail] = useState(null);
-    const [categoryName,setCategoryName] = useState('');
-    const [categoryDesc,setCategoryDesc] = useState('');
+    const [category,setCategory] = useState({name:'',desc:''});
     const [categoryDetails,setCategoryDetails] = useState(null);
+    const [categories,setCategories] = useState([]);
+
     const openCategoryModal = (data)=>{
         setCategoryDetails();
-        setModal(true)
-        
+        setModal(true) 
     }
 
     useEffect(() => {
         const restoDetail = JSON.parse(localStorage.getItem('restoDetail'));
         if(restoDetail){
-            setRestoDetail(restoDetail);
+            setRestoDetail(restoDetail.restaurant);
+            console.log('restoDetail',restoDetail);
+            fetchCategories(restoDetail.restaurant.id)
         }else{
             Router.push('/restologin')
         }
@@ -37,16 +40,22 @@ function CreateMenu() {
         setCategoryDesc('');
         setModal(false)
     }
+
+    const fetchCategories = (id)=>{
+        menuService.fetchCategories({restaurant_id: id}).then(res=>{
+            setCategories(res.data.data);
+        }).catch(err=>{})
+    }
+
     const saveCategory = ()=>{
         menuService.createCategory({
-                "name" : categoryName,
-                "description": categoryDesc,
-                "category_id": 1,
+                "name" : category.name,
+                "description": category.desc,
                 "restaurant_id": restoDetail.id,
                 "tags": null,
-                "is_active": true
         }).then(res=>{
             setModal(false);
+            fetchCategories(restoDetail.id);
         }).catch(err=>{
             setModal(false);
         })
@@ -87,10 +96,10 @@ function CreateMenu() {
                     <ModalContent ref={modalRef}>
                         <h3>Create Category</h3>
                         <TextInputWrapper>
-                            <TextInput placeholder='Category name' value={categoryDetails?categoryDetails.name:''}></TextInput>
+                            <TextInput placeholder='Category name' value={category.name} onChange={(e)=>setCategory({name:e.target.value, desc: category.desc})}></TextInput>
                         </TextInputWrapper>
                         <TextInputWrapper>
-                        <TextInput placeholder='Category description'></TextInput>
+                        <TextInput placeholder='Category description' value={category.desc} onChange={(e)=>setCategory({name: category.name,desc:e.target.value})}></TextInput>
                         </TextInputWrapper>
                         <TextInputWrapper>
                             <SolidButton onClick={saveCategory}> Save</SolidButton>

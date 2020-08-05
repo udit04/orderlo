@@ -3,7 +3,6 @@ import styled  from 'styled-components'
 
 function StyledModal(props) {
     const closeModal = (e)=>{
-        console.log(e.target,e.currentTarget);
         if(e.target.contains(props.contentRef.current)){
             props.onClose();
         }
