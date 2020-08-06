@@ -71,7 +71,7 @@ function SubCategory() {
                 <Flex>
                 <SolidButton onClick={openSubCategoryModal} style={{fontSize: '0.9rem',whiteSpace:'nowrap',margin:'0 1rem'}}>Add SubCategory</SolidButton>
                 </Flex>
-                {subCategories.map(cat=>(<CreateSubCategory setModal={setModal} data={cat}/>))}
+                {subCategories.map(cat=>(<CreateSubCategory setModal={setModal} data={cat} categoryDetails={categoryDetails} />))}
             </Flex>
             </CategoryList>
             {   modal &&
@@ -97,17 +97,22 @@ function SubCategory() {
     )
 }
 
-function CreateSubCategory({data,setModal}) {
+function CreateSubCategory({data,setModal,categoryDetails}) {
     const addProductClick = ()=>{
         setModal(true);
         setProductModal();
     }
+
+    const addItemClick = ()=>{
+        Router.push(`/menu/products?c_id=${categoryDetails.id}&c_name=${categoryDetails.name}&sc_id=${data.id}&sc_name=${data.name}&from=category`);
+    }
+
     return (
         <SubCategoryComp style={{maxWidth: '700px',fontSize: '1.2rem'}}> 
             <Flex justifyBetween alignCenter>
             {data.name}
             <Flex>
-                <SolidButton onClick={()=>{addProductClick(true)}}  style={{fontSize: '0.9rem',whiteSpace:'nowrap',margin:'0 1rem'}}>Add Item</SolidButton>
+                <SolidButton onClick={addItemClick}  style={{fontSize: '0.9rem',whiteSpace:'nowrap',margin:'0 1rem'}}>Add Item</SolidButton>
             </Flex>
             </Flex>
         </SubCategoryComp>

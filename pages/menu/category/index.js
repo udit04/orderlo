@@ -110,17 +110,20 @@ function CreateMenu() {
 
 function CreateCategory({data,setCategoryDetails,setProductModal,setModal}) {
     const addSubCategoryClick = ()=>{
-        //setModal(true);
-        //setCategoryDetails(data);
         Router.push(`/menu/subcategory?category_id=${data.id}&category_name=${data.name}&from=category`);
     }
+
+    const addItemClick = ()=>{
+        Router.push(`/menu/products?c_id=${data.id}&c_name=${data.name}&from=category`);
+    }
+
     return (
         <CategoryComp style={{maxWidth: '700px',fontSize: '1.2rem'}}> 
             <Flex justifyBetween alignCenter>
             {data.name} 
             <Flex>
                 <SolidButton onClick={addSubCategoryClick} style={{fontSize: '0.9rem',whiteSpace:'nowrap',margin:'0 1rem'}}>Add SubCategory</SolidButton>
-                <SolidButton onClick={()=>{setProductModal(true)}}  style={{fontSize: '0.9rem',whiteSpace:'nowrap',margin:'0 1rem'}}>Add Item</SolidButton>
+                <SolidButton onClick={addItemClick}  style={{fontSize: '0.9rem',whiteSpace:'nowrap',margin:'0 1rem'}}>Add Item</SolidButton>
             </Flex>
             </Flex>
         </CategoryComp>
