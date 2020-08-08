@@ -1,6 +1,6 @@
 import React,{useState, useEffect} from 'react'
 import styled from 'styled-components'
-import Flex from 'styled-flex-component'
+import Flex,{FlexItem} from 'styled-flex-component'
 import { SolidButton, TextInputWrapper, TextInput } from '../../../src/components/Login/LoginStyled'
 import StyledModal from '../../../src/components/Modal/StyledModal'
 import Router, {useRouter} from 'next/router';
@@ -14,11 +14,11 @@ function MenuProducts() {
     const [productsArray,setProductsArray] = useState([]);
     const [categoryDetails,setCategoryDetails] = useState(null);
     const [subCategoryDetails,setSubCategoryDetails] = useState(null);
-    const [prod,setProduct] = useState({name:'',desc:'',price:0,is_veg:false,is_alcohol:false,image_url: ''});
+    const [prod,setProduct] = useState({name:'',desc:'',price:'',is_veg:false,is_alcohol:false,image_url: ''});
     const [categories,setCategories] = useState(null);
     const [subCategories,setSubCategories] = useState(null);
     const [vegRadio,setVegRadio] = useState(null);
-    const [alchoholicRadio,setAlchoholicRadio]  =  useState(null);
+    const [alchoholicRadio,setAlchoholicRadio]  =  useState(false);
 
     const router = useRouter();
 
@@ -51,32 +51,25 @@ function MenuProducts() {
         }
     }, [])
     const onCloseModal = ()=>{
+        alert('ff')
         setCategoryName('');
         setCategoryDesc('');
-        setModal(false)
+        setVegRadio(null);
+        setModal(false);
     }
     const fetchCategories = (id)=>{
         menuService.fetchCategories({restaurant_id: id}).then(res=>{
             setCategories(res.data.data);
-
-            if(res.data && res.data.data && res.data.data.length >0){
-                const selectedCategory = res.data.data[0];
-                
-                setCategoryDetails({name:selectedCategory.name,id:selectedCategory.id});
-
-                menuService.fetchSubCategories({restaurant_id:restoDetail.id,category_id:selectedCategory.id}).then(res=>{
-                        if(res.dat && res.data.data){
-                            setSubCategories(res.data.data)
-                        
-                            setSubCategoryDetails({name:res.data.data[0].name,id:res.data.data[0].id});
-                        }
-
-                }).catch(err=>{
-
-                });
-
-            }
-            // console.log(res.data);
+            // if(res.data && res.data.data && res.data.data.length >0){
+            //     const selectedCategory = res.data.data[0];
+            //     menuService.fetchSubCategories({restaurant_id:restoDetail.id,category_id:selectedCategory.id}).then(res=>{
+            //         if(res.dat && res.data.data){
+            //             setSubCategories(res.data.data)        
+            //             setSubCategoryDetails({name:res.data.data[0].name,id:res.data.data[0].id});
+            //         }
+            //     }).catch(err=>{
+            //     });
+            // }
         }).catch(err=>{});
     }
     const fetchProducts = (id)=>{
@@ -84,21 +77,29 @@ function MenuProducts() {
             setProductsArray(res.data.products);
         }).catch(err=>{})
     }
-    const selectCategory = (e)=>{
-        const selectedCategory = categories.filter(cat=>cat.id == e.target.value)[0];
-        setCategoryDetails({name:selectedCategory.name,id:selectedCategory.id});
-        menuService.fetchSubCategories({restaurant_id:restoDetail.id,category_id:e.target.value}).then(res=>{
-                setSubCategories(res.data.data)
-
-        }).catch(err=>{
-
-        });
+    const selectCategory = (id)=>{
+        if(Number(id)!==-1){
+            const selectedCategory = categories.filter(cat=>cat.id == id)[0];
+            setCategoryDetails({name:selectedCategory.name,id:selectedCategory.id});
+            menuService.fetchSubCategories({restaurant_id:restoDetail.id,category_id:id}).then(res=>{
+                setSubCategories(res.data.data);
+            }).catch(err=>{
+            });
+        }
+        else{
+            setCategoryDetails(null);
+            setSubCategories(null);
+        }
+        setSubCategoryDetails(null);
     }
-    const selectSubCategory = (e)=>{
-        const selectedSubCategory = subCategories.filter(cat=>cat.id == e.target.value)[0];
-
-        setSubCategoryDetails({name:selectedSubCategory.name,id:selectedSubCategory.id});
-        
+    const selectSubCategory = (id)=>{
+        if(Number(id)!==-1){
+            const selectedSubCategory = subCategories.filter(cat=>cat.id == id)[0];
+            setSubCategoryDetails({name:selectedSubCategory.name,id:selectedSubCategory.id});
+        }
+        else{
+            setSubCategoryDetails(null);
+        }
     }
     const saveProduct = ()=>{
         menuService.createProduct({
@@ -108,19 +109,19 @@ function MenuProducts() {
             "image": prod.image_url,
             "is_alcohol": alchoholicRadio?true:false,
             "restaurant_id": restoDetail.id,
-            "category_id": categoryDetails.id,
-            "subcategory_id": subCategoryDetails && subCategoryDetails.id
+            "category_id": categoryDetails.id != -1 ? categoryDetails.id : null,
+            "subcategory_id": subCategoryDetails && subCategoryDetails.id != -1 ? subCategoryDetails.id : null
         }).then(res=>{
             setModal(false);
             setProduct({name:'',desc:'',price:0,is_veg:vegRadio,is_alcohol:false,image_url: ''})
-            setCategoryDetails(null);
-            setSubCategoryDetails(null);
             fetchProducts(restoDetail.id);
             setVegRadio(null);
         }).catch(err=>{
             setModal(false);
         })
     }
+    console.log('categorydetails',categoryDetails);
+
     return (
         <CategoryWrapper>
             <CategoryList >
@@ -128,11 +129,11 @@ function MenuProducts() {
                 <Flex>
                 <SolidButton onClick={openSubCategoryModal} style={{fontSize: '0.9rem',whiteSpace:'nowrap',margin:'0 1rem'}}>Add Product</SolidButton>
                 </Flex>
-                {productsArray.map(cat=>(<CreateProduct setModal={setModal} data={cat}/>))}
+                {productsArray.map((cat,i)=>(<CreateProduct setModal={setModal} data={cat} key={i} selectSubCategory={selectSubCategory} selectCategory={selectCategory} setProduct={setProduct} setVegRadio={setVegRadio} setAlchoholicRadio={setAlchoholicRadio}/>))}
             </Flex>
             </CategoryList>
             {   modal &&
-                <StyledModal contentRef={modalRef} onClose={()=>{setModal(false)}}>
+                <StyledModal contentRef={modalRef} onClose={()=>{setModal(false);setVegRadio(null);}}>
                     <ModalContent ref={modalRef}>
                         <h3>Create Product</h3>
                         
@@ -140,9 +141,10 @@ function MenuProducts() {
                             ?
                             <TextInputWrapper>
                             <div><b>Select Category</b></div>
-                            <CategorySelect as='select' onChange={selectCategory}>
-                                {categories.map(cat=>{
-                                    return(<option  value={cat.id}>{cat.name}</option>)
+                            <CategorySelect as='select' onChange={(e)=>selectCategory(e.target.value)} style={{width:'100%'}} defaultValue={categoryDetails ? categoryDetails.id : -1}>
+                                <option value={-1} key={-1}>Select Category</option>
+                                {categories.map((cat,i)=>{
+                                    return(<option value={cat.id} key={i}>{cat.name} </option>)
                                 })}
                                 
                             </CategorySelect>
@@ -151,26 +153,32 @@ function MenuProducts() {
                             :
                             <TextInputWrapper>
                                 <div><b>Add Category</b></div>
-                                <TextInput placeholder='Category name' value={categoryDetails && categoryDetails.name} ></TextInput>
+                                <TextInput disabled placeholder='Category name' value={categoryDetails && categoryDetails.name} ></TextInput>
                             </TextInputWrapper>
                         }
                         { (subCategories && subCategories.length>0)
                             ?
                             <TextInputWrapper>
                             <div><b>Select SubCategory</b></div>
-                            <CategorySelect as='select' onChange={selectSubCategory}>
-                                {subCategories.map(cat=>{
-                                    return(<option  value={cat.id}>{cat.name}</option>)
+                            <CategorySelect as='select' onChange={(e)=>selectSubCategory(e.target.value)} style={{width:'100%'}}>
+                                <option value={-1} key={-1}>Select Sub Category</option>
+                                {subCategories.map((cat,i)=>{
+                                    return(<option  value={cat.id} key={i}>{cat.name}</option>)
                                 })}
-                                
                             </CategorySelect>
                             {/* <TextInput placeholder='Category name' value={categoryDetails && categoryDetails.name} disabled></TextInput> */}
                             </TextInputWrapper>
                             :
-                            <TextInputWrapper>
-                                <div><b>SubCategory</b></div>
-                                <TextInput placeholder='Sub Category Name' value={subCategoryDetails && subCategoryDetails.name} disabled></TextInput>
-                            </TextInputWrapper>
+                            <>
+                            {
+                                subCategoryDetails ? 
+                                <TextInputWrapper>
+                                    <div><b>Select SubCategory</b></div>
+                                    <TextInput placeholder='Sub Category Name' value={subCategoryDetails && subCategoryDetails.name ? subCategoryDetails.name : '' } disabled></TextInput>
+                                </TextInputWrapper> : null
+                            }
+                            </>
+                            
                         }
                         
                         <TextInputWrapper>
@@ -182,24 +190,24 @@ function MenuProducts() {
                         </TextInputWrapper> */}
                         <TextInputWrapper>
                             <div><b>Product Price</b></div>
-                            <TextInput placeholder='Price' value={prod.price} onChange={(e)=>setProduct({name:prod.name,desc:prod.desc,price:e.target.value,is_veg:prod.is_veg,is_alcohol:prod.is_alcohol,image_url:prod.image_url})}></TextInput>
+                            <TextInput type='number' placeholder='Price' value={prod.price} onChange={(e)=>setProduct({name:prod.name,desc:prod.desc,price:e.target.value,is_veg:prod.is_veg,is_alcohol:prod.is_alcohol,image_url:prod.image_url})}></TextInput>
                         </TextInputWrapper>
 
                         <Flex>
                             <TextInputWrapper>
-                                <label class='container' htmlFor="vegOption"><Flex><input id='vegOption' onChange={(e)=>{setVegRadio(e.target.value)}} type='radio' name='vegOption' value='veg'/><span class="checkmark"></span><div>Veg</div></Flex></label>
+                                <label className='container' htmlFor="vegOption"><Flex><input id='vegOption' onChange={(e)=>{setVegRadio(e.target.value)}} type='radio' name='vegOption' value='veg' defaultChecked={vegRadio === true ? true : false}/><span className="checkmark"></span><div>Veg</div></Flex></label>
 
                             </TextInputWrapper>
 
                             <TextInputWrapper>
-                                <label class='container' htmlFor="NonVegOption"><Flex><input id='NonVegOption' onChange={(e)=>{setVegRadio(e.target.value)}} type='radio' name='vegOption' value='nonveg'/><span class="checkmark"></span><div>Non-Veg</div></Flex></label>
+                                <label className='container' htmlFor="NonVegOption"><Flex><input id='NonVegOption' onChange={(e)=>{setVegRadio(e.target.value)}} type='radio' name='vegOption' value='nonveg' defaultChecked={vegRadio !== true ? true : false} /><span className="checkmark"></span><div>Non-Veg</div></Flex></label>
 
                             </TextInputWrapper>
 
                         </Flex>
 
                         <TextInputWrapper>
-                            <label  htmlFor="alchoholic"><input id='alchoholic' onChange={(e)=>{setAlchoholicRadio(!alchoholicRadio)}} type='checkbox' defaultChecked={false} checked={alchoholicRadio} name='alchoholic' value='alchoholic'/>Alcoholic</label>
+                            <label  htmlFor="alchoholic"><input id='alchoholic' onChange={(e)=>{setAlchoholicRadio(!alchoholicRadio)}} type='checkbox' defaultChecked={alchoholicRadio} name='alchoholic' value='alchoholic'/>Alcoholic</label>
                             {/* <TextInput placeholder='Alcoholic' value={prod.is_alcohol} onChange={(e)=>setProduct({name:prod.name,desc:prod.desc,price:prod.price,is_veg:prod.is_veg,is_alcohol:e.target.value,image_url:prod.image_url})}></TextInput> */}
                         </TextInputWrapper>
 
@@ -210,8 +218,8 @@ function MenuProducts() {
 
 
 
-                        <TextInputWrapper>
-                            <SolidButton disabled={(vegRadio === null)} onClick={saveProduct}> Save</SolidButton>
+                        <TextInputWrapper style={{position:'sticky',bottom: '0', textAlign:'center'}}>
+                            <SolidButton disabled={(vegRadio === null || !prod.price || !prod.name || !categoryDetails)} onClick={saveProduct} style={{width:'20%'}}> Save</SolidButton>
                         </TextInputWrapper>
                     </ModalContent>
                 </StyledModal>
@@ -220,14 +228,23 @@ function MenuProducts() {
     )
 }
 
-function CreateProduct({data,setModal}) {
+function CreateProduct({data,setModal,selectCategory,selectSubCategory,setProduct, setVegRadio, setAlchoholicRadio}) {
+
+    const onEditClick=(data)=>{
+        setModal(true);
+        selectCategory(data.category_id ? data.category_id : -1);
+        setProduct({name:data.name,desc:data.Description,price:data.price,is_veg:data.is_veg,is_alcohol:data.is_alcohol,image_url: data.image_url});
+        setVegRadio(data.is_veg);
+        setAlchoholicRadio(data.is_alcohol);
+        selectSubCategory(data.subcategory_id ? data.subcategory_id : -1);
+    }
+
     return (
         <ProductComp style={{maxWidth: '700px',fontSize: '1.2rem'}}> 
-            <Flex justifyBetween alignCenter>
-            {data.name}
-            <Flex>
-                {/* <SolidButton onClick={()=>{addProductClick(true)}}  style={{fontSize: '0.9rem',whiteSpace:'nowrap',margin:'0 1rem'}}>Add Item</SolidButton> */}
-            </Flex>
+            <Flex justifyBetween alignCenter>  
+                <FlexItem > {data.name}</FlexItem>
+                <FlexItem > Rs.{data.price}</FlexItem>
+                <FlexItem onClick={()=>(onEditClick(data))} > <SolidButton style={{background:'burlywood', padding:'10px'}} > Edit</SolidButton> </FlexItem>
             </Flex>
         </ProductComp>
     )

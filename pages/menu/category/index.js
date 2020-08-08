@@ -6,7 +6,7 @@ import StyledModal from '../../../src/components/Modal/StyledModal'
 import Router from 'next/router';
 import menuService from '../../../src/services/menuService'
 
-function CreateMenu() {
+function Category() {
     const modalRef = React.createRef();
     const productModalRef = React.createRef();
     const [productModal, setProductModal] = useState(false)
@@ -63,7 +63,7 @@ function CreateMenu() {
                 <Flex>
                 <SolidButton onClick={openCategoryModal} style={{fontSize: '0.9rem',whiteSpace:'nowrap',margin:'0 1rem'}}>Add Category</SolidButton>
                 </Flex>
-                {categories.map(cat=>(<CreateCategory setProductModal={setProductModal} setCategoryDetails={setCategoryDetails} setModal={setModal}  data={cat}/>))}
+                {categories.map((cat,i)=>(<CreateCategory setProductModal={setProductModal} setCategoryDetails={setCategoryDetails} setModal={setModal} data={cat} key={i}/>))}
             </Flex>
             </CategoryList>
             {   modal &&
@@ -156,4 +156,4 @@ const CategoryComp = styled.div`
     border-bottom:1px solid #c5c5c5;
 `;
 
-export default CreateMenu
+export default Category

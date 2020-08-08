@@ -27,7 +27,7 @@ function OrderSidebar(props) {
                         </div>
                     </SideOption>
 
-                    <SideOption className={props.activeTab===1?'activeMenuTab':''} onClick={()=>Router.push('/menu/category')} >
+                    <SideOption className={props.activeTab===1?'activeMenuTab':''} onClick={()=>Router.push('/menu')} >
                         <div className='optionName' style={{fontWeight:'bold'}}>Menu</div>
                     </SideOption>
 
