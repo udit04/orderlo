@@ -1,23 +1,13 @@
 import React,{useState, useEffect} from 'react'
 import styled from 'styled-components'
 import Flex from 'styled-flex-component'
-import { SolidButton, TextInputWrapper, TextInput } from '../../src/components/Login/LoginStyled'
-import StyledModal from '../../src/components/Modal/StyledModal'
+import { SolidButton } from '../../src/components/Login/LoginStyled'
 import Router from 'next/router';
-import menuService from '../../src/services/menuService'
 
 function CreateMenu() {
-    const modalRef = React.createRef();
-    const productModalRef = React.createRef();
-    const [productModal, setProductModal] = useState(false)
-    const [modal, setModal] = useState(false)
     const [restoDetail,setRestoDetail] = useState(null);
-    const [category,setCategory] = useState({name:'',desc:''});
-    const [categoryDetails,setCategoryDetails] = useState(null);
-    const [categories,setCategories] = useState([]);
 
     const openCategoryModal = (data)=>{
-        setCategoryDetails();
         setModal(true) 
     }
 
@@ -25,40 +15,14 @@ function CreateMenu() {
         const restoDetail = JSON.parse(localStorage.getItem('restoDetail'));
         if(restoDetail){
             setRestoDetail(restoDetail.restaurant);
-            console.log('restoDetail',restoDetail);
-            fetchCategories(restoDetail.restaurant.id);
         }else{
             Router.push('/restologin')
         }
-    }, [])
-    const onCloseModal = ()=>{
-        setCategoryName('');
-        setCategoryDesc('');
-        setModal(false)
-    }
-
-    const fetchCategories = (id)=>{
-        menuService.fetchCategories({restaurant_id: id}).then(res=>{
-            setCategories(res.data.data);
-        }).catch(err=>{})
-    }
-
-    const saveCategory = ()=>{
-        menuService.createCategory({
-                "name" : category.name,
-                "description": category.desc,
-                "restaurant_id": restoDetail.id,
-                "tags": null,
-        }).then(res=>{
-            setModal(false);
-            fetchCategories(restoDetail.id);
-        }).catch(err=>{
-            setModal(false);
-        })
-    }
+    }, []);
     return (
         <CategoryWrapper>
             <CategoryList >
+            <div style={{textAlign:'right',margin:'10px'}}><button onClick={()=>Router.push(`/dashboard/${restoDetail.id}`)} style={{background: 'cadetblue',borderRadius: "10px",padding: "10px"}}>Back To Dashboard</button></div>
             <Flex column alignCenter>
                 <Flex>
                 <SolidButton onClick={()=>Router.push('/menu/category')} style={{fontSize: '0.9rem',whiteSpace:'nowrap',margin:'10px'}}>Categories</SolidButton>
@@ -77,7 +41,7 @@ const CategoryWrapper = styled.div`
 const CategoryList = styled.div`
     max-width: 800px;
     margin: auto;
-    padding: 5rem 0;
+    padding: 2rem 0;
     background: #fff;
 `
 const ModalContent = styled.div`

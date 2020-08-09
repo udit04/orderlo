@@ -15,6 +15,10 @@ const editSubCategory = (body)=>{
     return ax.get(`/v1/api/edit_subcategory`)
 }
 
+const editProduct = (body)=>{ 
+    return ax.post(`/v1/api/edit_product`,body)
+}
+
 const fetchCategories = (body)=>{ 
     return ax.get(`/v1/api/fetch_categories?restaurant_id=${body.restaurant_id}`)
 }
@@ -40,4 +44,4 @@ const createProduct = (body)=>{
 }
 
 
-export default { editCategory, editSubCategory, fetchCategories, fetchSubCategories, createCategory,createSubCategory, fetchProducts,createProduct}
+export default { editCategory, editSubCategory, fetchCategories, fetchSubCategories, createCategory,createSubCategory, fetchProducts,createProduct,editProduct}

@@ -4,7 +4,6 @@ import Flex from 'styled-flex-component'
 import Router from 'next/router';
 function OrderSidebar(props) {
     const {restaurant} = props;
-    console.log('ROuter',Router);
     const logout = ()=>{
         localStorage.removeItem('restoDetail');
         window.location.reload();

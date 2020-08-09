@@ -67,6 +67,7 @@ function SubCategory() {
     return (
         <CategoryWrapper>
             <CategoryList >
+            <div style={{textAlign:'right',margin:'10px'}}><button onClick={()=>Router.push(`/dashboard/${restoDetail.id}`)} style={{background: 'cadetblue',borderRadius: "10px",padding: "10px"}}>Back To Dashboard</button></div>
             <Flex column alignCenter>
                 <Flex>
                 <SolidButton onClick={openSubCategoryModal} style={{fontSize: '0.9rem',whiteSpace:'nowrap',margin:'0 1rem'}}>Add SubCategory</SolidButton>
@@ -126,7 +127,7 @@ const CategoryWrapper = styled.div`
 const CategoryList = styled.div`
     max-width: 800px;
     margin: auto;
-    padding: 5rem 0;
+    padding: 2rem 0;
     background: #fff;
 `
 const ModalContent = styled.div`

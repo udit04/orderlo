@@ -14,11 +14,12 @@ function MenuProducts() {
     const [productsArray,setProductsArray] = useState([]);
     const [categoryDetails,setCategoryDetails] = useState(null);
     const [subCategoryDetails,setSubCategoryDetails] = useState(null);
-    const [prod,setProduct] = useState({name:'',desc:'',price:'',is_veg:false,is_alcohol:false,image_url: ''});
+    const [prod,setProduct] = useState({name:'',desc:'',price:'',is_veg:false,is_alcohol:false,image_url: '',product_id:null});
     const [categories,setCategories] = useState(null);
     const [subCategories,setSubCategories] = useState(null);
     const [vegRadio,setVegRadio] = useState(null);
     const [alchoholicRadio,setAlchoholicRadio]  =  useState(false);
+    const [edit,setEditButton] = useState(false);
 
     const router = useRouter();
 
@@ -34,7 +35,8 @@ function MenuProducts() {
             if(obj.from && obj.from === 'category'){
                 if(!isNaN(obj.c_id)){
                     fetchProducts(restoDetail.restaurant.id);
-                    setCategoryDetails({name:obj.c_name,id:obj.c_id});
+                    fetchCategories(restoDetail.restaurant.id);
+                    setCategoryDetails({name:decodeURIComponent(obj.c_name),id:obj.c_id});
                     setSubCategoryDetails({name:obj.sc_name,id:obj.sc_id});
                     setModal(true);
                 }
@@ -51,11 +53,10 @@ function MenuProducts() {
         }
     }, [])
     const onCloseModal = ()=>{
-        alert('ff')
-        setCategoryName('');
-        setCategoryDesc('');
         setVegRadio(null);
         setModal(false);
+        setProduct({name:'',desc:'',price:'',is_veg:false,is_alcohol:false,image_url: '',product_id:null});
+        setAlchoholicRadio(false);
     }
     const fetchCategories = (id)=>{
         menuService.fetchCategories({restaurant_id: id}).then(res=>{
@@ -101,39 +102,55 @@ function MenuProducts() {
             setSubCategoryDetails(null);
         }
     }
-    const saveProduct = ()=>{
-        menuService.createProduct({
+    const saveProduct = async ()=>{
+        const body_to_send = {
             "name" : prod.name,
-            "price": prod.price,
+            "price": parseFloat(prod.price),
             "is_veg": vegRadio ? true : false,
             "image": prod.image_url,
             "is_alcohol": alchoholicRadio?true:false,
             "restaurant_id": restoDetail.id,
             "category_id": categoryDetails.id != -1 ? categoryDetails.id : null,
-            "subcategory_id": subCategoryDetails && subCategoryDetails.id != -1 ? subCategoryDetails.id : null
-        }).then(res=>{
-            setModal(false);
-            setProduct({name:'',desc:'',price:0,is_veg:vegRadio,is_alcohol:false,image_url: ''})
+            "subcategory_id": subCategoryDetails && subCategoryDetails.id != -1 ? subCategoryDetails.id : null,
+            "description": prod.desc
+        };
+        try {
+            if(edit===true){
+                body_to_send.product_id = prod.product_id;
+                await menuService.editProduct(body_to_send);
+            }
+            else{
+                await menuService.createProduct(body_to_send);  
+            }
+            resetState();
             fetchProducts(restoDetail.id);
-            setVegRadio(null);
-        }).catch(err=>{
+        } catch (error) {
             setModal(false);
-        })
+        }
     }
-    console.log('categorydetails',categoryDetails);
+    const resetState = ()=>{
+        setVegRadio(null);
+        setEditButton(false);
+        setCategoryDetails(null);
+        setSubCategoryDetails(null);
+        setProduct({name:'',desc:'',price:'',is_veg:false,is_alcohol:false,image_url: '',product_id:null});
+        setAlchoholicRadio(false);
+        setModal(false);
+    }
 
     return (
         <CategoryWrapper>
             <CategoryList >
+            <div style={{textAlign:'right',margin:'10px'}}><button onClick={()=>Router.push(`/dashboard/${restoDetail.id}`)} style={{background: 'cadetblue',borderRadius: "10px",padding: "10px"}}>Back To Dashboard</button></div>
             <Flex column alignCenter>
                 <Flex>
                 <SolidButton onClick={openSubCategoryModal} style={{fontSize: '0.9rem',whiteSpace:'nowrap',margin:'0 1rem'}}>Add Product</SolidButton>
                 </Flex>
-                {productsArray.map((cat,i)=>(<CreateProduct setModal={setModal} data={cat} key={i} selectSubCategory={selectSubCategory} selectCategory={selectCategory} setProduct={setProduct} setVegRadio={setVegRadio} setAlchoholicRadio={setAlchoholicRadio}/>))}
+                {productsArray.map((cat,i)=>(<CreateProduct index={i} setModal={setModal} data={cat} key={i} selectSubCategory={selectSubCategory} selectCategory={selectCategory} setProduct={setProduct} setVegRadio={setVegRadio} setAlchoholicRadio={setAlchoholicRadio} setEditButton={setEditButton}/>))}
             </Flex>
             </CategoryList>
             {   modal &&
-                <StyledModal contentRef={modalRef} onClose={()=>{setModal(false);setVegRadio(null);}}>
+                <StyledModal contentRef={modalRef} onClose={()=>{resetState();}}>
                     <ModalContent ref={modalRef}>
                         <h3>Create Product</h3>
                         
@@ -183,27 +200,37 @@ function MenuProducts() {
                         
                         <TextInputWrapper>
                             <div><b>Product Name</b></div>
-                            <TextInput placeholder='Product Name' value={prod.name} onChange={(e)=>setProduct({name:e.target.value,desc:prod.desc,price:prod.price,is_veg:prod.is_veg,is_alcohol:prod.is_alcohol,image_url:prod.image_url})}></TextInput>
+                            <TextInput placeholder='Product Name' value={prod.name} onChange={(e)=>setProduct({name:e.target.value,desc:prod.desc,price:prod.price,is_veg:prod.is_veg,is_alcohol:prod.is_alcohol,image_url:prod.image_url,product_id:prod.product_id})}></TextInput>
                         </TextInputWrapper>
                         {/* <TextInputWrapper>
                             <TextInput placeholder='Product Description' value={prod.desc} onChange={(e)=>setProduct({name:prod.name,desc:e.target.value,price:prod.price,is_veg:prod.is_veg,is_alcohol:prod.is_alcohol,image_url:prod.image_url})}></TextInput>
                         </TextInputWrapper> */}
                         <TextInputWrapper>
                             <div><b>Product Price</b></div>
-                            <TextInput type='number' placeholder='Price' value={prod.price} onChange={(e)=>setProduct({name:prod.name,desc:prod.desc,price:e.target.value,is_veg:prod.is_veg,is_alcohol:prod.is_alcohol,image_url:prod.image_url})}></TextInput>
+                            <TextInput type='number' placeholder='Price' value={prod.price} onChange={(e)=>setProduct({name:prod.name,desc:prod.desc,price:e.target.value,is_veg:prod.is_veg,is_alcohol:prod.is_alcohol,image_url:prod.image_url,product_id:prod.product_id})}></TextInput>
                         </TextInputWrapper>
 
                         <Flex>
                             <TextInputWrapper>
-                                <label className='container' htmlFor="vegOption"><Flex><input id='vegOption' onChange={(e)=>{setVegRadio(e.target.value)}} type='radio' name='vegOption' value='veg' defaultChecked={vegRadio === true ? true : false}/><span className="checkmark"></span><div>Veg</div></Flex></label>
+                                <label className='container' htmlFor="vegOption"><Flex>
+                                {
+                                    vegRadio === null ? 
+                                    <input id='NonVegOption' onChange={(e)=>{setVegRadio(true)}} type='radio' name='vegOption' value='veg' />: 
+                                    <input id='NonVegOption' onChange={(e)=>{setVegRadio(true)}} type='radio' name='vegOption' value='veg' defaultChecked={vegRadio === true ? true : false} />
+                                }
+                                <span className="checkmark"></span><div>Veg</div></Flex></label>
 
                             </TextInputWrapper>
 
                             <TextInputWrapper>
-                                <label className='container' htmlFor="NonVegOption"><Flex><input id='NonVegOption' onChange={(e)=>{setVegRadio(e.target.value)}} type='radio' name='vegOption' value='nonveg' defaultChecked={vegRadio !== true ? true : false} /><span className="checkmark"></span><div>Non-Veg</div></Flex></label>
-
+                                <label className='container' htmlFor="NonVegOption"><Flex>
+                                {
+                                    vegRadio === null ? 
+                                    <input id='NonVegOption' onChange={(e)=>{setVegRadio(false)}} type='radio' name='vegOption' value='nonveg' />: 
+                                    <input id='NonVegOption' onChange={(e)=>{setVegRadio(false)}} type='radio' name='vegOption' value='nonveg' defaultChecked={vegRadio !== true ? true : false} />
+                                }
+                                <span className="checkmark"></span><div>Non-Veg</div></Flex></label>
                             </TextInputWrapper>
-
                         </Flex>
 
                         <TextInputWrapper>
@@ -213,7 +240,7 @@ function MenuProducts() {
 
                         <TextInputWrapper>
                             <div><b>Image Url</b></div>
-                            <TextInput placeholder='Image Url' value={prod.image_url} onChange={(e)=>setProduct({name:prod.name,desc:prod.desc,price:prod.price,is_veg:prod.is_veg,is_alcohol:prod.is_alcohol,image_url:e.target.value})}></TextInput>
+                            <TextInput placeholder='Image Url' value={prod.image_url} onChange={(e)=>setProduct({name:prod.name,desc:prod.desc,price:prod.price,is_veg:prod.is_veg,is_alcohol:prod.is_alcohol,image_url:e.target.value,product_id:prod.product_id})}></TextInput>
                         </TextInputWrapper>
 
 
@@ -228,22 +255,28 @@ function MenuProducts() {
     )
 }
 
-function CreateProduct({data,setModal,selectCategory,selectSubCategory,setProduct, setVegRadio, setAlchoholicRadio}) {
+function CreateProduct({data,index,setModal,selectCategory,selectSubCategory,setProduct, setVegRadio, setAlchoholicRadio, setEditButton}) {
 
     const onEditClick=(data)=>{
         setModal(true);
         selectCategory(data.category_id ? data.category_id : -1);
-        setProduct({name:data.name,desc:data.Description,price:data.price,is_veg:data.is_veg,is_alcohol:data.is_alcohol,image_url: data.image_url});
+        setProduct({name:data.name,desc:data.Description,price:data.price,is_veg:data.is_veg,is_alcohol:data.is_alcohol,image_url: data.image_url, product_id: data.id});
         setVegRadio(data.is_veg);
         setAlchoholicRadio(data.is_alcohol);
         selectSubCategory(data.subcategory_id ? data.subcategory_id : -1);
+        setEditButton(true);
     }
 
     return (
-        <ProductComp style={{maxWidth: '700px',fontSize: '1.2rem'}}> 
+        <ProductComp style={{maxWidth: '700px',fontSize: '1.2rem', padding:'0.2rem'}}> 
             <Flex justifyBetween alignCenter>  
+                <FlexItem >{index+1})</FlexItem>
                 <FlexItem > {data.name}</FlexItem>
                 <FlexItem > Rs.{data.price}</FlexItem>
+                {
+                    data.is_veg ? <FlexItem style={{color:'green'}} >Veg</FlexItem> : <FlexItem style={{color:'red'}} >Non-Veg</FlexItem>
+                }
+                
                 <FlexItem onClick={()=>(onEditClick(data))} > <SolidButton style={{background:'burlywood', padding:'10px'}} > Edit</SolidButton> </FlexItem>
             </Flex>
         </ProductComp>
@@ -257,7 +290,7 @@ const CategoryWrapper = styled.div`
 const CategoryList = styled.div`
     max-width: 800px;
     margin: auto;
-    padding: 5rem 0;
+    padding: 2rem 0;
     background: #fff;
 `
 const ModalContent = styled.div`
