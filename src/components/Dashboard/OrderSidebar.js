@@ -1,10 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 import Flex from 'styled-flex-component'
-
+import Router from 'next/router';
 function OrderSidebar(props) {
     const {restaurant} = props;
-
     const logout = ()=>{
         localStorage.removeItem('restoDetail');
         window.location.reload();
@@ -26,6 +25,11 @@ function OrderSidebar(props) {
                             Orders
                         </div>
                     </SideOption>
+
+                    <SideOption className={props.activeTab===1?'activeMenuTab':''} onClick={()=>Router.push('/menu')} >
+                        <div className='optionName' style={{fontWeight:'bold'}}>Menu</div>
+                    </SideOption>
+
                     <SideOption className={props.activeTab===1?'activeMenuTab':''} onClick={logout} >
                         <div className='optionName' style={{fontWeight:'bold'}}>Logout</div>
                     </SideOption>

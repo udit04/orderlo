@@ -5,3 +5,14 @@ export const getDateTimeStringFromGMT = (date)=>{
     //new_date = (new_date.toISOString()).split('T');
     return new_date.toLocaleString();
 }
+
+export const queryStringToObject = (queryString) => {
+    let obj = {}
+    if(queryString) {
+      queryString.slice(1).split('&').map((item) => {
+        const [ k, v ] = item.split('=')
+        v ? obj[k] = v : null
+      })
+    }
+    return obj
+}
