@@ -67,7 +67,11 @@ function SubCategory() {
     return (
         <CategoryWrapper>
             <CategoryList >
-            <div style={{textAlign:'right',margin:'10px'}}><button onClick={()=>Router.push(`/dashboard/${restoDetail.id}`)} style={{background: 'cadetblue',borderRadius: "10px",padding: "10px"}}>Back To Dashboard</button></div>
+            <div style={{textAlign:'right',margin:'10px'}}>
+                <button onClick={()=>Router.push(`/dashboard/${restoDetail.id}`)} style={{background: 'cadetblue',borderRadius: "10px",padding: "10px"}}>Back To Dashboard</button>
+                <button onClick={()=>Router.push(`/menu/category`)} style={{background: 'cadetblue',borderRadius: "10px",padding: "10px", marginLeft:'10px'}}>View Categories</button>
+                <button onClick={()=>Router.push(`/menu/products`)} style={{background: 'cadetblue',borderRadius: "10px",padding: "10px", marginLeft:'10px'}}>View Products</button>
+            </div>
             <Flex column alignCenter>
                 <Flex>
                 <SolidButton onClick={openSubCategoryModal} style={{fontSize: '0.9rem',whiteSpace:'nowrap',margin:'0 1rem'}}>Add SubCategory</SolidButton>

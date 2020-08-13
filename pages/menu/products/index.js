@@ -141,11 +141,26 @@ function MenuProducts() {
     return (
         <CategoryWrapper>
             <CategoryList >
-            <div style={{textAlign:'right',margin:'10px'}}><button onClick={()=>Router.push(`/dashboard/${restoDetail.id}`)} style={{background: 'cadetblue',borderRadius: "10px",padding: "10px"}}>Back To Dashboard</button></div>
+            <div style={{textAlign:'right',margin:'10px'}}>
+                <button onClick={()=>Router.push(`/dashboard/${restoDetail.id}`)} style={{background: 'cadetblue',borderRadius: "10px",padding: "10px"}}>Back To Dashboard</button>
+                <button onClick={()=>Router.push(`/menu/category`)} style={{background: 'cadetblue',borderRadius: "10px",padding: "10px", marginLeft:'10px'}}>View Categories</button>
+            </div>
             <Flex column alignCenter>
                 <Flex>
                 <SolidButton onClick={openSubCategoryModal} style={{fontSize: '0.9rem',whiteSpace:'nowrap',margin:'0 1rem'}}>Add Product</SolidButton>
                 </Flex>
+                <ProductComp style={{maxWidth: '700px',fontSize: '1.2rem', padding:'0.2rem'}}> 
+                    <Flex justifyBetween alignCenter>  
+                        <FlexItem >S.No</FlexItem>
+                        <FlexItem >Name</FlexItem>
+                        <FlexItem >Price</FlexItem>
+                        <FlexItem >Veg/Non-Veg</FlexItem>
+                        <FlexItem >Alcoholic</FlexItem>
+                        {/* <FlexItem >Category</FlexItem> */}
+                        {/* <FlexItem >Sub Category</FlexItem> */}
+                        <FlexItem > </FlexItem>
+                    </Flex>
+                </ProductComp>
                 {productsArray.map((cat,i)=>(<CreateProduct index={i} setModal={setModal} data={cat} key={i} selectSubCategory={selectSubCategory} selectCategory={selectCategory} setProduct={setProduct} setVegRadio={setVegRadio} setAlchoholicRadio={setAlchoholicRadio} setEditButton={setEditButton}/>))}
             </Flex>
             </CategoryList>
@@ -178,7 +193,7 @@ function MenuProducts() {
                             <TextInputWrapper>
                             <div><b>Select SubCategory</b></div>
                             <CategorySelect as='select' onChange={(e)=>selectSubCategory(e.target.value)} style={{width:'100%'}}>
-                                <option value={-1} key={-1}>Select Sub Category</option>
+                                <option value={-1} key={-1}>N.A.</option>
                                 {subCategories.map((cat,i)=>{
                                     return(<option  value={cat.id} key={i}>{cat.name}</option>)
                                 })}
@@ -194,8 +209,7 @@ function MenuProducts() {
                                     <TextInput placeholder='Sub Category Name' value={subCategoryDetails && subCategoryDetails.name ? subCategoryDetails.name : '' } disabled></TextInput>
                                 </TextInputWrapper> : null
                             }
-                            </>
-                            
+                            </>                        
                         }
                         
                         <TextInputWrapper>
@@ -247,6 +261,7 @@ function MenuProducts() {
 
                         <TextInputWrapper style={{position:'sticky',bottom: '0', textAlign:'center'}}>
                             <SolidButton disabled={(vegRadio === null || !prod.price || !prod.name || !categoryDetails)} onClick={saveProduct} style={{width:'20%'}}> Save</SolidButton>
+                            <SolidButton onClick={()=>setModal(false)} style={{width:'20%','background':'red',margin:'10px'}}> Close</SolidButton>
                         </TextInputWrapper>
                     </ModalContent>
                 </StyledModal>
@@ -275,8 +290,10 @@ function CreateProduct({data,index,setModal,selectCategory,selectSubCategory,set
                 <FlexItem > Rs.{data.price}</FlexItem>
                 {
                     data.is_veg ? <FlexItem style={{color:'green'}} >Veg</FlexItem> : <FlexItem style={{color:'red'}} >Non-Veg</FlexItem>
-                }
-                
+                }     
+                <FlexItem >{data.is_alcohol? 'Yes' : 'No'} </FlexItem>   
+                {/* <FlexItem >{data.category_id}</FlexItem> */}
+                {/* <FlexItem >{data.subcategory_id}</FlexItem> */}
                 <FlexItem onClick={()=>(onEditClick(data))} > <SolidButton style={{background:'burlywood', padding:'10px'}} > Edit</SolidButton> </FlexItem>
             </Flex>
         </ProductComp>
