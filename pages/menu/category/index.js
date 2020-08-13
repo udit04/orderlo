@@ -59,7 +59,10 @@ function Category() {
     return (
         <CategoryWrapper>
             <CategoryList >
-            <div style={{textAlign:'right',margin:'10px'}}><button onClick={()=>Router.push(`/dashboard/${restoDetail.id}`)} style={{background: 'cadetblue',borderRadius: "10px",padding: "10px"}}>Back To Dashboard</button></div>
+            <div style={{textAlign:'right',margin:'10px'}}>
+                <button onClick={()=>Router.push(`/dashboard/${restoDetail.id}`)} style={{background: 'cadetblue',borderRadius: "10px",padding: "10px"}}>Back To Dashboard</button>
+                <button onClick={()=>Router.push(`/menu/products`)} style={{background: 'cadetblue',borderRadius: "10px",padding: "10px", marginLeft:'10px'}}>View All Products</button>
+            </div>
             <Flex column alignCenter>
                 <Flex>
                 <SolidButton onClick={openCategoryModal} style={{fontSize: '0.9rem',whiteSpace:'nowrap',margin:'0 1rem'}}>Add Category</SolidButton>
