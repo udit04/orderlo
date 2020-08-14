@@ -142,23 +142,23 @@ function MenuProducts() {
         <CategoryWrapper>
             <CategoryList >
             <div style={{textAlign:'right',margin:'10px'}}>
-                <button onClick={()=>Router.push(`/dashboard/${restoDetail.id}`)} style={{background: 'cadetblue',borderRadius: "10px",padding: "10px"}}>Back To Dashboard</button>
-                <button onClick={()=>Router.push(`/menu/category`)} style={{background: 'cadetblue',borderRadius: "10px",padding: "10px", marginLeft:'10px'}}>View Categories</button>
+                <DashboadBtn as='button' onClick={()=>Router.push(`/dashboard/${restoDetail.id}`)} >Back To Dashboard</DashboadBtn>
+                <DashboadBtn as='button' onClick={()=>Router.push(`/menu/category`)}>View Categories</DashboadBtn>
             </div>
             <Flex column alignCenter>
                 <Flex>
                 <SolidButton onClick={openSubCategoryModal} style={{fontSize: '0.9rem',whiteSpace:'nowrap',margin:'0 1rem'}}>Add Product</SolidButton>
                 </Flex>
-                <ProductComp style={{maxWidth: '700px',fontSize: '1.2rem', padding:'0.2rem'}}> 
+                <ProductComp style={{maxWidth: '700px',textAlign:'left',fontSize: '1.2rem', padding:'0.2rem'}}> 
                     <Flex justifyBetween alignCenter>  
-                        <FlexItem >S.No</FlexItem>
-                        <FlexItem >Name</FlexItem>
-                        <FlexItem >Price</FlexItem>
-                        <FlexItem >Veg/Non-Veg</FlexItem>
-                        <FlexItem >Alcoholic</FlexItem>
+                        <TableData w={70}>S.No</TableData>
+                        <TableData  w={200}>Name</TableData>
+                        <TableData w={100}>Price</TableData>
+                        <TableData w={150}>Veg<br/>/Non-Veg</TableData>
+                        <TableData >Alcoholic</TableData>
                         {/* <FlexItem >Category</FlexItem> */}
                         {/* <FlexItem >Sub Category</FlexItem> */}
-                        <FlexItem > </FlexItem>
+                        <TableData > Edit</TableData>
                     </Flex>
                 </ProductComp>
                 {productsArray.map((cat,i)=>(<CreateProduct index={i} setModal={setModal} data={cat} key={i} selectSubCategory={selectSubCategory} selectCategory={selectCategory} setProduct={setProduct} setVegRadio={setVegRadio} setAlchoholicRadio={setAlchoholicRadio} setEditButton={setEditButton}/>))}
@@ -226,7 +226,7 @@ function MenuProducts() {
 
                         <Flex>
                             <TextInputWrapper>
-                                <label className='container' htmlFor="vegOption"><Flex>
+                                <label className='container' htmlFor="NonVegOption"><Flex>
                                 {
                                     vegRadio === null ? 
                                     <input id='NonVegOption' onChange={(e)=>{setVegRadio(true)}} type='radio' name='vegOption' value='veg' />: 
@@ -237,11 +237,11 @@ function MenuProducts() {
                             </TextInputWrapper>
 
                             <TextInputWrapper>
-                                <label className='container' htmlFor="NonVegOption"><Flex>
+                                <label className='container' htmlFor="vegOption"><Flex>
                                 {
                                     vegRadio === null ? 
-                                    <input id='NonVegOption' onChange={(e)=>{setVegRadio(false)}} type='radio' name='vegOption' value='nonveg' />: 
-                                    <input id='NonVegOption' onChange={(e)=>{setVegRadio(false)}} type='radio' name='vegOption' value='nonveg' defaultChecked={vegRadio !== true ? true : false} />
+                                    <input id='vegOption' onChange={(e)=>{setVegRadio(false)}} type='radio' name='vegOption' value='nonveg' />: 
+                                    <input id='vegOption' onChange={(e)=>{setVegRadio(false)}} type='radio' name='vegOption' value='nonveg' defaultChecked={vegRadio !== true ? true : false} />
                                 }
                                 <span className="checkmark"></span><div>Non-Veg</div></Flex></label>
                             </TextInputWrapper>
@@ -283,23 +283,30 @@ function CreateProduct({data,index,setModal,selectCategory,selectSubCategory,set
     }
 
     return (
-        <ProductComp style={{maxWidth: '700px',fontSize: '1.2rem', padding:'0.2rem'}}> 
-            <Flex justifyBetween alignCenter>  
-                <FlexItem >{index+1})</FlexItem>
-                <FlexItem > {data.name}</FlexItem>
-                <FlexItem > Rs.{data.price}</FlexItem>
+        <ProductComp style={{maxWidth: '700px',textAlign:'left',fontSize: '1.2rem', padding:'0.2rem'}}> 
+            <Flex  alignCenter>  
+                <TableData w={70} flex={1} >{index+1})</TableData>
+                <TableData  w={200}> {data.name}</TableData>
+                <TableData w={100} > Rs.{data.price}</TableData>
                 {
-                    data.is_veg ? <FlexItem style={{color:'green'}} >Veg</FlexItem> : <FlexItem style={{color:'red'}} >Non-Veg</FlexItem>
+                    data.is_veg ? <TableData w={100} style={{color:'green'}} >Veg</TableData> : <TableData w={100} style={{color:'red'}} >Non-Veg</TableData>
                 }     
-                <FlexItem >{data.is_alcohol? 'Yes' : 'No'} </FlexItem>   
+                <TableData w={100} >{data.is_alcohol? 'Yes' : 'No'} </TableData>   
                 {/* <FlexItem >{data.category_id}</FlexItem> */}
                 {/* <FlexItem >{data.subcategory_id}</FlexItem> */}
-                <FlexItem onClick={()=>(onEditClick(data))} > <SolidButton style={{background:'burlywood', padding:'10px'}} > Edit</SolidButton> </FlexItem>
+                <TableData w={100}  onClick={()=>(onEditClick(data))} > <SolidButton style={{background:'burlywood', padding:'10px'}} > Edit</SolidButton> </TableData>
             </Flex>
         </ProductComp>
     )
 }
 
+
+const TableData = styled.div`
+    display:block;
+    width:${({w})=>(w?w:100)+'px'};
+    padding:0 5px;
+    box-sizing:border-box;
+`
 const CategoryWrapper = styled.div`
     background:#f5f5f5;
     min-height:100vh;
@@ -333,5 +340,19 @@ const CategorySelect = styled.div`
     cursor: pointer;
     padding-right: 2rem;
 `;
+
+export const DashboadBtn = styled.div`
+        background: lightseagreen;
+        border-radius: 10px;
+        padding: 10px;
+        margin-left: 10px;
+        border: none;
+        color: #fff;
+        font-weight: 800;
+        padding: 10px 1rem;
+        &:active,&:hover{
+            outline:none;
+        }
+`
 
 export default MenuProducts;
