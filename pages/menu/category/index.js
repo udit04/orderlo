@@ -60,8 +60,8 @@ function Category() {
         <CategoryWrapper>
             <CategoryList >
             <div style={{textAlign:'right',margin:'10px'}}>
-                <button onClick={()=>Router.push(`/dashboard/${restoDetail.id}`)} style={{background: 'cadetblue',borderRadius: "10px",padding: "10px"}}>Back To Dashboard</button>
-                <button onClick={()=>Router.push(`/menu/products`)} style={{background: 'cadetblue',borderRadius: "10px",padding: "10px", marginLeft:'10px'}}>View All Products</button>
+                <DashboadBtn as='button' onClick={()=>Router.push(`/dashboard/${restoDetail.id}`)} style={{background: 'cadetblue',borderRadius: "10px",padding: "10px"}}>Back To Dashboard</DashboadBtn>
+                <DashboadBtn as='button' onClick={()=>Router.push(`/menu/products`)} style={{background: 'cadetblue',borderRadius: "10px",padding: "10px", marginLeft:'10px'}}>View All Products</DashboadBtn>
             </div>
             <Flex column alignCenter>
                 <Flex>
@@ -159,5 +159,18 @@ const CategoryComp = styled.div`
     display:block;
     border-bottom:1px solid #c5c5c5;
 `;
-
+export const DashboadBtn = styled.div`
+        background: lightseagreen;
+        border-radius: 10px;
+        padding: 10px;
+        margin-left: 10px;
+        border: none;
+        color: #fff;
+        font-weight: 800;
+        padding: 10px 1rem;
+        cursor:pointer;
+        &:active,&:hover{
+            outline:none;
+        }
+`
 export default Category
