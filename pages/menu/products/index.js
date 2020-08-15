@@ -148,24 +148,24 @@ function MenuProducts() {
             <Flex justifyCenter>
                 <SolidButton onClick={openSubCategoryModal} style={{width:'200px',fontSize: '0.9rem',whiteSpace:'nowrap',margin:'1rem'}}>Add Product</SolidButton>
             </Flex>
-            <Table column alignCenter>
+            <Table column>
                 
                 {/* <table style={{maxWidth: '700px',textAlign:'left',fontSize: '1.2rem', padding:'0.2rem'}}>  */}
                 <thead>
-                    <tr justifyBetween alignCenter>  
+                    <tr >  
                         <td w={70}>S.No</td>
                         <td  w={200}>Name</td>
                         <td w={100}>Price</td>
                         <td w={150}>Veg<br/>/Non-Veg</td>
                         <td >Alcoholic</td>
-                        {/* <FlexItem >Category</FlexItem> */}
-                        {/* <FlexItem >Sub Category</FlexItem> */}
+                        <td >Category</td>
+                        <td >Sub Category</td>
                         <td > Edit</td>
                     </tr>
                 </thead>
                 {/* </tr> */}
                 <tbody>
-                    {productsArray.map((cat,i)=>(<CreateProduct index={i} setModal={setModal} data={cat} key={i} selectSubCategory={selectSubCategory} selectCategory={selectCategory} setProduct={setProduct} setVegRadio={setVegRadio} setAlchoholicRadio={setAlchoholicRadio} setEditButton={setEditButton}/>))}
+                    {productsArray.map((cat,i)=>(<CreateProduct index={i} setModal={setModal} data={cat} key={i} selectSubCategory={selectSubCategory} selectCategory={selectCategory} setProduct={setProduct} setVegRadio={setVegRadio} setAlchoholicRadio={setAlchoholicRadio} setEditButton={setEditButton} setSubCategoryDetails={setSubCategoryDetails} />))}
                 </tbody>
             </Table>
             </CategoryList>
@@ -197,7 +197,7 @@ function MenuProducts() {
                             ?
                             <TextInputWrapper>
                             <div><b>Select SubCategory</b></div>
-                            <CategorySelect as='select' onChange={(e)=>selectSubCategory(e.target.value)} style={{width:'100%'}}>
+                            <CategorySelect as='select' onChange={(e)=>selectSubCategory(e.target.value)} style={{width:'100%'}} defaultValue={subCategoryDetails ? subCategoryDetails.id : -1}>
                                 <option value={-1} key={-1}>N.A.</option>
                                 {subCategories.map((cat,i)=>{
                                     return(<option  value={cat.id} key={i}>{cat.name}</option>)
@@ -275,7 +275,7 @@ function MenuProducts() {
     )
 }
 
-function CreateProduct({data,index,setModal,selectCategory,selectSubCategory,setProduct, setVegRadio, setAlchoholicRadio, setEditButton}) {
+function CreateProduct({data,index,setModal,selectCategory,selectSubCategory,setProduct, setVegRadio, setAlchoholicRadio, setEditButton,setSubCategoryDetails}) {
 
     const onEditClick=(data)=>{
         setModal(true);
@@ -283,23 +283,26 @@ function CreateProduct({data,index,setModal,selectCategory,selectSubCategory,set
         setProduct({name:data.name,desc:data.Description,price:data.price,is_veg:data.is_veg,is_alcohol:data.is_alcohol,image_url: data.image_url, product_id: data.id});
         setVegRadio(data.is_veg);
         setAlchoholicRadio(data.is_alcohol);
-        selectSubCategory(data.subcategory_id ? data.subcategory_id : -1);
+        //selectSubCategory(data.subcategory_id ? data.category[0].subCategory.find((sub)=>sub.id === data.subcategory_id).id : -1);
+        let subData = data.subcategory_id ? data.category[0].subCategory.find((sub)=>sub.id === data.subcategory_id) : null;
+        console.log('subData',subData);
+        setSubCategoryDetails(subData ? {name:subData.name,id:subData.id} : null);
         setEditButton(true);
     }
 
     return (
-            <tr  alignCenter>  
-                <td w={70} flex={1} >{index+1})</td>
-                <td  w={200}> {data.name}</td>
-                <td w={100} > Rs.{data.price}</td>
-                {
-                    data.is_veg ? <td w={100} style={{color:'green'}} >Veg</td> : <td w={100} style={{color:'red'}} >Non-Veg</td>
-                }     
-                <td w={100} >{data.is_alcohol? 'Yes' : 'No'} </td>   
-                {/* <FlexItem >{data.category_id}</FlexItem> */}
-                {/* <FlexItem >{data.subcategory_id}</FlexItem> */}
-                <td w={100}  onClick={()=>(onEditClick(data))} > <SolidButton style={{background:'burlywood', padding:'10px'}} > Edit</SolidButton> </td>
-            </tr>
+        <tr >  
+            <td w={70} flex={1} >{index+1})</td>
+            <td  w={200}> {data.name}</td>
+            <td w={100} > {'\u{20B9}'}{data.price}</td>
+            {
+                data.is_veg ? <td w={100} ><img src="https://img.icons8.com/color/28/000000/vegetarian-food-symbol.png"/></td> : <td w={100} ><img src="https://img.icons8.com/color/28/000000/non-vegetarian-food-symbol.png"/></td>
+            }     
+            <td w={100} >{data.is_alcohol? '\u{1F37A}' : '-'} </td>
+            <td w={100} >{data.category[0].name}</td>
+            <td w={100} >{data.subcategory_id ? data.category[0].subCategory.find((sub)=>sub.id === data.subcategory_id).name : 'N.A'}</td>   
+            <td w={100}  onClick={()=>(onEditClick(data))} > <SolidButton style={{background:'burlywood', padding:'10px'}} > Edit</SolidButton> </td>
+        </tr>
     )
 }
 
@@ -379,5 +382,6 @@ const Table = styled.table`
             padding-right:10px;
             max-width: 200px;
         }
+        text-align: center;
 `
 export default MenuProducts;
