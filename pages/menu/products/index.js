@@ -315,7 +315,7 @@ const CategoryWrapper = styled.div`
     min-height:100vh;
 `;
 const CategoryList = styled.div`
-    max-width: 800px;
+    max-width: 900px;
     margin: auto;
     padding: 2rem 0;
     background: #fff;
@@ -361,7 +361,7 @@ export const DashboadBtn = styled.div`
 const Table = styled.table`
         font-size:1.25rem;
         border-spacing:0;
-        width:800px;
+        width:900px;
         border-collapse:collapse;
         thead{
             td{
