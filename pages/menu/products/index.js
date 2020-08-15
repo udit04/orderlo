@@ -145,24 +145,29 @@ function MenuProducts() {
                 <DashboadBtn as='button' onClick={()=>Router.push(`/dashboard/${restoDetail.id}`)} >Back To Dashboard</DashboadBtn>
                 <DashboadBtn as='button' onClick={()=>Router.push(`/menu/category`)}>View Categories</DashboadBtn>
             </div>
-            <Flex column alignCenter>
-                <Flex>
-                <SolidButton onClick={openSubCategoryModal} style={{fontSize: '0.9rem',whiteSpace:'nowrap',margin:'0 1rem'}}>Add Product</SolidButton>
-                </Flex>
-                <ProductComp style={{maxWidth: '700px',textAlign:'left',fontSize: '1.2rem', padding:'0.2rem'}}> 
-                    <Flex justifyBetween alignCenter>  
-                        <TableData w={70}>S.No</TableData>
-                        <TableData  w={200}>Name</TableData>
-                        <TableData w={100}>Price</TableData>
-                        <TableData w={150}>Veg<br/>/Non-Veg</TableData>
-                        <TableData >Alcoholic</TableData>
+            <Flex justifyCenter>
+                <SolidButton onClick={openSubCategoryModal} style={{width:'200px',fontSize: '0.9rem',whiteSpace:'nowrap',margin:'1rem'}}>Add Product</SolidButton>
+            </Flex>
+            <Table column alignCenter>
+                
+                {/* <table style={{maxWidth: '700px',textAlign:'left',fontSize: '1.2rem', padding:'0.2rem'}}>  */}
+                <thead>
+                    <tr justifyBetween alignCenter>  
+                        <td w={70}>S.No</td>
+                        <td  w={200}>Name</td>
+                        <td w={100}>Price</td>
+                        <td w={150}>Veg<br/>/Non-Veg</td>
+                        <td >Alcoholic</td>
                         {/* <FlexItem >Category</FlexItem> */}
                         {/* <FlexItem >Sub Category</FlexItem> */}
-                        <TableData > Edit</TableData>
-                    </Flex>
-                </ProductComp>
-                {productsArray.map((cat,i)=>(<CreateProduct index={i} setModal={setModal} data={cat} key={i} selectSubCategory={selectSubCategory} selectCategory={selectCategory} setProduct={setProduct} setVegRadio={setVegRadio} setAlchoholicRadio={setAlchoholicRadio} setEditButton={setEditButton}/>))}
-            </Flex>
+                        <td > Edit</td>
+                    </tr>
+                </thead>
+                {/* </tr> */}
+                <tbody>
+                    {productsArray.map((cat,i)=>(<CreateProduct index={i} setModal={setModal} data={cat} key={i} selectSubCategory={selectSubCategory} selectCategory={selectCategory} setProduct={setProduct} setVegRadio={setVegRadio} setAlchoholicRadio={setAlchoholicRadio} setEditButton={setEditButton}/>))}
+                </tbody>
+            </Table>
             </CategoryList>
             {   modal &&
                 <StyledModal contentRef={modalRef} onClose={()=>{resetState();}}>
@@ -283,20 +288,18 @@ function CreateProduct({data,index,setModal,selectCategory,selectSubCategory,set
     }
 
     return (
-        <ProductComp style={{maxWidth: '700px',textAlign:'left',fontSize: '1.2rem', padding:'0.2rem'}}> 
-            <Flex  alignCenter>  
-                <TableData w={70} flex={1} >{index+1})</TableData>
-                <TableData  w={200}> {data.name}</TableData>
-                <TableData w={100} > Rs.{data.price}</TableData>
+            <tr  alignCenter>  
+                <td w={70} flex={1} >{index+1})</td>
+                <td  w={200}> {data.name}</td>
+                <td w={100} > Rs.{data.price}</td>
                 {
-                    data.is_veg ? <TableData w={100} style={{color:'green'}} >Veg</TableData> : <TableData w={100} style={{color:'red'}} >Non-Veg</TableData>
+                    data.is_veg ? <td w={100} style={{color:'green'}} >Veg</td> : <td w={100} style={{color:'red'}} >Non-Veg</td>
                 }     
-                <TableData w={100} >{data.is_alcohol? 'Yes' : 'No'} </TableData>   
+                <td w={100} >{data.is_alcohol? 'Yes' : 'No'} </td>   
                 {/* <FlexItem >{data.category_id}</FlexItem> */}
                 {/* <FlexItem >{data.subcategory_id}</FlexItem> */}
-                <TableData w={100}  onClick={()=>(onEditClick(data))} > <SolidButton style={{background:'burlywood', padding:'10px'}} > Edit</SolidButton> </TableData>
-            </Flex>
-        </ProductComp>
+                <td w={100}  onClick={()=>(onEditClick(data))} > <SolidButton style={{background:'burlywood', padding:'10px'}} > Edit</SolidButton> </td>
+            </tr>
     )
 }
 
@@ -355,4 +358,26 @@ export const DashboadBtn = styled.div`
         }
 `
 
+const Table = styled.table`
+        font-size:1.25rem;
+        border-spacing:0;
+        width:800px;
+        border-collapse:collapse;
+        thead{
+            td{
+               font-weight:bold;
+               color:#666666;
+            }
+            border:1px solid #999999;
+            border-collapse:collapse;
+
+        }
+        td{
+            border:1px solid #999999;
+            border-collapse:collapse;
+            padding-left:10px;
+            padding-right:10px;
+            max-width: 200px;
+        }
+`
 export default MenuProducts;
