@@ -128,6 +128,21 @@ function MenuProducts() {
             setModal(false);
         }
     }
+
+    const toggleActiveState = async (product_id,state)=>{
+        const body_to_send = {
+            "product_id" : product_id,
+            "is_active": !state,
+            "restaurant_id": restoDetail.id
+        };
+        try {
+            await menuService.editProduct(body_to_send);
+            resetState();
+            fetchProducts(restoDetail.id);
+        } catch (error) {
+            setModal(false);
+        }
+    }
     const resetState = ()=>{
         setVegRadio(null);
         setEditButton(false);
@@ -161,11 +176,12 @@ function MenuProducts() {
                         <td >Category</td>
                         <td >Sub Category</td>
                         <td > Edit</td>
+                        <td > Set Status</td>
                     </tr>
                 </thead>
                 {/* </tr> */}
                 <tbody>
-                    {productsArray.map((cat,i)=>(<CreateProduct index={i} setModal={setModal} data={cat} key={i} selectSubCategory={selectSubCategory} selectCategory={selectCategory} setProduct={setProduct} setVegRadio={setVegRadio} setAlchoholicRadio={setAlchoholicRadio} setEditButton={setEditButton} setSubCategoryDetails={setSubCategoryDetails} />))}
+                    {productsArray.map((cat,i)=>(<CreateProduct index={i} setModal={setModal} data={cat} key={i} selectSubCategory={selectSubCategory} selectCategory={selectCategory} setProduct={setProduct} setVegRadio={setVegRadio} setAlchoholicRadio={setAlchoholicRadio} setEditButton={setEditButton} setSubCategoryDetails={setSubCategoryDetails} toggleActiveState={toggleActiveState} />))}
                 </tbody>
             </Table>
             </CategoryList>
@@ -275,7 +291,7 @@ function MenuProducts() {
     )
 }
 
-function CreateProduct({data,index,setModal,selectCategory,selectSubCategory,setProduct, setVegRadio, setAlchoholicRadio, setEditButton,setSubCategoryDetails}) {
+function CreateProduct({data,index,setModal,selectCategory,selectSubCategory,setProduct, setVegRadio, setAlchoholicRadio, setEditButton,setSubCategoryDetails,toggleActiveState}) {
 
     const onEditClick=(data)=>{
         setModal(true);
@@ -291,7 +307,7 @@ function CreateProduct({data,index,setModal,selectCategory,selectSubCategory,set
     }
 
     return (
-        <tr >  
+        <tr style={{background:!data.is_active ? 'indianred' : 'inherit'}} >  
             <td w={70} flex={1} >{index+1})</td>
             <td  w={200}> {data.name}</td>
             <td w={100} > {'\u{20B9}'}{data.price}</td>
@@ -301,7 +317,8 @@ function CreateProduct({data,index,setModal,selectCategory,selectSubCategory,set
             <td w={100} >{data.is_alcohol? '\u{1F37A}' : '-'} </td>
             <td w={100} >{data.category[0].name}</td>
             <td w={100} >{data.subcategory_id ? data.category[0].subCategory.find((sub)=>sub.id === data.subcategory_id).name : 'N.A'}</td>   
-            <td w={100}  onClick={()=>(onEditClick(data))} > <SolidButton style={{background:'burlywood', padding:'10px'}} > Edit</SolidButton> </td>
+            <td w={100}  onClick={()=>(onEditClick(data))} > {data.is_active ? <SolidButton style={{background:'burlywood', padding:'10px'}} > Edit</SolidButton> : null} </td>
+            <td w={100} onClick={()=>(toggleActiveState(data.id,data.is_active))} > {data.is_active ? <SolidButton style={{background:'red', padding:'10px', fontSize:'15px', marginBottom: '14px'}} >Disable</SolidButton> : <SolidButton style={{background:'green', padding:'10px',fontSize:'15px', marginBottom: '14px'}} >Enable</SolidButton>} </td>
         </tr>
     )
 }
@@ -318,7 +335,7 @@ const CategoryWrapper = styled.div`
     min-height:100vh;
 `;
 const CategoryList = styled.div`
-    max-width: 900px;
+    max-width: 1000px;
     margin: auto;
     padding: 2rem 0;
     background: #fff;
@@ -364,7 +381,7 @@ export const DashboadBtn = styled.div`
 const Table = styled.table`
         font-size:1.25rem;
         border-spacing:0;
-        width:900px;
+        width:1000px;
         border-collapse:collapse;
         thead{
             td{
