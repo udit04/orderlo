@@ -30,6 +30,10 @@ function OrderSidebar(props) {
                         <div className='optionName' style={{fontWeight:'bold'}}>Menu</div>
                     </SideOption>
 
+                    <SideOption className={props.activeTab===1?'activeMenuTab':''} onClick={()=>Router.push('/dashboard/profile')} >
+                        <div className='optionName' style={{fontWeight:'bold'}}>Profile</div>
+                    </SideOption>
+
                     <SideOption className={props.activeTab===1?'activeMenuTab':''} onClick={logout} >
                         <div className='optionName' style={{fontWeight:'bold'}}>Logout</div>
                     </SideOption>
