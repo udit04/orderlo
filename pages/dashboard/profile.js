@@ -176,6 +176,8 @@ const CategoryWrapper = styled.div`
     min-height:100vh;
     .textvalues{
         color:slategray;
+        max-width: 300px;
+        text-align: right;
     }
 `;
 const CategoryList = styled.div`
