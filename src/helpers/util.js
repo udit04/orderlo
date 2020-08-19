@@ -16,3 +16,10 @@ export const queryStringToObject = (queryString) => {
     }
     return obj
 }
+
+export const getHyphenSeperatedStringLowerCase = (string) => {
+  if(string) {
+    return string.toLowerCase().split(" ").join("-");
+  }
+  return string;
+}
