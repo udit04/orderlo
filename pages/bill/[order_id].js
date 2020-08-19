@@ -5,6 +5,7 @@ import restoService from '../../src/services/RestoService';
 import styled from 'styled-components'
 import Flex,{FlexItem} from 'styled-flex-component'
 import StyledModal from '../../src/components/Modal/StyledModal';
+import Head from 'next/head'
 
 export default function Bill(props) {
     const router = useRouter();
@@ -37,6 +38,9 @@ export default function Bill(props) {
 
     return (
         <div>     
+            <Head >
+                <title>Ordrlo | Order Bill</title>
+            </Head>
             <Flex column >
                 {   orderDetails
                     &&

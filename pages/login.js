@@ -1,10 +1,10 @@
 import React, { useContext,useEffect } from 'react';
-
 import styled from 'styled-components'
 import SimpleSlider from '../src/components/Slider';
 import Login from '../src/components/Login/Login';
 import { AuthContext } from './_app';
 import Router from 'next/router'
+import Head from 'next/head'
 
 export default function LoginPage() {
   const {authData,setauthData} = useContext(AuthContext);
@@ -18,6 +18,9 @@ export default function LoginPage() {
 
   return (
       <Block >
+          <Head >
+            <title>Ordrlo | Login</title>
+          </Head>
         {/* <Login /> */}
         <SimpleSlider />
         <Login />

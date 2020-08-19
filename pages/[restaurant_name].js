@@ -3,11 +3,26 @@ import { RestoLoginService } from '../src/services/restoLoginService';
 import Restaurant from './restaurant/[res_id]';
 import styled from 'styled-components'
 import {notFoundImg} from '../src/helpers/constants';
+import Head from 'next/head'
 
 export default function RestaurantName(props) {
   if(!(props.resto && props.resto.restaurant)) return <Resto ><img src={notFoundImg} /></Resto>;
   return (
-      <Restaurant res_id = {props.resto.restaurant.id} />
+      <>
+        <Head >
+            <title>Ordrlo | {props.resto.restaurant.name}</title>
+            <meta
+                name="description"
+                content={"Order online from "+props.resto.restaurant.name + " on ordrlo platform"}
+            />
+            <meta
+            name="keywords"
+            content={props.resto.restaurant.name+", ordrlo, online ordering, food, online food ordering"}
+            />
+        </Head>
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <Restaurant res_id = {props.resto.restaurant.id} />
+      </>
   );
 }
 

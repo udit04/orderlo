@@ -23,8 +23,16 @@ export default class MyDocument extends Document {
     return (
       <html>
         <Head>
-          <title>My page</title>
           {/* Step 5: Output the styles in the head  */}
+          <meta
+            name="description"
+            content="Ordrlo is digital menu card and order processing platform for restaurants. With aim to improve hygiene and overall dining experience, ordrlo provides contact less and seamless dinning solution."
+          />
+          <meta
+            name="keywords"
+            content="menu, menu card, qrcode, qrcode scanner, ordrlo, restaurant, delivery, food, online food ordering"
+          />
+          <link rel="shortcut icon" href="/favicon.ico" />
           {this.props.styleTags}
         </Head>
         <body>

@@ -36,8 +36,16 @@ export default function MyApp(props) {
   return (
     <React.Fragment>
       <Head>
-        <title>My page</title>
+        <meta
+          name="description"
+          content="Ordrlo is digital menu card and order processing platform for restaurants. With aim to improve hygiene and overall dining experience, ordrlo provides contact less and seamless dinning solution."
+        />
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+        <meta
+          name="keywords"
+          content="menu, menu card, qrcode, qrcode scanner, ordrlo, restaurant, delivery, food, online food ordering"
+        />
+        <link rel="shortcut icon" href="/favicon.ico" />
       </Head>
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
