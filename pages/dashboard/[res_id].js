@@ -7,6 +7,7 @@ import RestoMenu from '../../src/components/Dashboard/RestoMenu';
 import Router,{ useRouter } from 'next/router'
 import GenerateBillModal from '../../src/components/Dashboard/GenerateBillModal';
 import EditOrderModal from '../../src/components/Dashboard/EditOrderModal';
+import Head from 'next/head'
 function Dashboard(props) {
 
     const [activeTab, setActiveTab] = useState(0);
@@ -34,38 +35,47 @@ function Dashboard(props) {
     
     if(!id){
         return(
-            <div></div>
+            <div>
+                <Head >
+                    <title>Ordrlo | Dashboard</title>
+                </Head>
+            </div>
         )
     }else{
-            return (
-        <Flex>
-            <OrderSidebar restaurant={restaurant} setActiveTab={setActiveTab} activeTab={activeTab}/>
-            {
-                activeTab === 0
+        return (
+            <>
+            <Head >
+                <title>Ordrlo | Dashboard</title>
+            </Head>
+            <Flex>
+                <OrderSidebar restaurant={restaurant} setActiveTab={setActiveTab} activeTab={activeTab}/>
+                {
+                    activeTab === 0
+                        &&
+                    <Orders showEditOrders={editOrder} setEditOrder={setEditOrder} restaurant={restaurant} res_id={id} setOrderDetail={setOrderDetail} id={id} activeTab={activeTab} orderDetail={orderDetail} billModal={billModal}/>
+                }
+                {
+                    activeTab === 1
+                        &&
+                    <RestoMenu restaurant={restaurant} res_id={res_id} activeTab={activeTab}/>
+                }
+                {
+                    activeTab === 2
+                        &&
+                    <RestoMenu restaurant={restaurant} res_id={res_id}/>
+                }
+                
+                <OrderDetails restaurant={restaurant} openBillModal={()=>{setBillModal(true)}} res_id={res_id} orderDetail={orderDetail} activeTab={activeTab}/>
+                {(billModal && restaurant) && <GenerateBillModal billModal={billModal} setBillModal={setBillModal} restaurant={restaurant} orderDetail={orderDetail}/>}
+                {(editOrder && restaurant && orderDetail)
                     &&
-                <Orders showEditOrders={editOrder} setEditOrder={setEditOrder} restaurant={restaurant} res_id={id} setOrderDetail={setOrderDetail} id={id} activeTab={activeTab} orderDetail={orderDetail} billModal={billModal}/>
-            }
-            {
-                activeTab === 1
-                    &&
-                <RestoMenu restaurant={restaurant} res_id={res_id} activeTab={activeTab}/>
-            }
-            {
-                activeTab === 2
-                    &&
-                <RestoMenu restaurant={restaurant} res_id={res_id}/>
-            }
-            
-            <OrderDetails restaurant={restaurant} openBillModal={()=>{setBillModal(true)}} res_id={res_id} orderDetail={orderDetail} activeTab={activeTab}/>
-            {(billModal && restaurant) && <GenerateBillModal billModal={billModal} setBillModal={setBillModal} restaurant={restaurant} orderDetail={orderDetail}/>}
-            {(editOrder && restaurant && orderDetail)
-                &&
-            <EditOrderModal  orderDetail={orderDetail} res_id={id} restaurant={restaurant} onClose={()=>{setEditOrder(false)}}>
-            </EditOrderModal>
-            }
-        </Flex>
-    )
-        }
+                <EditOrderModal  orderDetail={orderDetail} res_id={id} restaurant={restaurant} onClose={()=>{setEditOrder(false)}}>
+                </EditOrderModal>
+                }
+            </Flex>
+            </>
+        )
+    }
 }
 
 export default Dashboard
