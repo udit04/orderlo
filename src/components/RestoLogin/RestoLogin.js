@@ -1,35 +1,25 @@
-import React, { useState, useEffect,useContext } from 'react'
+import React, { useState } from 'react'
 import styled,{keyframes} from 'styled-components'
 import Flex from 'styled-flex-component'
-import { BackIcon } from '../../Icons';
+//import { BackIcon } from '../../Icons';
 import { RestoLoginService } from '../../services/restoLoginService';
-import {SignupContainer,BackButton,StackHeader,LoginCard,TextInput,TextInputWrapper,Separator,SolidButton,LoginText,LoginHeader,Tagline,SuccessText,ErrorText} from '../Login/LoginStyled';
+import {TextInput,TextInputWrapper,SolidButton,LoginText,LoginHeader,Tagline,SuccessText,ErrorText} from '../Login/LoginStyled';
 import RestoSignup from './RestoSignup';
-import { AuthContext } from '../../../pages/_app';
 import Router from 'next/router';
 
 export default function Login(){
     const [showSignup ,setSignup ] = useState(false);
-    const [newUser, setNewUser] = useState(false);
-    const [mobile_number,setMobileNumber] = useState('');
-    const [otp, setOtp] = useState('')
     const [err, setErr] = useState(null);
     const [message,setMessage]  = useState('');
-    const [disable,setDisable] = useState(true);
-    const {authData,setauthData} = useContext(AuthContext);
     const [pinType, setPinType] = useState('password')
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const handleFormChange =(e)=>{
-        if(e.target.name==='username' && e.target.value.length<=10){
+        if(e.target.name==='username'){
             setUsername(e.target.value);
-            
         }else if(e.target.name==='password' && e.target.value.length<=10){
-
             setPassword(e.target.value)
-
         }
-
     }
     
     const handleSubmit = (e)=>{

@@ -18,15 +18,7 @@ const loginResto = (body)=>{
 }
 
 const signupResto = (body)=>{
-    const {username,password,email,name} = body;
-    return ax.post(`/v1/api/create_restaurant`,
-        {
-            username,
-            password,
-            email,
-            name,
-        }
-    )
+    return ax.post(`/v1/api/create_restaurant`,body)
 }
 
 const getRestoByName = (body)=>{
