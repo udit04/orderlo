@@ -1,9 +1,6 @@
 import React, { useState,useContext,useEffect } from 'react'
 import {SignupContainer,slideIn,BackButton,StackHeader,LoginCard,TextInput,TextInputWrapper,Separator,SolidButton,LoginText,LoginHeader,Tagline,SuccessText,ErrorText} from '../Login/LoginStyled'
-import { BackIcon } from '../../Icons';
-import Flex from 'styled-flex-component'
-import { loginService } from '../../services/loginService';
-import { AuthContext } from '../../../pages/_app';
+//import { BackIcon } from '../../Icons';
 import  Router  from 'next/router';
 import { RestoLoginService } from '../../services/restoLoginService';
 export default function RestoSignup(props) {
@@ -12,21 +9,15 @@ export default function RestoSignup(props) {
     const [email, setEmail] = useState('');
     const [username, setUsername] = useState(props.username);
     const [password, setPassword] = useState('');
-    const [err,setErr] = useState('');
-
-    const [disable, setDisable] = useState(false)
-    const [message, setMessage] = useState('');
-    const {authData,setauthData} = useContext(AuthContext);
+    const [phone_number, setPhoneNumber] = useState('');
+    const [err,setErr] = useState(null);
     const [pinType, setPinType] = useState('password')
-    const handleSubmit = (event)=>{
-
-        setOtpSent(true);
-    }
     useEffect(() => {
         document.getElementsByTagName('body')[0].style='height:100vh;overflow-y:hidden;';
         return () => {
             document.getElementsByTagName('body')[0].style='height:100%;overflow-y:auto;';
         }
+        
     }, [])
     const signupResto = (e)=>{
         e.preventDefault()
@@ -34,12 +25,11 @@ export default function RestoSignup(props) {
             username,
             email,
             password,
-            name:restoName
-        }
-        
+            name:restoName,
+            phone_number
+        }        
         RestoLoginService.signupResto(formData).then(res=>{
             if(res.data){
-                setMessage(res.data.message);
                 if(res.data.restaurant){
                     localStorage.setItem('restoDetail',JSON.stringify({ restaurant:{...res.data.restaurant}}));
                     Router.push(`/dashboard/${res.data.restaurant.id}`)
@@ -48,9 +38,7 @@ export default function RestoSignup(props) {
                 
             }
         }).catch(err=>{
-            setErr(err);
-            setErr(err.response?err.response.data.message:'something went wrong');
-            console.log(err);
+            setErr(err.response && err.response.data ? err.response.data.message:'something went wrong');
         })
     }
 
@@ -63,7 +51,7 @@ export default function RestoSignup(props) {
                     <LoginHeader>
                         Signup
                     </LoginHeader>
-                    {err && err!=='' && <ErrorText>{err}</ErrorText>}
+                    {err && <ErrorText>{err}</ErrorText>}
                     {<SuccessText></SuccessText>}
                     <form onSubmit={signupResto}>
                     <TextInputWrapper>
@@ -85,6 +73,11 @@ export default function RestoSignup(props) {
                     <TextInputWrapper>
                         <TextInput required id='password' name='password' placeholder='password'  type={pinType} onChange={(e)=>{setPassword(e.target.value.length<=10?e.target.value:password)}} value={password} />
                         <img onClick={()=>setPinType(pinType==='password'?'text':'password')} src={require('../../../public/static/lock.png')}/>
+                    </TextInputWrapper>
+
+                    <TextInputWrapper>
+                        <TextInput required id='phone_number' name='phone_number' placeholder='Mobile Number' type='number' min='1000000000' max="9999999999" onInput={(e)=>e.target.setCustomValidity('')} onInvalid={(e)=>e.target.setCustomValidity('Please Enter valid mobile number')} onChange={(e)=>{setPhoneNumber(e.target.value)}} value={phone_number} />
+                        <img src={require('../../../public/static/phone.png')}/>
                     </TextInputWrapper>
 
                     <SolidButton type='submit' as='button' >Signup</SolidButton>
