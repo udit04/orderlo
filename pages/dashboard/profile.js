@@ -152,11 +152,11 @@ function Category() {
                         </TextInputWrapper>
                         <TextInputWrapper>
                             <div><b>Service Charge (%)</b></div>
-                            <TextInput type='number' min='0' placeholder='Service Charge' value={restoDetail.service_charge ? restoDetail.service_charge : ''} onChange={(e)=>handleChange('service_charge',Number(e.target.value))} ></TextInput>
+                            <TextInput type='number' min='0' placeholder='Service Charge' value={restoDetail.service_charge ? restoDetail.service_charge : 0} onChange={(e)=>handleChange('service_charge',Number(e.target.value))} ></TextInput>
                         </TextInputWrapper>
                         <TextInputWrapper>
                             <div><b>Vat Tax (%)</b></div>
-                            <TextInput placeholder='Vat Tax' type='number' min='0' value={restoDetail.vat_tax ? restoDetail.vat_tax : ''} onChange={(e)=>handleChange('vat_tax',Number(e.target.value))} ></TextInput>
+                            <TextInput placeholder='Vat Tax' type='number' min='0' value={restoDetail.vat_tax ? restoDetail.vat_tax : 0} onChange={(e)=>handleChange('vat_tax',Number(e.target.value))} ></TextInput>
                         </TextInputWrapper>
                         <TextInputWrapper>
                             <label htmlFor="alchoholic"><input id='alchoholic' type='checkbox' defaultChecked={restoDetail.is_active} name='alchoholic' value='Opened' onChange={(e)=>handleChange('is_active',!restoDetail.is_active)}/>Opened</label>

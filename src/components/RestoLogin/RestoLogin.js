@@ -76,7 +76,7 @@ export default function Login(){
                                 
                                 <SolidButton as='button' disabled={!(username.length>0 && password.length>0)} onClick={handleSubmit}>SignIn</SolidButton>
                             
-                        <LoginText>Don't have an account yet?<br/><span onClick={()=>{setSignup(true)}}>Create an account</span></LoginText>
+                        <LoginText style={{cursor:'pointer'}}>Don't have an account yet?<br/><span onClick={()=>{setSignup(true)}}>Create an account</span></LoginText>
                     </LoginWrapper>
                     }
                         
